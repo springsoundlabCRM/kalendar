@@ -118,7 +118,7 @@ textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
 </head>
 <body>
 <header class="top">
-  <button class="ib" id="menuBtn" aria-label="Меню"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
+  <button class="ib" id="menuBtn" aria-label="Меню"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="ttl"><b id="title"></b><small id="sub"></small></div>
   <button class="pill" id="todayBtn">Сегодня</button>
   <div class="nv" id="nv"><button class="ib" data-nav2="-1" aria-label="Назад">‹</button><button class="ib" data-nav2="1" aria-label="Вперёд">›</button></div>
@@ -264,15 +264,17 @@ function form(id,pre){
   const showT=()=>{$('#fS span').textContent=hm(ts);$('#fE span').textContent=hm(te)};showT();
   const mark=c=>{const i=Math.round(c.scrollTop/44);[...c.children].forEach((x,j)=>x.classList.toggle('on',j===i))};
   const closeT=()=>{$('#tpop').classList.remove('on');$('#tpin').classList.remove('open');tact=null};
+  const wrap=(c,len)=>{const i=Math.round(c.scrollTop/44);if(i>=len*2&&i<len*5)return;const ni=len*3+(i%len);c.style.scrollSnapType='none';c.scrollTop=ni*44;c._i=ni;requestAnimationFrame(()=>{c.style.scrollSnapType=''})};
   const buildW=el=>{
-    const v=tact==='s'?ts:te,hi=Math.floor(v/60),mi=Math.round((v%60)/5)%12;
-    const it=a=>a.map(x=>`<div class="wv">${pad(x)}</div>`).join('');
-    el.innerHTML=`<div class="wheel"><div class="wcol">${it([...Array(24).keys()])}</div><b class="wsep">:</b><div class="wcol">${it([...Array(12).keys()].map(i=>i*5))}</div><div class="wband"></div></div><button type="button" class="btn" data-tdone="1">Готово</button>`;
+    const v=tact==='s'?ts:te,hi=Math.floor(v/60),mi=v%60;
+    const it=a=>[1,2,3,4,5,6,7].map(()=>a.map(x=>`<div class="wv">${pad(x)}</div>`).join('')).join('');
+    el.innerHTML=`<div class="wheel"><div class="wcol">${it([...Array(24).keys()])}</div><b class="wsep">:</b><div class="wcol">${it([...Array(60).keys()])}</div><div class="wband"></div></div><button type="button" class="btn" data-tdone="1">Готово</button>`;
     const [ch,cm]=el.querySelectorAll('.wcol');let lock=true;
-    ch.scrollTop=hi*44;cm.scrollTop=mi*44;mark(ch);mark(cm);setTimeout(()=>lock=false,300);
+    ch.scrollTop=(72+hi)*44;cm.scrollTop=(180+mi)*44;mark(ch);mark(cm);setTimeout(()=>lock=false,300);
     [ch,cm].forEach(c=>c.addEventListener('wheel',ev=>{ev.preventDefault();c._a=(c._a||0)+ev.deltaY*(ev.deltaMode===1?33:1);if(Math.abs(c._a)<30)return;const st=Math.sign(c._a);c._a=0;const n=c.children.length-1,base=Date.now()-(c._wt||0)<400?c._i:Math.round(c.scrollTop/44);c._i=Math.max(0,Math.min(n,base+st));c._wt=Date.now();c.scrollTo({top:c._i*44,behavior:'smooth'})},{passive:false}));
-    [ch,cm].forEach(c=>c.onscroll=()=>{mark(c);if(lock)return;clearTimeout(c._t);c._t=setTimeout(()=>{
-      const nv=Math.round(ch.scrollTop/44)*60+Math.round(cm.scrollTop/44)*5;
+    [ch,cm].forEach(c=>c.onscroll=()=>{const L=c===c.parentNode.children[0]?24:60;if(c.scrollTop<L*22||c.scrollTop>L*44*6.5)wrap(c,L);mark(c);if(lock)return;clearTimeout(c._t);c._t=setTimeout(()=>{
+      wrap(ch,24);wrap(cm,60);
+      const nv=(Math.round(ch.scrollTop/44)%24)*60+Math.round(cm.scrollTop/44)%60;
       if(tact==='s'){const d=te-ts;ts=nv;te=Math.min(ts+d,1439)}else te=nv;showT()},100)});
   };
   const openT=k=>{
