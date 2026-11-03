@@ -53,7 +53,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .big{font-size:26px;font-weight:700}
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s;z-index:10}
 .scrim.on{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;bottom:0;left:0;width:min(82vw,320px);background:var(--bg);z-index:11;transform:translateX(-102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);padding:calc(env(safe-area-inset-top,0px) + 16px) 12px calc(env(safe-area-inset-bottom,0px) + 16px);display:flex;flex-direction:column;gap:4px;box-shadow:var(--sh)}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(82vw,280px);background:var(--bg);z-index:11;transform:translateX(-102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);padding:calc(env(safe-area-inset-top,0px) + 16px) 12px calc(env(safe-area-inset-bottom,0px) + 16px);display:flex;flex-direction:column;gap:4px;box-shadow:var(--sh)}
 .drawer.on{transform:none}
 .logo{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;font-weight:700;font-size:18px}
 .logo i{width:38px;height:38px;border-radius:12px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-style:normal;font-size:20px}
@@ -89,7 +89,7 @@ input,textarea{width:100%;margin-top:5px;padding:12px;border-radius:12px;border:
 @media (min-width:900px){
 .sheet{top:0;bottom:0;left:auto;right:0;width:460px;max-width:none;max-height:none;margin:0;border-radius:24px 0 0 24px;padding:28px 28px 28px;transform:translateX(105%)}
 .sheet.on{transform:none}.grab{display:none}
-.drawer{width:340px;padding:28px 20px}
+.drawer{width:280px;padding:28px 20px}
 .top{padding-left:20px;padding-right:20px}.chips{padding:4px 20px 10px}.ev b{font-size:14px}.ev{font-size:13px}
 }
 .dbtn{width:100%;margin-top:5px;padding:12px;border-radius:12px;border:1px solid var(--ln);background:var(--bg2);text-align:left;font-size:16px}
@@ -116,13 +116,14 @@ textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
 .wsep{font-size:24px}.wband{position:absolute;left:8%;right:8%;top:88px;height:44px;border-radius:12px;background:rgba(255,204,0,.28);pointer-events:none}
 .dpin:not(.open){background:none;border-width:0}
 @media (hover:hover) and (pointer:fine){
-body{padding-left:min(82vw,320px)}
+body{padding-left:min(82vw,280px)}
 .drawer{transform:none!important;z-index:9}.drawer,.drawer.on{box-shadow:none;border-right:1px solid var(--ln)}
 #menuBtn{display:none}.top{padding-left:12px}
 }
-@media (hover:hover) and (pointer:fine) and (min-width:900px){body{padding-left:340px}.top{padding-left:20px}}
+@media (hover:hover) and (pointer:fine) and (min-width:900px){body{padding-left:280px}.top{padding-left:20px}}
 @media (hover:none) and (pointer:coarse){#nv,#zm,.strip .ar{display:none}.strip{grid-template-columns:repeat(7,1fr)}}
 @media (max-width:899px){.top{padding-left:2px}#menuBtn{width:48px;height:48px}#menuBtn svg{width:30px;height:30px}}
+.acc{display:flex;align-items:center;gap:12px;padding:10px 8px}.acc .av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:var(--acx);display:grid;place-items:center;flex:none}.acc span{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vw{position:relative;flex:none}
 .vmenu{position:absolute;right:0;top:46px;min-width:160px;background:var(--bg);border:1px solid var(--ln);border-radius:14px;box-shadow:var(--sh);padding:6px;z-index:20;display:none}
 .vmenu.on{display:block}
@@ -151,13 +152,11 @@ body{padding-left:min(82vw,320px)}
 <aside class="drawer" id="drawer">
   <div class="logo"><i>♪</i>Студия</div>
   <button class="nav" data-page="cal">📅 Календарь</button>
-  <button class="nav" data-page="people">👥 Преподаватели и клиенты</button>
+  <button class="nav" data-page="people">👥 Преподаватели</button>
   <button class="nav" data-page="rep">📊 Загрузка за месяц</button>
   <button class="nav" data-page="set">⚙️ Настройки</button>
   <div class="sp"></div>
-  <button class="nav" id="instBtn">📲 Установить на экран «Домой»</button>
-  <label>Тема</label>
-  <div class="seg" id="themeSeg"><button data-t="light">Светлая</button><button data-t="auto">Авто</button><button data-t="dark">Тёмная</button></div>
+  <div class="acc"><i class="av"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></i><span id="accLbl"></span></div>
 </aside>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <div class="scrim dpop" id="dpop"><div class="dp" id="dp"></div></div>
@@ -228,25 +227,27 @@ function pages(){
   if(page==='people'){
     const m={};S.ev.forEach(e=>{const k=e.type+'|'+e.person;(m[k]=m[k]||{type:e.type,person:e.person,n:0,h:0});const o=m[k];o.n++;o.h+=(e.end-e.start)/60});
     const L=Object.values(m).sort((a,b)=>b.h-a.h);
-    h+='<h2>Преподаватели и клиенты</h2>'+(L.length?L.map(o=>`<div class="card"><div class="r"><b>${esc(o.person)}</b><span class="badge" style="background:var(--${o.type})">${T[o.type].n}</span></div><div class="r"><span>Занятий / часов</span><span>${o.n} / ${+o.h.toFixed(2)}</span></div></div>`).join(''):'<div class="empty">Пока нет записей</div>');
-  }else if(page==='rep'){
-    const mo=cur.getFullYear()+'-'+pad(cur.getMonth()+1),L=S.ev.filter(e=>e.date.startsWith(mo));
-    const hrs=f=>L.filter(f).reduce((a,e)=>a+(e.end-e.start)/60,0);
-    h+=`<h2 style="text-transform:capitalize">${MN[cur.getMonth()]} ${cur.getFullYear()}</h2>
-    <div class="card"><div class="r"><span>Занято часов</span></div><div class="big">${+hrs(()=>1).toFixed(2)} ч</div><div class="r"><span>Всего занятий</span><span>${L.length}</span></div></div>
-    <div class="card"><div class="r"><b>Записи песен</b><span>${+hrs(e=>e.type==='rec').toFixed(2)} ч</span></div><div class="r"><span>Занятий</span><span>${L.filter(e=>e.type==='rec').length}</span></div></div>
-    <div class="card"><div class="r"><b>Уроки вокала</b><span>${+hrs(e=>e.type==='lesson').toFixed(2)} ч</span></div><div class="r"><span>Занятий</span><span>${L.filter(e=>e.type==='lesson').length}</span></div></div>
-    
-    <p style="color:var(--tx2);font-size:13px">Месяц выбирается в календаре.</p>`;
-  }else{
-    h+=`<h2>Настройки</h2>
-    <button class="btn g" id="exp">Скачать резервную копию (JSON)</button><button class="btn d" id="clr">Удалить все данные</button>
-    <p style="color:var(--tx2);font-size:13px">Данные хранятся на этом устройстве.</p>`;
+    h+='<h2>Преподаватели</h2>'+(L.length?L.map(o=>`<div class="card"><div class="r"><b>${esc(o.person)}</b><span class="badge" style="background:var(--${o.type})">${T[o.type].n}</span></div><div class="r"><span>Занятий / часов</span><span>${o.n} / ${+o.h.toFixed(2)}</span></div></div>`).join(''):'<div class="empty">Пока нет записей</div>');
   }
   $('#main').innerHTML=h+'</div>';
 }
 
 /* sheet / drawer */
+function report(){
+  const mo=cur.getFullYear()+'-'+pad(cur.getMonth()+1),L=S.ev.filter(e=>e.date.startsWith(mo));
+  const hrs=f=>L.filter(f).reduce((a,e)=>a+(e.end-e.start)/60,0);
+  sheet(`<h3 style="text-transform:capitalize">${MN[cur.getMonth()]} ${cur.getFullYear()}</h3>
+  <div class="card"><div class="r"><span>Занято часов</span></div><div class="big">${+hrs(()=>1).toFixed(2)} ч</div><div class="r"><span>Всего занятий</span><span>${L.length}</span></div></div>
+  <div class="card"><div class="r"><b>Записи песен</b><span>${+hrs(e=>e.type==='rec').toFixed(2)} ч</span></div><div class="r"><span>Занятий</span><span>${L.filter(e=>e.type==='rec').length}</span></div></div>
+  <div class="card"><div class="r"><b>Уроки вокала</b><span>${+hrs(e=>e.type==='lesson').toFixed(2)} ч</span></div><div class="r"><span>Занятий</span><span>${L.filter(e=>e.type==='lesson').length}</span></div></div>
+  <p style="color:var(--tx2);font-size:13px">Месяц выбирается в календаре.</p>`);
+}
+function settings(){
+  sheet(`<h3>Настройки</h3>
+  <div class="card"><label style="margin-top:0">Имя аккаунта</label><div class="row" style="align-items:center;margin-top:5px"><input id="setName" style="margin-top:0" value="${esc(S.name)}" placeholder="Преподаватель 1" maxlength="40"><button class="btn" id="saveName" style="width:auto;flex:none;margin:0;padding:12px 18px">Сохранить</button></div></div>
+  <div class="card"><label style="margin-top:0">Данные</label><div class="row" style="margin-top:8px"><button class="btn g" id="exp" style="margin:0;background:var(--bg);flex:1;font-size:15px">Резервная копия</button><button class="btn d" id="clr" style="margin:0;background:var(--bg);flex:1;font-size:15px">Удалить всё</button></div><p style="color:var(--tx2);font-size:13px;margin:10px 0 0">Данные хранятся на этом устройстве.</p></div>`);
+}
+
 const sheet=html=>{$('#sheetBody').innerHTML=html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')};
 const closeAll=()=>{$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
 const openDrawer=()=>{$('#drawer').classList.add('on');$('#scrim').classList.add('on')};
@@ -259,7 +260,7 @@ function detail(id){
 }
 function form(id,pre){
   const e=S.ev.find(x=>x.id===id)||Object.assign({type:'lesson',person:'',date:iso(cur),start:10*60,end:11*60,note:''},pre||{});
-  let type=e.type,dval=e.date,dm=pd(e.date);const desk=matchMedia('(min-width:900px)').matches;let ts=e.start,te=e.end,tact=null;
+  let type=e.type,dval=e.date,dm=pd(e.date);const desk=matchMedia('(min-width:900px)').matches;let ts=e.start,te=e.end,tact=null,bk=null;
   sheet(`<h3>${id?'Изменить':'Новая запись'}</h3>
   <div class="seg" id="fType"><button data-v="lesson">Урок вокала</button><button data-v="rec">Запись песни</button></div>
   <label id="fWho"></label><input id="fPerson" value="${esc(e.person)}" placeholder="Имя">
@@ -288,7 +289,7 @@ function form(id,pre){
   const buildW=el=>{
     const v=tact==='s'?ts:te,hi=Math.floor(v/60),mi=v%60;
     const it=a=>[1,2,3,4,5,6,7].map(()=>a.map(x=>`<div class="wv">${pad(x)}</div>`).join('')).join('');
-    el.innerHTML=`<div class="wheel"><div class="wcol">${it([...Array(24).keys()])}</div><b class="wsep">:</b><div class="wcol">${it([...Array(60).keys()])}</div><div class="wband"></div></div><button type="button" class="btn" data-tdone="1">Готово</button>`;
+    el.innerHTML=`<div class="wheel"><div class="wcol">${it([...Array(24).keys()])}</div><b class="wsep">:</b><div class="wcol">${it([...Array(60).keys()])}</div><div class="wband"></div></div><div class="row"><button type="button" class="btn" style="flex:1;width:auto;background:#f33;color:#fff" data-tcancel="1">Отмена</button><button type="button" class="btn" style="flex:1;width:auto" data-tdone="1">Готово</button></div>`;
     const [ch,cm]=el.querySelectorAll('.wcol');let lock=true;
     ch.scrollTop=(72+hi)*44;cm.scrollTop=(180+mi)*44;mark(ch);mark(cm);setTimeout(()=>lock=false,300);
     [ch,cm].forEach(c=>c.addEventListener('wheel',ev=>{ev.preventDefault();c._a=(c._a||0)+ev.deltaY*(ev.deltaMode===1?33:1);if(Math.abs(c._a)<30)return;const st=Math.sign(c._a);c._a=0;const n=c.children.length-1,base=Date.now()-(c._wt||0)<400?c._i:Math.round(c.scrollTop/44);c._i=Math.max(0,Math.min(n,base+st));c._wt=Date.now();c.scrollTo({top:c._i*44,behavior:'smooth'})},{passive:false}));
@@ -298,10 +299,11 @@ function form(id,pre){
       if(tact==='s'){const d=te-ts;ts=nv;te=Math.min(ts+d,1439)}else te=nv;showT()},100)});
   };
   const openT=k=>{
+    if(tact===null)bk=[ts,te];
     if(desk){$('#dpin').classList.remove('open');const p=$('#tpin');if(p.classList.contains('open')&&tact===k)return closeT();tact=k;buildW(p);p.classList.add('open')}
     else{tact=k;buildW($('#tpw'));$('#tpop').classList.add('on')}
   };
-  const tclick=ev=>{const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tdone]'))closeT()};
+  const tclick=ev=>{const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tcancel]')){if(bk){ts=bk[0];te=bk[1];showT()}return closeT()}if(ev.target.closest('[data-tdone]'))closeT()};
   $('#tpin').onclick=$('#tpw').onclick=tclick;
   $('#tpop').onclick=ev=>{if(ev.target.id==='tpop')closeT()};
   $('#fS').onclick=()=>openT('s');$('#fE').onclick=()=>openT('e');
@@ -346,12 +348,13 @@ document.addEventListener('click',e=>{
   if(b=q('[data-d]')){cur=pd(b.dataset.d);return render()}
   if(b=q('[data-nav]')){cur=addD(cur,+b.dataset.nav);return render()}
   if(b=q('[data-f]')){filt=b.dataset.f;return render()}
-  if(b=q('[data-page]')){page=b.dataset.page;closeAll();return render()}
+  if(b=q('[data-page]')){if(b.dataset.page==='set'){closeAll();return settings()}if(b.dataset.page==='rep'){closeAll();return report()}page=b.dataset.page;closeAll();return render()}
   if(b=q('#themeSeg button')){S.theme=b.dataset.t;save();return applyTheme()}
   if(b=q('.col')){const r=b.getBoundingClientRect(),m=Math.floor((e.clientY-r.top)/H*4)/4*60+S0*60;return form(null,{date:b.dataset.date,start:m,end:m+60})}
   if(q('#saveSet')){S.rate={rec:+$('#r1').value||0,lesson:+$('#r2').value||0};save();return alert('Сохранено')}
+  if(q('#saveName')){S.name=$('#setName').value.trim();save();accUpd();const bt=$('#saveName');bt.textContent='Сохранено ✓';setTimeout(()=>{bt.textContent='Сохранить'},1500);return}
   if(q('#exp')){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='studio-backup.json';a.click();return}
-  if(q('#clr')){if(confirm('Удалить все записи?')){S.ev=[];save();render()}return}
+  if(q('#clr')){if(confirm('Удалить все записи?')){S.ev=[];save();closeAll();render()}return}
 });
 $('#menuBtn').onclick=openDrawer;$('#scrim').onclick=closeAll;$('#dpop').onclick=e=>{if(e.target.id==='dpop')$('#dpop').classList.remove('on')};
 
@@ -393,13 +396,14 @@ $('#sheet').addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-sy2>9
   }catch(e){}
 })();
 let dp=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});
-$('#instBtn').onclick=async()=>{
+if($('#instBtn'))$('#instBtn').onclick=async()=>{
   if(dp){dp.prompt();dp=null;closeAll();return}
   closeAll();
   sheet(`<h3>Установка на телефон</h3><div class="card"><div class="r"><b>iPhone (Safari)</b></div><div>Нажмите «Поделиться» → «На экран „Домой“».</div></div><div class="card"><div class="r"><b>Android (Chrome)</b></div><div>Меню ⋮ → «Установить приложение» или «Добавить на главный экран».</div></div><button class="btn g" onclick="closeAll()">Понятно</button>`);
 };
 
-applyTheme();render();
+const accUpd=()=>{$('#accLbl').textContent=S.name||'Преподаватель 1'};
+accUpd();applyTheme();render();
 setInterval(()=>{if(page==='cal'&&!$('#sheet').classList.contains('on'))render()},60000);
 </script>
 </body>
