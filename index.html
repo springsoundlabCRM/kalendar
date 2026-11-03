@@ -134,7 +134,6 @@ textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
     <div class="vmenu" id="vmenu"><button data-vm="1">1 день</button><button data-vm="3">3 дня</button><button data-vm="5">5 дней</button><button data-vm="7">7 дней</button><button data-vm="m">Месяц</button></div>
   </div>
 </header>
-<div class="chips" id="chips"></div>
 <div class="strip" id="strip"></div>
 <main id="main"></main>
 
@@ -183,13 +182,12 @@ const evOn=d=>S.ev.filter(e=>e.date===iso(d)&&(filt==='all'||e.type===filt)).sor
 
 function render(){
   const cal=page==='cal';
-  $('#chips').style.display=$('#nv').style.display=$('#todayBtn').style.display=$('#vw').style.display=cal?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';
+  $('#nv').style.display=$('#todayBtn').style.display=$('#vw').style.display=cal?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';
   $$('.nav[data-page]').forEach(n=>n.classList.toggle('on',n.dataset.page===page));
   if(!cal){const t={people:'Люди',rep:'Загрузка',set:'Настройки'}[page];$('#title').textContent=t;$('#sub').textContent='';pages();return}
   $('#title').textContent=MN[cur.getMonth()]+' '+cur.getFullYear();
   $('#sub').textContent=view==='day'?cur.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}):view==='week'?(()=>{const a=nd===7?weekStart(cur):cur,b=addD(a,nd-1),o={day:'numeric',month:'long'};return a.getMonth()===b.getMonth()?a.getDate()+' – '+b.toLocaleDateString('ru-RU',o):a.toLocaleDateString('ru-RU',o)+' – '+b.toLocaleDateString('ru-RU',o)})():'Месяц';
   
-  $('#chips').innerHTML=[['all','Все'],['rec','Запись'],['lesson','Уроки']].map(([k,n])=>`<button class="chip ${filt===k?'on':''}" data-f="${k}">${n}</button>`).join('');
   $$('#vmenu button').forEach(b=>b.classList.toggle('on',view==='month'?b.dataset.vm==='m':+b.dataset.vm===nd));
   const ws=weekStart(cur),td=iso(new Date());
   $('#strip').innerHTML='<button class="ar" data-nav="-7">‹</button>'+[...Array(7)].map((_,i)=>{const d=addD(ws,i);return `<button class="d ${iso(d)===iso(cur)?'on':''} ${iso(d)===td?'td':''} ${evOn(d).length?'has':''}" data-d="${iso(d)}">${DN[i]}<i>${d.getDate()}</i></button>`}).join('')+'<button class="ar" data-nav="7">›</button>';
