@@ -114,6 +114,7 @@ textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
 .wv{height:44px;line-height:44px;text-align:center;font-size:22px;scroll-snap-align:center;color:var(--tx2);cursor:pointer;font-variant-numeric:tabular-nums}.wv.on{color:var(--tx);font-weight:700}
 .wsep{font-size:24px}.wband{position:absolute;left:8%;right:8%;top:88px;height:44px;border-radius:12px;background:rgba(255,204,0,.28);pointer-events:none}
 .dpin:not(.open){background:none;border-width:0}
+@media (hover:none) and (pointer:coarse){#nv,.strip .ar{display:none}.strip{grid-template-columns:repeat(7,1fr)}}
 .vw{position:relative;flex:none}
 .vmenu{position:absolute;right:0;top:46px;min-width:160px;background:var(--bg);border:1px solid var(--ln);border-radius:14px;box-shadow:var(--sh);padding:6px;z-index:20;display:none}
 .vmenu.on{display:block}
@@ -335,9 +336,18 @@ $('#todayBtn').onclick=()=>{cur=new Date();render()};
 
 
 /* swipes */
-let sx,sy,edge=false,inDrawer=false;
-document.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;edge=sx<22;inDrawer=!!e.target.closest('#drawer')},{passive:true});
-document.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+let sx,sy,edge=false,inDrawer=false,axis=null,inCal=false,st0=0;
+document.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;edge=sx<22;inDrawer=!!e.target.closest('#drawer');
+  axis=null;st0=$('#main').scrollTop;inCal=page==='cal'&&!!e.target.closest('#main,#strip')&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')&&!edge},{passive:true});
+document.addEventListener('touchmove',e=>{
+  if(!inCal||axis==='v')return;
+  const t=e.touches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+  if(!axis){if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)*1.2)axis='h';else if(Math.abs(dy)>8)axis='v';else return}
+  if(axis==='h'){if(e.cancelable)e.preventDefault();const m=$('#main');m.style.overflowY='hidden';m.scrollTop=st0}
+},{passive:false});
+const unlockY=()=>{$('#main').style.overflowY='';axis=null};
+document.addEventListener('touchcancel',unlockY,{passive:true});
+document.addEventListener('touchend',e=>{unlockY();const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
   if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*.7)return;
   if(edge&&dx>0)return openDrawer();
   if(inDrawer&&dx<0)return closeAll();
