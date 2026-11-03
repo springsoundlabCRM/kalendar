@@ -114,6 +114,13 @@ textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
 .wv{height:44px;line-height:44px;text-align:center;font-size:22px;scroll-snap-align:center;color:var(--tx2);cursor:pointer;font-variant-numeric:tabular-nums}.wv.on{color:var(--tx);font-weight:700}
 .wsep{font-size:24px}.wband{position:absolute;left:8%;right:8%;top:88px;height:44px;border-radius:12px;background:rgba(255,204,0,.28);pointer-events:none}
 .dpin:not(.open){background:none;border-width:0}
+.vw{position:relative;flex:none}
+.vmenu{position:absolute;right:0;top:46px;min-width:160px;background:var(--bg);border:1px solid var(--ln);border-radius:14px;box-shadow:var(--sh);padding:6px;z-index:20;display:none}
+.vmenu.on{display:block}
+.vmenu button{display:flex;justify-content:space-between;align-items:center;width:100%;padding:11px 12px;border-radius:10px;font-weight:600;text-align:left}
+.vmenu button:active{background:var(--bg2)}
+.vmenu button.on{background:var(--bg2)}
+.vmenu button.on::after{content:"✓";color:var(--tx2)}
 </style>
 </head>
 <body>
@@ -122,6 +129,10 @@ textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
   <div class="ttl"><b id="title"></b><small id="sub"></small></div>
   <button class="pill" id="todayBtn">Сегодня</button>
   <div class="nv" id="nv"><button class="ib" data-nav2="-1" aria-label="Назад">‹</button><button class="ib" data-nav2="1" aria-label="Вперёд">›</button></div>
+  <div class="vw" id="vw">
+    <button class="ib" id="vbtn" aria-label="Масштаб календаря"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button>
+    <div class="vmenu" id="vmenu"><button data-vm="1">1 день</button><button data-vm="3">3 дня</button><button data-vm="5">5 дней</button><button data-vm="7">7 дней</button><button data-vm="m">Месяц</button></div>
+  </div>
 </header>
 <div class="chips" id="chips"></div>
 <div class="strip" id="strip"></div>
@@ -160,7 +171,7 @@ const DN=['пн','вт','ср','чт','пт','сб','вс'];
 const T={rec:{n:'Запись песни',who:'Клиент / исполнитель'},lesson:{n:'Урок вокала',who:'Преподаватель'}};
 const cost=e=>e.rate*(e.end-e.start)/60;
 const H=56,S0=8;
-let cur=new Date(),view='week',filt='all',page='cal',first=true;
+let nd=7,cur=new Date(),view='week',filt='all',page='cal',first=true;
 
 function applyTheme(){const r=document.documentElement;S.theme==='auto'?r.removeAttribute('data-theme'):r.dataset.theme=S.theme;
   const dark=S.theme==='dark'||(S.theme==='auto'&&matchMedia('(prefers-color-scheme:dark)').matches);
@@ -172,16 +183,17 @@ const evOn=d=>S.ev.filter(e=>e.date===iso(d)&&(filt==='all'||e.type===filt)).sor
 
 function render(){
   const cal=page==='cal';
-  $('#chips').style.display=$('#nv').style.display=$('#todayBtn').style.display=cal?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';
+  $('#chips').style.display=$('#nv').style.display=$('#todayBtn').style.display=$('#vw').style.display=cal?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';
   $$('.nav[data-page]').forEach(n=>n.classList.toggle('on',n.dataset.page===page));
   if(!cal){const t={people:'Люди',rep:'Загрузка',set:'Настройки'}[page];$('#title').textContent=t;$('#sub').textContent='';pages();return}
   $('#title').textContent=MN[cur.getMonth()]+' '+cur.getFullYear();
-  $('#sub').textContent=view==='day'?cur.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}):view==='week'?(()=>{const a=weekStart(cur),b=addD(a,6),o={day:'numeric',month:'long'};return a.getMonth()===b.getMonth()?a.getDate()+' – '+b.toLocaleDateString('ru-RU',o):a.toLocaleDateString('ru-RU',o)+' – '+b.toLocaleDateString('ru-RU',o)})():'Месяц';
+  $('#sub').textContent=view==='day'?cur.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}):view==='week'?(()=>{const a=nd===7?weekStart(cur):cur,b=addD(a,nd-1),o={day:'numeric',month:'long'};return a.getMonth()===b.getMonth()?a.getDate()+' – '+b.toLocaleDateString('ru-RU',o):a.toLocaleDateString('ru-RU',o)+' – '+b.toLocaleDateString('ru-RU',o)})():'Месяц';
   
-  $('#chips').innerHTML=[['all','Все'],['rec','Запись'],['lesson','Уроки']].map(([k,n])=>`<button class="chip ${filt===k?'on':''}" data-f="${k}">${n}</button>`).join('')+'<div class="seg" style="margin-left:auto;flex:none">'+[['day','День'],['week','Неделя'],['month','Месяц']].map(([k,n])=>`<button class="${view===k?'on':''}" data-view="${k}">${n}</button>`).join('')+'</div>';
+  $('#chips').innerHTML=[['all','Все'],['rec','Запись'],['lesson','Уроки']].map(([k,n])=>`<button class="chip ${filt===k?'on':''}" data-f="${k}">${n}</button>`).join('');
+  $$('#vmenu button').forEach(b=>b.classList.toggle('on',view==='month'?b.dataset.vm==='m':+b.dataset.vm===nd));
   const ws=weekStart(cur),td=iso(new Date());
   $('#strip').innerHTML='<button class="ar" data-nav="-7">‹</button>'+[...Array(7)].map((_,i)=>{const d=addD(ws,i);return `<button class="d ${iso(d)===iso(cur)?'on':''} ${iso(d)===td?'td':''} ${evOn(d).length?'has':''}" data-d="${iso(d)}">${DN[i]}<i>${d.getDate()}</i></button>`}).join('')+'<button class="ar" data-nav="7">›</button>';
-  const days=view==='day'?[cur]:[...Array(7)].map((_,i)=>addD(ws,i));
+  const days=view==='day'?[cur]:[...Array(nd)].map((_,i)=>addD(nd===7?ws:cur,i));
   const rul=[...Array(24-S0)].map((_,i)=>`<div>${pad(S0+i)}:00</div>`).join('');
   const nowM=new Date().getHours()*60+new Date().getMinutes();
   const cols=days.map(d=>{const items=evOn(d).map(e=>`<div class="ev ${e.type}" data-id="${e.id}" style="top:${(e.start-S0*60)/60*H}px;height:${Math.max((e.end-e.start)/60*H-2,22)}px"><b>${esc(e.person)}</b><span>${hm(e.start)}–${hm(e.end)}</span></div>`).join('');
@@ -300,10 +312,12 @@ document.addEventListener('click',e=>{
   const t=e.target,q=s=>t.closest(s);
   let b;
   if(b=q('.ev,.mev'))return detail(b.dataset.id);
-  if(b=q('[data-view]')){view=b.dataset.view;first=true;return render()}
-  if(b=q('[data-nav2]')){const s=+b.dataset.nav2;cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()+s,1):addD(cur,s*(view==='week'?7:1));return render()}
-  if(b=q('[data-go]')){cur=pd(b.dataset.go);view='day';first=true;return render()}
-  if(b=q('.mc')){cur=pd(b.dataset.date);view='day';first=true;return render()}
+  if(!q('#vw'))$('#vmenu').classList.remove('on');
+  if(q('#vbtn')){$('#vmenu').classList.toggle('on');return}
+  if(b=q('[data-vm]')){const v=b.dataset.vm;if(v==='m')view='month';else{nd=+v;view=nd===1?'day':'week'}$('#vmenu').classList.remove('on');first=true;return render()}
+  if(b=q('[data-nav2]')){const s=+b.dataset.nav2;cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()+s,1):addD(cur,s*(view==='week'?nd:1));return render()}
+  if(b=q('[data-go]')){cur=pd(b.dataset.go);view='day';nd=1;first=true;return render()}
+  if(b=q('.mc')){cur=pd(b.dataset.date);view='day';nd=1;first=true;return render()}
   if(b=q('[data-pay]')){const x=S.ev.find(v=>v.id===b.dataset.pay);x.paid=!x.paid;save();closeAll();render();return}
   if(b=q('[data-edit]'))return form(b.dataset.edit);
   if(b=q('[data-del]')){if(confirm('Удалить запись?')){S.ev=S.ev.filter(v=>v.id!==b.dataset.del);save();closeAll();render()}return}
@@ -330,7 +344,7 @@ document.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.client
   if(edge&&dx>0)return openDrawer();
   if(inDrawer&&dx<0)return closeAll();
   if(dx>0&&$('#sheet').classList.contains('on'))return;
-  if(page==='cal'&&e.target.closest('#main,#strip')&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')){cur=addD(cur,(dx<0?1:-1)*(view==='week'?7:1));render()}
+  if(page==='cal'&&e.target.closest('#main,#strip')&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')){cur=addD(cur,(dx<0?1:-1)*(view==='week'?nd:1));render()}
 },{passive:true});
 let sy2;$('#sheet').addEventListener('touchstart',e=>sy2=e.touches[0].clientY,{passive:true});
 $('#sheet').addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-sy2>90&&$('#sheet').scrollTop===0)closeAll()},{passive:true});
