@@ -359,7 +359,7 @@ function form(id,pre){
   sg.onclick=ev=>{const d=ev.target.closest('[data-sg]');if(!d)return;$('#fPerson').value=d.dataset.sg;hideSg();upPay()};upPay();
   const pIn=$('#fPrice'),pOk=$('#fPriceOk');
   const CK='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>',DONE='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/><path class="gp" stroke="#2fb344" d="M5 12.5l4.5 4.5L19 7"/></svg>';
-  const pFix=a=>{const v=pIn.value.trim(),dirty=v===''?S.price!=null:(S.price==null||+v!==+S.price),idle=v===''&&S.price==null;pOk.classList.toggle('go',dirty);pOk.classList.toggle('done',!dirty&&!idle);pOk.style.visibility=idle?'hidden':'';pOk.innerHTML=dirty?CK:DONE;pOk.disabled=!dirty;if(a===true&&!dirty){const r=pOk.querySelector('.gp');if(r)r.classList.add('draw')}};pFix();
+  const pFix=a=>{const v=pIn.value.trim(),dirty=v===''?S.price!=null:(S.price==null||+v!==+S.price),idle=v===''&&S.price==null;pOk.classList.toggle('go',dirty);pOk.classList.toggle('done',!dirty&&!idle);pOk.style.visibility='';pOk.innerHTML=(dirty||idle)?CK:DONE;pOk.disabled=!dirty;if(a===true&&!dirty){const r=pOk.querySelector('.gp');if(r)r.classList.add('draw')}};pFix();
   pIn.oninput=()=>pFix();
   pOk.onclick=()=>{const v=pIn.value.trim();if(v==='')delete S.price;else S.price=Math.max(0,+v||0);save();pFix(true);toast('Изменения сохранены')};
   $('#fType').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;type=b.dataset.v;sync()};
