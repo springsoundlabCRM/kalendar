@@ -281,7 +281,9 @@ function settings(){
   fullNext=true;
   sheet(`<button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button><h3>Настройки</h3>
   <div class="card"><label style="margin-top:0">Имя аккаунта</label><div class="row" style="align-items:center;margin-top:5px"><input id="setName" style="margin-top:0" value="${esc(S.name)}" placeholder="Преподаватель 1" maxlength="40"><button class="btn" id="saveName" style="width:auto;flex:none;margin:0;padding:12px 18px">Сохранить</button></div></div>
+  <div class="card"><label style="margin-top:0">Тема</label><div class="seg" id="themeSeg" style="margin-top:8px;background:var(--bg)"><button data-t="light">Светлая</button><button data-t="auto">Авто</button><button data-t="dark">Тёмная</button></div></div>
   <div class="card"><label style="margin-top:0">Данные</label><div class="row" style="margin-top:8px"><button class="btn g" id="exp" style="margin:0;background:var(--bg);flex:1;font-size:15px">Резервная копия</button><button class="btn d" id="clr" style="margin:0;background:var(--bg);flex:1;font-size:15px">Удалить всё</button></div><p style="color:var(--tx2);font-size:13px;margin:10px 0 0">Данные хранятся на этом устройстве.</p></div>`);
+  applyTheme();
 }
 
 let tallNext=false,fullNext=false;
