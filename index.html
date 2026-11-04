@@ -102,7 +102,7 @@ input,textarea{width:100%;margin-top:5px;padding:12px;border-radius:12px;border:
 .dpop{z-index:30;display:grid;place-items:center}
 .dpop .dp{margin:0;width:min(92vw,340px);background:var(--bg);box-shadow:var(--sh);padding:14px;transform:scale(.96);transition:transform .2s}.dpop.on .dp{transform:none}
 textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
-.sheet{overflow-x:hidden}
+.sheet{overflow-x:hidden;overscroll-behavior-y:contain}
 .dpin{max-height:0;overflow:hidden;transition:max-height .28s ease,margin .28s ease,padding .28s ease;background:var(--bg2);border-radius:16px;padding:0 10px;margin-top:0;border:1px solid transparent}
 .dpin.open{max-height:380px;margin-top:8px;padding:10px;border-color:var(--ln)}
 @media (max-width:899px){.dpin{display:none}}
@@ -468,8 +468,7 @@ function people(){
     el=document.createElement('div');el.className='sheet full';el.id='pplSheet';
     $('#sheet').before(el);
     el.addEventListener('click',e=>{if(e.target.closest('.xbtn,[data-menu]'))el.classList.remove('on')});
-    let y0;el.addEventListener('touchstart',e=>y0=e.touches[0].clientY,{passive:true});
-    el.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-y0>90&&el.scrollTop===0){el.classList.remove('on');$('#scrim').classList.remove('blur','on')}},{passive:true});
+    sheetDrag(el,()=>{el.classList.remove('on');$('#scrim').classList.remove('blur','on')});
     $('#scrim').addEventListener('click',()=>el.classList.remove('on'));
     new MutationObserver(()=>{if(!$('#sheet').classList.contains('on')&&el.classList.contains('on')&&$('#stuList'))$('#stuList').innerHTML=stuRows()}).observe($('#sheet'),{attributes:true,attributeFilter:['class']});
   }
@@ -647,8 +646,45 @@ document.addEventListener('touchend',e=>{if(pinch){if(!pinch.s){pinch.s=1;S.zoom
   if(dx>0&&$('#sheet').classList.contains('on'))return;
   if(page==='cal'&&e.target.closest('#main,#strip')&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')){cur=addD(cur,(dx<0?1:-1)*(view==='week'?nd:1));render()}
 },{passive:true});
-let sy2,sx2,sTop,sHd;$('#sheet').addEventListener('touchstart',e=>{const t=e.touches[0];sy2=t.clientY;sx2=t.clientX;sTop=$('#sheet').scrollTop;sHd=!e.target.closest('.wcol,input,textarea')&&t.clientY-$('#sheet').getBoundingClientRect().top<110},{passive:true});
-$('#sheet').addEventListener('touchend',e=>{const t=e.changedTouches[0],dy=t.clientY-sy2,dx=Math.abs(t.clientX-sx2);if(dy>80&&dx<dy*.8&&(sHd||(sTop===0&&$('#sheet').scrollTop===0&&!e.target.closest('.wcol'))))closeAll()},{passive:true});
+/* Плавное закрытие нижних окон жестом вниз (как в Авито): окно тянется за пальцем, только когда внутри нечего листать */
+function sheetDrag(el,onClose){
+  const sc=$('#scrim'),mob=()=>matchMedia('(max-width:899px)').matches,EZ='cubic-bezier(.2,.8,.2,1)';
+  let y0=0,x0=0,ly=0,lt=0,v=0,d=0,on=false,ok=false,can=false;
+  el.addEventListener('touchstart',e=>{
+    ok=e.touches.length===1&&mob()&&el.classList.contains('on')&&!e.target.closest('.wcol,.sg,textarea');on=false;v=0;d=0;can=el.scrollTop<1;   /* закрытие только жестом, начатым уже у самого верха */
+    if(!ok)return;const t=e.touches[0];y0=ly=t.clientY;x0=t.clientX;lt=e.timeStamp},{passive:true});
+  el.addEventListener('touchmove',e=>{
+    if(!ok)return;
+    if(e.touches.length!==1){if(on)snap();ok=false;return}
+    const y=e.touches[0].clientY;
+    if(!on){
+      if(el.scrollTop>=1)can=false;   /* в этом жесте листали — первое доведение до верха окно не закрывает */
+      if(!can)return;
+      const dy=y-y0,dx=Math.abs(e.touches[0].clientX-x0);
+      if(dy>6&&dy>dx){on=true;y0=y;el.style.transition='none';sc.style.transition='none'}
+      else{if(dy<0)y0=y;ly=y;lt=e.timeStamp;return}
+    }
+    if(e.cancelable)e.preventDefault();
+    d=Math.max(0,y-y0);
+    const dt=e.timeStamp-lt;if(dt>0)v=(y-ly)/dt;ly=y;lt=e.timeStamp;
+    el.style.transform='translateY('+d+'px)';
+    sc.style.opacity=Math.max(0,1-d/(el.offsetHeight*.9));
+  },{passive:false});
+  function snap(){
+    el.style.transition='transform .3s '+EZ;el.style.transform='';sc.style.transition='opacity .3s';sc.style.opacity='';
+    setTimeout(()=>{el.style.transition='';sc.style.transition=''},320);
+  }
+  function end(e){
+    if(!ok||!on){ok=false;return}
+    ok=on=false;
+    if(e.type!=='touchcancel'&&(d>Math.min(160,el.offsetHeight*.3)||(v>.5&&d>30))){
+      el.style.transition='transform .28s '+EZ;el.style.transform='translateY(105%)';sc.style.transition='opacity .28s';sc.style.opacity='0';
+      setTimeout(()=>{el.style.transition='none';onClose();el.style.transform='';sc.style.opacity='';void el.offsetWidth;el.style.transition='';sc.style.transition=''},290);
+    }else snap();
+  }
+  el.addEventListener('touchend',end,{passive:true});el.addEventListener('touchcancel',end,{passive:true});
+}
+sheetDrag($('#sheet'),closeAll);
 
 /* PWA: icon, manifest, install */
 (function(){
