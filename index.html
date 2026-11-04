@@ -127,6 +127,7 @@ body{padding-left:min(82vw,280px)}
 @media (min-width:900px){
 .sheet.full{top:50%;left:50%;right:auto;bottom:auto;width:min(520px,calc(100% - 48px));height:auto;max-height:calc(100% - 64px);border-radius:24px;padding:28px;transform:translate(-50%,-47%) scale(.97);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.2,.8,.2,1),opacity .2s;box-shadow:var(--sh)}
 .sheet.full.on{transform:translate(-50%,-50%);opacity:1;pointer-events:auto}
+.sheet.full.an{height:min(780px,calc(100% - 64px))}
 .sheet.full h3{padding-right:48px;min-height:36px;display:flex;align-items:center}
 .sheet.full .xbtn{display:grid;place-items:center;position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:var(--bg2);z-index:2}
 #scrim.blur{background:rgba(0,0,0,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
@@ -267,7 +268,7 @@ function anHtml(){
   const ttl=an.per==='m'?MN[M]+' '+Y:an.per==='y'?String(Y):'Всё время';
   return `<button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>`+`<h3 style="text-transform:capitalize">Аналитика</h3>
   <div class="seg" style="margin-bottom:12px"><button class="${an.per==='m'?'on':''}" data-ap="m">Месяц</button><button class="${an.per==='y'?'on':''}" data-ap="y">Год</button><button class="${an.per==='all'?'on':''}" data-ap="all">Всё время</button></div>
-  <div style="display:flex;align-items:center;margin-bottom:12px">${an.per==='all'?'':'<button class="ib" data-ao="-1" aria-label="Назад">‹</button>'}<b style="text-transform:capitalize;flex:1;text-align:center">${ttl}</b>${an.per==='all'?'':'<button class="ib" data-ao="1" aria-label="Вперёд">›</button>'}</div>
+  <div style="display:flex;align-items:center;margin-bottom:12px"><button class="ib" data-ao="-1" aria-label="Назад" ${an.per==='all'?'style="visibility:hidden" tabindex="-1"':''}>‹</button><b style="text-transform:capitalize;flex:1;text-align:center">${ttl}</b><button class="ib" data-ao="1" aria-label="Вперёд" ${an.per==='all'?'style="visibility:hidden" tabindex="-1"':''}>›</button></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">${kpi('Доход',rub(inc))}${kpi('Занятий',cnt)}${kpi('Часов',H(hrs))}${kpi('Средний чек',rub(cnt?inc/cnt:0))}</div>
   ${byT}
   ${chart?`<div class="card" style="margin:0 0 10px"><small style="color:var(--tx2)">${ct}</small>${chart}</div>`:''}
@@ -275,7 +276,7 @@ function anHtml(){
   <div class="card" style="margin:0 0 10px"><div class="r"><b>За всё время</b><span>${rub(aInc)}</span></div><div class="r"><span>${all.length} занятий</span><span>${H(aH)}</span></div></div>
   <p style="color:var(--tx2);font-size:13px;margin:0">Доход считается по ставкам: урок ${rub(+(S.rate&&S.rate.lesson)||0)}/ч, запись ${rub(+(S.rate&&S.rate.rec)||0)}/ч.</p>`;
 }
-function analytics(){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()};fullNext=true;sheet(anHtml())}
+function analytics(){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()};fullNext=true;sheet(anHtml());$('#sheet').classList.add('an')}
 function settings(){
   fullNext=true;
   sheet(`<button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button><h3>Настройки</h3>
@@ -284,7 +285,7 @@ function settings(){
 }
 
 let tallNext=false,fullNext=false;
-const sheet=html=>{const sh=$('#sheet');$('#scrim').classList.toggle('blur',fullNext);$('#sheetBody').innerHTML=html;sh.style.transition='none';sh.classList.toggle('tall',tallNext);sh.classList.toggle('full',fullNext);tallNext=fullNext=false;void sh.offsetWidth;sh.style.transition='';void sh.offsetWidth;sh.classList.add('on');$('#scrim').classList.add('on')};
+const sheet=html=>{const sh=$('#sheet');$('#scrim').classList.toggle('blur',fullNext);$('#sheetBody').innerHTML=html;sh.style.transition='none';sh.classList.remove('an');sh.classList.toggle('tall',tallNext);sh.classList.toggle('full',fullNext);tallNext=fullNext=false;void sh.offsetWidth;sh.style.transition='';void sh.offsetWidth;sh.classList.add('on');$('#scrim').classList.add('on')};
 const closeAll=()=>{$('#scrim').classList.remove('blur');$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
 const openDrawer=()=>{$('#drawer').classList.add('on');$('#scrim').classList.add('on')};
 
