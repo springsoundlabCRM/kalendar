@@ -222,6 +222,7 @@ body{padding-left:min(82vw,280px)}
 #auth .alg{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;margin-bottom:22px}
 #auth .alg i{width:38px;height:38px;border-radius:12px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-style:normal;font-size:20px}
 #auth h1{margin:0;font-size:26px}#auth .as{margin:6px 0 20px;color:var(--tx2);font-size:14px}
+#auth .pwf{position:relative;display:flow-root}#auth .pwf input{padding-right:52px}#auth .pwe{position:absolute;right:0;top:5px;bottom:0;width:50px;display:grid;place-items:center;color:var(--tx2);border-radius:12px}#auth .pwe:active{color:var(--tx)}#auth input::-ms-reveal{display:none}
 #auth .ars{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:5px}
 #auth .ars button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:14px;border:2px solid var(--ln);background:var(--bg2);text-align:center;font-size:13px}
 #auth .ars button span{font-size:24px}#auth .ars button.on{border-color:var(--ac);background:rgba(255,204,0,.18)}
@@ -267,10 +268,11 @@ if(me){window.__me=me;document.addEventListener('click',e=>{if(e.target.closest(
 const hash=async s=>{s='studio|'+s;if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}let h=5381;for(const c of s)h=(h*33^c.charCodeAt(0))>>>0;return'x'+h};
 const ov=document.createElement('div');ov.id='auth';document.body.appendChild(ov);
 let mode='in',role='vocal';
+const EYE='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',EYE_OFF='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10.8 10.8 0 0 1 12 19c-6.4 0-10-7-10-7a18.6 18.6 0 0 1 4.1-5.1M9.9 5.2A10 10 0 0 1 12 5c6.4 0 10 7 10 7a18.5 18.5 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2"/><path d="M2 2l20 20"/></svg>';
 const draw=()=>{const up=mode==='up';ov.innerHTML=`<div class="aw"><div class="alg"><i>♪</i>Студия</div><h1>${up?'Создать аккаунт':'С возвращением'}</h1><p class="as">${up?'Регистрация займёт минуту':'Войдите, чтобы открыть календарь'}</p>
 <div class="seg" style="margin-bottom:6px"><button data-m="in" class="${up?'':'on'}">Вход</button><button data-m="up" class="${up?'on':''}">Регистрация</button></div>
 ${up?`<label>Имя</label><input id="aN" placeholder="Как вас зовут" maxlength="40" autocomplete="name"><label>Кто вы</label><div class="ars"><button type="button" data-r="vocal" class="${role==='vocal'?'on':''}"><span>🎤</span><b>Преподаватель по вокалу</b></button><button type="button" data-r="sound" class="${role==='sound'?'on':''}"><span>🎚️</span><b>Звукорежиссёр</b></button></div>`:''}
-<label>Почта (Gmail)</label><input id="aE" type="email" autocomplete="email" placeholder="name@gmail.com"><label>Пароль</label><input id="aP" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="${up?'Минимум 6 символов':'Ваш пароль'}"><p class="err" id="aR"></p><button class="btn" id="aGo" style="margin-top:6px">${up?'Зарегистрироваться':'Войти'}</button></div>`;};
+<label>Почта (Gmail)</label><input id="aE" type="email" autocomplete="email" placeholder="name@gmail.com"><label>Пароль</label><div class="pwf"><input id="aP" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="${up?'Минимум 6 символов':'Ваш пароль'}"><button type="button" class="pwe" id="aEye" aria-label="Показать пароль">${EYE}</button></div><p class="err" id="aR"></p><button class="btn" id="aGo" style="margin-top:6px">${up?'Зарегистрироваться':'Войти'}</button></div>`;};
 draw();
 const go=async()=>{const q=s=>ov.querySelector(s),er=t=>q('#aR').textContent=t;
   const em=q('#aE').value.trim().toLowerCase(),pw=q('#aP').value;
@@ -284,7 +286,8 @@ const go=async()=>{const q=s=>ov.querySelector(s),er=t=>q('#aR').textContent=t;
   const id=String(Date.now());
   if(!list.length){const old=localStorage.getItem('studio-crm-v1');if(old)localStorage.setItem('studio-crm-v1-'+id,old)}
   list.push({id,email:em,pass:h,name:nm,role});localStorage.setItem(UK,JSON.stringify(list));localStorage.setItem(SK,id);location.reload()};
-ov.addEventListener('click',e=>{let b;if(b=e.target.closest('[data-m]')){mode=b.dataset.m;return draw()}if(b=e.target.closest('[data-r]')){role=b.dataset.r;ov.querySelectorAll('[data-r]').forEach(x=>x.classList.toggle('on',x===b));return}if(e.target.closest('#aGo'))go()});
+ov.addEventListener('mousedown',e=>{if(e.target.closest('#aEye'))e.preventDefault()});
+ov.addEventListener('click',e=>{let b;if(b=e.target.closest('#aEye')){const i=ov.querySelector('#aP'),sh=i.type==='password';i.type=sh?'text':'password';b.innerHTML=sh?EYE_OFF:EYE;b.setAttribute('aria-label',sh?'Скрыть пароль':'Показать пароль');return}if(b=e.target.closest('[data-m]')){mode=b.dataset.m;return draw()}if(b=e.target.closest('[data-r]')){role=b.dataset.r;ov.querySelectorAll('[data-r]').forEach(x=>x.classList.toggle('on',x===b));return}if(e.target.closest('#aGo'))go()});
 ov.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
 })();
 </script>
@@ -668,7 +671,7 @@ function sheetDrag(el,onClose){
     d=Math.max(0,y-y0);
     const dt=e.timeStamp-lt;if(dt>0)v=(y-ly)/dt;ly=y;lt=e.timeStamp;
     el.style.transform='translateY('+d+'px)';
-    sc.style.opacity=Math.max(0,1-d/(el.offsetHeight*.9));
+    {const pr=Math.min(1,d/el.offsetHeight),q=Math.min(1,Math.max(0,(pr-.6)/.4));sc.style.opacity=1-q*q*(3-2*q)}   /* блюр держится почти до конца, гаснет только в финале */
   },{passive:false});
   function snap(){
     el.style.transition='transform .3s '+EZ;el.style.transform='';sc.style.transition='opacity .3s';sc.style.opacity='';
@@ -678,8 +681,8 @@ function sheetDrag(el,onClose){
     if(!ok||!on){ok=false;return}
     ok=on=false;
     if(e.type!=='touchcancel'&&(d>Math.min(160,el.offsetHeight*.3)||(v>.5&&d>30))){
-      el.style.transition='transform .28s '+EZ;el.style.transform='translateY(105%)';sc.style.transition='opacity .28s';sc.style.opacity='0';
-      setTimeout(()=>{el.style.transition='none';onClose();el.style.transform='';sc.style.opacity='';void el.offsetWidth;el.style.transition='';sc.style.transition=''},290);
+      el.style.transition='transform .28s '+EZ;el.style.transform='translateY(105%)';sc.style.transition='opacity .2s ease-in .1s';sc.style.opacity='0';
+      setTimeout(()=>{el.style.transition='none';onClose();el.style.transform='';sc.style.opacity='';void el.offsetWidth;el.style.transition='';sc.style.transition=''},330);
     }else snap();
   }
   el.addEventListener('touchend',end,{passive:true});el.addEventListener('touchcancel',end,{passive:true});
