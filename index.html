@@ -298,6 +298,23 @@ function anHtml(){
   <p style="color:var(--tx2);font-size:13px;margin:0">Доход считается по ставкам: урок ${rub(+(S.rate&&S.rate.lesson)||0)}/ч, запись ${rub(+(S.rate&&S.rate.rec)||0)}/ч.</p>`;
 }
 function analytics(){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()};fullNext=true;sheet(anHtml());$('#sheet').classList.add('an')}
+/* Ученики на мобильных: та же панель сбоку, что у «Аналитики» и «Настроек» */
+function people(){
+  let el=$('#pplSheet');
+  if(!el){
+    el=document.createElement('div');el.className='sheet full';el.id='pplSheet';
+    $('#sheet').before(el);
+    el.addEventListener('click',e=>{if(e.target.closest('.xbtn,[data-menu]'))el.classList.remove('on')});
+    let y0;el.addEventListener('touchstart',e=>y0=e.touches[0].clientY,{passive:true});
+    el.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-y0>90&&el.scrollTop===0){el.classList.remove('on');$('#scrim').classList.remove('blur','on')}},{passive:true});
+    $('#scrim').addEventListener('click',()=>el.classList.remove('on'));
+    new MutationObserver(()=>{if(!$('#sheet').classList.contains('on')&&el.classList.contains('on')&&$('#stuList'))$('#stuList').innerHTML=stuRows()}).observe($('#sheet'),{attributes:true,attributeFilter:['class']});
+  }
+  el.innerHTML=`<button class="ib mbtn" data-menu aria-label="Меню"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>`+XB+`<h3>Ученики</h3><div class="sth" style="display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-bottom:12px"><button class="btn" data-addstu style="width:auto;margin:0;padding:10px 16px">+ Ученик</button></div><input id="stuQ" placeholder="Поиск ученика" value="${esc(stuQv)}" style="margin:0 0 12px"><div class="stbl"><div class="srow h"><span>Ученик</span><span>Занятий</span><span>Абонемент</span><span>Оплачено</span><span>Последнее</span></div><div id="stuList">${stuRows()}</div></div>`;
+  $('#scrim').classList.add('blur');
+  el.style.transition='none';el.scrollTop=0;void el.offsetWidth;el.style.transition='';void el.offsetWidth;
+  el.classList.add('on');$('#scrim').classList.add('on');
+}
 function settings(){
   fullNext=true;
   sheet(`<button class="ib mbtn" data-menu aria-label="Меню"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button><h3>Настройки</h3>
@@ -426,7 +443,7 @@ document.addEventListener('click',e=>{
   if(b=q('[data-d]')){cur=pd(b.dataset.d);return render()}
   if(b=q('[data-nav]')){cur=addD(cur,+b.dataset.nav);return render()}
   if(b=q('[data-f]')){filt=b.dataset.f;return render()}
-  if(b=q('[data-page]')){if(b.dataset.page==='set'){closeAll();return settings()}if(b.dataset.page==='rep'){closeAll();return analytics()}page=b.dataset.page;closeAll();return render()}
+  if(b=q('[data-page]')){if(b.dataset.page==='set'){closeAll();return settings()}if(b.dataset.page==='rep'){closeAll();return analytics()}if(b.dataset.page==='people'&&matchMedia('(max-width:899px)').matches){closeAll();return people()}page=b.dataset.page;closeAll();return render()}
   if(b=q('#themeSeg button')){S.theme=b.dataset.t;save();return applyTheme()}
   if(b=q('.col')){const r=b.getBoundingClientRect(),m=Math.floor((e.clientY-r.top)/H*4)/4*60+S0*60;return form(null,{date:b.dataset.date,start:m,end:m+60})}
   if(q('#saveSet')){S.rate={rec:+$('#r1').value||0,lesson:+$('#r2').value||0};save();return alert('Сохранено')}
