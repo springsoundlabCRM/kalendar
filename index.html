@@ -162,7 +162,70 @@ body{padding-left:min(82vw,280px)}
 @media (hover:hover) and (pointer:fine){body[data-pg="cal"] .top{padding-top:calc(env(safe-area-inset-top,0px) + 31px)}}
 /* Карточка ученика на компьютере: правая панель, кнопка действия всегда внизу */
 @media (min-width:900px){#scrim.soft{background:rgba(0,0,0,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.sheet.stu .xbtn{display:grid;place-items:center;position:absolute;top:24px;right:24px;width:36px;height:36px;border-radius:50%;background:var(--bg2);z-index:2}.sheet.stu h3{padding-right:48px;min-height:36px;display:flex;align-items:center}.stk{margin:auto 0 -28px;padding:14px 0 28px;position:sticky;bottom:-28px;background:var(--bg)}.stk .btn{margin:0}}
-</style>
+/* Аналитика (компьютер) */
+.ad{max-width:1320px;margin:0 auto;padding-bottom:24px}
+.adh{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.adh h2{margin:0;font-size:26px}.adh p{margin:2px 0 0;color:var(--tx2);font-size:13px;text-transform:capitalize}
+.adn{display:flex;align-items:center;gap:12px}
+.adnv{display:flex;align-items:center;background:var(--bg2);border-radius:12px;padding:3px}
+.adnv .ib{width:34px;height:34px;font-size:20px}.adnv .ib:hover{background:var(--bg)}
+.adnv b{min-width:132px;text-align:center;text-transform:capitalize;font-size:14px}
+.ad .seg{width:290px;flex:none}
+.adk{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.adg{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px;align-items:start}
+.adcol{display:flex;flex-direction:column;gap:14px;min-width:0}
+.adcd{background:var(--bg2);border-radius:18px;padding:18px 20px;min-width:0}
+.adcd h4{margin:0 0 2px;font-size:15px}.adcd .sub{color:var(--tx2);font-size:12px}
+.adhd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.adkl{color:var(--tx2);font-size:12px;font-weight:600;letter-spacing:.02em}
+.adkv{font-size:30px;font-weight:700;margin:6px 0 8px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.adtr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.adt{font-size:12px;color:var(--tx2)}
+.adt.up,.adt.dn{font-weight:700;padding:2px 8px;border-radius:8px}
+.adt.up{color:#1f9d3a;background:rgba(47,179,68,.15)}.adt.dn{color:#e5322d;background:rgba(255,51,51,.14)}
+.adk .adcd:first-child{background:var(--ac);color:var(--acx)}
+.adk .adcd:first-child .adkl,.adk .adcd:first-child .adt{color:rgba(23,23,26,.68)}
+.adk .adcd:first-child .adt.up{color:#0f6b24;background:rgba(255,255,255,.55)}.adk .adcd:first-child .adt.dn{color:#b3140f;background:rgba(255,255,255,.55)}
+.adc{height:300px;display:flex;padding:8px 0 0 46px}
+.adp{position:relative;flex:1;margin-bottom:26px}
+.adl{position:absolute;left:0;right:0;border-top:1px dashed var(--ln)}.adl:last-of-type{border-top-style:solid}
+.adl span{position:absolute;left:-46px;top:-8px;width:38px;text-align:right;font-size:11px;color:var(--tx2)}
+.adb{position:absolute;inset:0;display:flex;align-items:flex-end;gap:5px}
+.adx{flex:1;height:100%;position:relative;display:flex;align-items:flex-end;justify-content:center;min-width:0}
+.adx i{display:block;width:100%;max-width:34px;height:var(--p);min-height:3px;background:var(--ac);border-radius:6px 6px 2px 2px;transition:filter .15s,transform .15s;transform-origin:bottom}
+.adx.z i{opacity:.28}
+.adx:hover i{filter:brightness(.93);transform:scaleY(1.02)}
+.adx small{position:absolute;top:calc(100% + 7px);font-size:10.5px;color:var(--tx2);white-space:nowrap}
+.adx .tip{display:none;position:absolute;bottom:calc(var(--p) + 10px);left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:8px 11px;border-radius:10px;font-size:12px;white-space:nowrap;z-index:6;pointer-events:none;box-shadow:var(--sh);line-height:1.5}
+.adx:hover .tip{display:block}.adx .tip b{display:block;font-size:13px}.adx .tip span{opacity:.7}
+.adx:first-child .tip{left:0;transform:none}.adx:last-child .tip{left:auto;right:0;transform:none}
+.ade{position:absolute;inset:0;display:grid;place-items:center;color:var(--tx2);font-size:14px;pointer-events:none}
+.adsb{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--ln);margin:6px 0 16px;gap:2px}
+.adsb i{display:block;height:100%}
+.adr{display:flex;align-items:center;gap:10px;padding:9px 0}.adr+.adr{border-top:1px solid var(--ln)}
+.add{width:10px;height:10px;border-radius:50%;flex:none}
+.adr .nm{flex:1;min-width:0}.adr .nm b{display:block;font-size:14px}.adr .nm small{color:var(--tx2);font-size:12px}
+.adr .vl{text-align:right;font-variant-numeric:tabular-nums}.adr .vl b{display:block;font-size:14px}.adr .vl small{color:var(--tx2);font-size:12px}
+.adw{display:flex;align-items:flex-end;gap:8px;height:92px;margin-top:14px}
+.adw div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px}
+.adw i{display:block;width:100%;border-radius:6px;background:var(--ac);min-height:4px}
+.adw small{font-size:11px;color:var(--tx2);text-transform:uppercase}.adw .mx i{background:var(--tx)}
+.adtp .sa{width:36px;height:36px}
+.adtp .adr{padding:11px 0}.adtp .pb{margin:6px 0 0;height:5px;background:var(--ln)}
+.adrk{width:18px;color:var(--tx2);font-size:12px;font-weight:700;text-align:center;flex:none}
+.adall{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;margin-top:12px}
+.adall small{color:var(--tx2);font-size:12px;display:block}.adall b{font-size:18px;font-variant-numeric:tabular-nums}
+.adnote{color:var(--tx2);font-size:12px;margin:16px 2px 0}
+@media (min-width:900px) and (max-width:1180px){.adk{grid-template-columns:repeat(2,1fr)}.adg{grid-template-columns:1fr}}
+#auth{position:fixed;inset:0;z-index:100;background:var(--bg2);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+#auth .aw{width:100%;max-width:420px;background:var(--bg);border-radius:24px;padding:32px 28px;box-shadow:var(--sh);margin:auto}
+#auth .alg{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;margin-bottom:22px}
+#auth .alg i{width:38px;height:38px;border-radius:12px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-style:normal;font-size:20px}
+#auth h1{margin:0;font-size:26px}#auth .as{margin:6px 0 20px;color:var(--tx2);font-size:14px}
+#auth .ars{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:5px}
+#auth .ars button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:14px;border:2px solid var(--ln);background:var(--bg2);text-align:center;font-size:13px}
+#auth .ars button span{font-size:24px}#auth .ars button.on{border-color:var(--ac);background:rgba(255,204,0,.18)}
+.ev.oth{opacity:.82;border-left-style:dashed}</style>
 </head>
 <body>
 <header class="top">
@@ -189,17 +252,53 @@ body{padding-left:min(82vw,280px)}
   <button class="nav" data-page="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg> Настройки</button>
   <div class="sp"></div>
   <div class="acc"><i class="av"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></i><span id="accLbl"></span></div>
-</aside>
+<button class="nav" id="logout"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/></svg> Выйти</button></aside>
 <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
 <div class="scrim dpop" id="dpop"><div class="dp" id="dp"></div></div>
 <div class="scrim dpop" id="tpop"><div class="dp"><div id="tpw"></div></div></div>
 
 <script>
-const K='studio-crm-v1';
+/* ===== Вход и регистрация (временно локально; позже заменить на Firebase Auth) ===== */
+(function(){
+const UK='studio-users-v1',SK='studio-session';
+let users=[];try{users=JSON.parse(localStorage.getItem(UK))||[]}catch(e){}
+const me=users.find(u=>u.id===localStorage.getItem(SK));
+if(me){window.__me=me;document.addEventListener('click',e=>{if(e.target.closest('#logout')){localStorage.removeItem(SK);location.reload()}});return}
+const hash=async s=>{s='studio|'+s;if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}let h=5381;for(const c of s)h=(h*33^c.charCodeAt(0))>>>0;return'x'+h};
+const ov=document.createElement('div');ov.id='auth';document.body.appendChild(ov);
+let mode='in',role='vocal';
+const draw=()=>{const up=mode==='up';ov.innerHTML=`<div class="aw"><div class="alg"><i>♪</i>Студия</div><h1>${up?'Создать аккаунт':'С возвращением'}</h1><p class="as">${up?'Регистрация займёт минуту':'Войдите, чтобы открыть календарь'}</p>
+<div class="seg" style="margin-bottom:6px"><button data-m="in" class="${up?'':'on'}">Вход</button><button data-m="up" class="${up?'on':''}">Регистрация</button></div>
+${up?`<label>Имя</label><input id="aN" placeholder="Как вас зовут" maxlength="40" autocomplete="name"><label>Кто вы</label><div class="ars"><button type="button" data-r="vocal" class="${role==='vocal'?'on':''}"><span>🎤</span><b>Преподаватель по вокалу</b></button><button type="button" data-r="sound" class="${role==='sound'?'on':''}"><span>🎚️</span><b>Звукорежиссёр</b></button></div>`:''}
+<label>Почта (Gmail)</label><input id="aE" type="email" autocomplete="email" placeholder="name@gmail.com"><label>Пароль</label><input id="aP" type="password" autocomplete="${up?'new-password':'current-password'}" placeholder="${up?'Минимум 6 символов':'Ваш пароль'}"><p class="err" id="aR"></p><button class="btn" id="aGo" style="margin-top:6px">${up?'Зарегистрироваться':'Войти'}</button></div>`;};
+draw();
+const go=async()=>{const q=s=>ov.querySelector(s),er=t=>q('#aR').textContent=t;
+  const em=q('#aE').value.trim().toLowerCase(),pw=q('#aP').value;
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return er('Введите корректную почту');
+  if(pw.length<6)return er('Пароль — минимум 6 символов');
+  let list=[];try{list=JSON.parse(localStorage.getItem(UK))||[]}catch(e){}
+  const h=await hash(pw);
+  if(mode==='in'){const u=list.find(x=>x.email===em&&x.pass===h);if(!u)return er('Неверная почта или пароль');localStorage.setItem(SK,u.id);return location.reload()}
+  const nm=q('#aN').value.trim();if(!nm)return er('Укажите имя');
+  if(list.some(x=>x.email===em))return er('Эта почта уже зарегистрирована — войдите');
+  const id=String(Date.now());
+  if(!list.length){const old=localStorage.getItem('studio-crm-v1');if(old)localStorage.setItem('studio-crm-v1-'+id,old)}
+  list.push({id,email:em,pass:h,name:nm,role});localStorage.setItem(UK,JSON.stringify(list));localStorage.setItem(SK,id);location.reload()};
+ov.addEventListener('click',e=>{let b;if(b=e.target.closest('[data-m]')){mode=b.dataset.m;return draw()}if(b=e.target.closest('[data-r]')){role=b.dataset.r;ov.querySelectorAll('[data-r]').forEach(x=>x.classList.toggle('on',x===b));return}if(e.target.closest('#aGo'))go()});
+ov.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
+})();
+</script>
+<script>
+if(!window.__me)throw new Error('auth');const ME=window.__me,K='studio-crm-v1-'+ME.id;
 let S={ev:[],rate:{rec:3000,lesson:1500},theme:'auto'};
 try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
-const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
-S.stu=S.stu||[];S.subs=S.subs||[];let stuQv='',stuK='';
+const save=()=>{_ca=null;try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+S.stu=S.stu||[];S.subs=S.subs||[];let stuQv='',stuK='';if(S.name==null)S.name=ME.name;
+const ROLE={vocal:'Преподаватель по вокалу',sound:'Звукорежиссёр'};let _ca=null;
+/* Календарь общий: свои записи + записи остальных пользователей (позже заменить на Firebase) */
+const calAll=()=>{if(_ca)return _ca;const r=S.ev.map(e=>({...e,own:1,owner:S.name||ME.name,role:ME.role}));let us=[];try{us=JSON.parse(localStorage.getItem('studio-users-v1'))||[]}catch(x){}
+  us.forEach(u=>{if(u.id===ME.id)return;try{const d=JSON.parse(localStorage.getItem('studio-crm-v1-'+u.id)||'{}');(d.ev||[]).forEach(e=>r.push({...e,id:u.id+':'+e.id,own:0,owner:d.name||u.name,role:u.role}))}catch(x){}});return _ca=r};
+addEventListener('storage',()=>{_ca=null;render()});
 const key=n=>String(n||'').trim().toLowerCase();
 const allStu=()=>{const m=new Map();S.stu.forEach(s=>m.set(key(s.name),s.name));S.ev.forEach(e=>{const k=key(e.person);if(k&&!m.has(k))m.set(k,e.person.trim())});return[...m]};
 function subUnit(k,ex){const su=S.subs.filter(x=>x.k===k).sort((a,b)=>(a.date+a.id).localeCompare(b.date+b.id));let used=S.ev.filter(e=>key(e.person)===k&&e.pay==='sub'&&e.id!==ex).length;for(const x of su){if(used<x.total)return x.unit||(x.price/x.total)||0;used-=x.total}return null}
@@ -236,9 +335,9 @@ function applyTheme(){const r=document.documentElement;S.theme==='auto'?r.remove
   $$('#themeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.theme))}
 const weekStart=d=>{const x=new Date(d);x.setDate(x.getDate()-(x.getDay()+6)%7);return x};
 const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
-const evOn=d=>S.ev.filter(e=>e.date===iso(d)&&(filt==='all'||e.type===filt)).sort((a,b)=>a.start-b.start);
+const evOn=d=>calAll().filter(e=>e.date===iso(d)&&(filt==='all'||e.type===filt)).sort((a,b)=>a.start-b.start);
 
-function render(){
+function render(){_ca=null;
   const cal=page==='cal';document.body.dataset.pg=page;
   $('#nv').style.display=$('#todayBtn').style.display=$('#vw').style.display=cal?'':'none';$('#zm').style.display=cal&&view!=='month'?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';$('#pgClose').style.display=cal?'none':'';
   $$('.nav[data-page]').forEach(n=>n.classList.toggle('on',n.dataset.page===page));
@@ -252,7 +351,7 @@ function render(){
   const days=view==='day'?[cur]:[...Array(nd)].map((_,i)=>addD(nd===7?ws:cur,i));
   const rul=[...Array(24-S0)].map((_,i)=>`<div>${pad(S0+i)}:00</div>`).join('');
   const nowM=new Date().getHours()*60+new Date().getMinutes();
-  const cols=days.map(d=>{const items=evOn(d).map(e=>`<div class="ev ${e.type}" data-id="${e.id}" style="top:${(e.start-S0*60)/60*H}px;height:${Math.max((e.end-e.start)/60*H-2,22)}px"><b>${esc(e.person)}</b></div>`).join('');
+  const cols=days.map(d=>{const items=evOn(d).map(e=>`<div class="ev ${e.type}${e.own?'':' oth'}" title="${esc(e.owner)}" data-id="${e.id}" style="top:${(e.start-S0*60)/60*H}px;height:${Math.max((e.end-e.start)/60*H-2,22)}px"><b>${esc(e.person)}</b>${e.own?'':'<span>'+esc(e.owner)+'</span>'}</div>`).join('');
     const nl=iso(d)===td&&nowM>=S0*60?`<div class="now" style="top:${(nowM-S0*60)/60*H}px"></div>`:'';
     return `<div class="col${iso(d)===td?' today':''}" data-date="${iso(d)}">${items}${nl}</div>`}).join('');
   const wh='<div class="wh">'+days.map(d=>`<div class="${iso(d)===td?'on':''}" data-go="${iso(d)}"><small>${DN[(d.getDay()+6)%7]}</small><i>${d.getDate()}</i></div>`).join('')+'</div>';
@@ -299,7 +398,40 @@ function anHtml(desk){
   const top=Object.entries(pm).sort((a,b)=>b[1].m-a[1].m||b[1].h-a[1].h).slice(0,5).map(([n,o])=>`<div class="r"><span>${esc(n)} · ${o.c}</span><span>${rub(o.m)}</span></div>`).join('');
   const all=S.ev,aInc=sum(all,e=>hr(e)*rt(e)),aH=sum(all,hr);
   const ttl=an.per==='m'?MN[M]+' '+Y:an.per==='y'?String(Y):'Всё время';
-  if(desk){const hid=an.per==='all'?' style="visibility:hidden" tabindex="-1"':'';const per=`<div class="seg" style="width:300px;flex:none"><button class="${an.per==='m'?'on':''}" data-ap="m">Месяц</button><button class="${an.per==='y'?'on':''}" data-ap="y">Год</button><button class="${an.per==='all'?'on':''}" data-ap="all">Всё время</button></div>`;const nv=`<div style="display:flex;align-items:center"><button class="ib" data-ao="-1" aria-label="Назад"${hid}>‹</button><b style="text-transform:capitalize;min-width:150px;text-align:center">${ttl}</b><button class="ib" data-ao="1" aria-label="Вперёд"${hid}>›</button></div>`;const note=`<p style="color:var(--tx2);font-size:13px;margin:16px 0 0">Доход считается по ставкам: урок ${rub(+(S.rate&&S.rate.lesson)||0)}/ч, запись ${rub(+(S.rate&&S.rate.rec)||0)}/ч.</p>`;return `<div class="anp"><div class="anh"><h2 style="margin:0">Аналитика</h2><div class="anc">${nv}${per}</div></div><div class="ank">${kpi('Доход',rub(inc))}${kpi('Занятий',cnt)}${kpi('Часов',H(hrs))}${kpi('Средний чек',rub(cnt?inc/cnt:0))}</div><div class="ang"><div>${byT}${top?`<div class="card" style="margin:0 0 10px"><b>Топ имён</b>${top}</div>`:''}</div><div>${chart?`<div class="card" style="margin:0 0 10px"><small style="color:var(--tx2)">${ct}</small>${chart}</div>`:''}<div class="card" style="margin:0 0 10px"><div class="r"><b>За всё время</b><span>${rub(aInc)}</span></div><div class="r"><span>${all.length} занятий</span><span>${H(aH)}</span></div></div></div></div>${note}</div>`}
+  if(desk){
+    const mon=a=>sum(a,e=>hr(e)*rt(e)),RM=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    const pk=an.per==='m'?(()=>{const d=new Date(Y,M-1,1);return d.getFullYear()+'-'+pad(d.getMonth()+1)})():an.per==='y'?(Y-1)+'-':null;
+    const P=pk?S.ev.filter(e=>e.date.startsWith(pk)):null,vs=an.per==='m'?'к прошлому месяцу':'к прошлому году';
+    const dl=(c,p)=>{if(!P)return '<span class="adt">за весь период</span>';if(!p)return '<span class="adt">нет данных для сравнения</span>';const x=Math.round((c-p)/p*100),up=x>=0;return `<span class="adt ${up?'up':'dn'}">${up?'↑':'↓'} ${Math.abs(x)}%</span><span class="adt">${vs}</span>`};
+    const avg=cnt?inc/cnt:0,pc=P?P.length:0,pi=P?mon(P):0,ph=P?sum(P,hr):0;
+    const kp=(t,v,d)=>`<div class="adcd"><div class="adkl">${t}</div><div class="adkv">${v}</div><div class="adtr">${d}</div></div>`;
+    /* график */
+    let bk=[];
+    if(an.per==='m'){const n=new Date(Y,M+1,0).getDate();bk=[...Array(n)].map((_,k)=>({l:String(k+1),t:new Date(Y,M,k+1).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}),m:0,c:0}));L.forEach(e=>{const b=bk[+e.date.slice(8,10)-1];if(b){b.m+=hr(e)*rt(e);b.c++}})}
+    else if(an.per==='y'){bk=RM.map((l,k)=>({l,t:MN[k]+' '+Y,m:0,c:0}));L.forEach(e=>{const b=bk[+e.date.slice(5,7)-1];if(b){b.m+=hr(e)*rt(e);b.c++}})}
+    else{bk=[...new Set(S.ev.map(e=>e.date.slice(0,4)))].sort().map(y=>{const a=S.ev.filter(e=>e.date.startsWith(y));return{l:y,t:y+' год',m:mon(a),c:a.length}})}
+    const mx=Math.max(...bk.map(b=>b.m),0),nice=x=>{if(x<=0)return 4000;const p=Math.pow(10,Math.floor(Math.log10(x))),f=x/p;return(f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p},top=nice(mx);
+    const ax=v=>v>=1000?(+(v/1000).toFixed(1)).toLocaleString('ru-RU')+' тыс':String(Math.round(v));
+    const grid=[0,1,2,3,4].map(i=>`<div class="adl" style="bottom:${i*25}%"><span>${ax(top*i/4)}</span></div>`).join('');
+    const bars=bk.map(b=>`<div class="adx${b.m?'':' z'}" style="--p:${(b.m/top*100).toFixed(2)}%"><div class="tip"><b>${rub(b.m)}</b><span>${b.t} · ${b.c} зан.</span></div><i></i><small>${bk.length>20&&(+b.l%2===0)&&an.per==='m'?'':b.l}</small></div>`).join('');
+    const ct=an.per==='m'?'по дням':an.per==='y'?'по месяцам':'по годам';
+    const chart=`<div class="adcd"><div class="adhd"><div><h4>Динамика дохода</h4><span class="sub">${ct}</span></div><div style="text-align:right"><div class="adkl">Максимум</div><b>${rub(mx)}</b></div></div><div class="adc"><div class="adp">${grid}<div class="adb">${bars}</div>${mx?'':'<div class="ade">Нет данных за выбранный период</div>'}</div></div></div>`;
+    /* структура */
+    const ty=['lesson','rec'].map(t=>{const a=L.filter(e=>e.type===t);return{t,n:a.length,m:mon(a),h:sum(a,hr)}}),tot=inc||1;
+    const struct=`<div class="adcd"><h4>Структура дохода</h4><div class="adsb">${ty.map(o=>o.m?`<i style="width:${o.m/tot*100}%;background:var(--${o.t})"></i>`:'').join('')}</div>${ty.map(o=>`<div class="adr"><i class="add" style="background:var(--${o.t})"></i><div class="nm"><b>${T[o.t].n}</b><small>${o.n} зан. · ${H(o.h)}</small></div><div class="vl"><b>${rub(o.m)}</b><small>${Math.round(o.m/tot*100)}%</small></div></div>`).join('')}</div>`;
+    /* дни недели */
+    const wd=Array(7).fill(0);L.forEach(e=>wd[(pd(e.date).getDay()+6)%7]++);const wm=Math.max(...wd,1);
+    const week=`<div class="adcd"><h4>Загрузка по дням недели</h4><span class="sub">количество занятий</span><div class="adw">${wd.map((v,i)=>`<div class="${v===wm&&v?'mx':''}" title="${v}"><i style="height:${v/wm*100}%;${v?'':'opacity:.25'}"></i><small>${DN[i]}</small></div>`).join('')}</div></div>`;
+    /* топ учеников */
+    const tp=Object.entries(pm).sort((a,b)=>b[1].m-a[1].m||b[1].h-a[1].h).slice(0,6),tm0=tp.length?tp[0][1].m||1:1;
+    const tops=`<div class="adcd adtp"><div class="adhd" style="margin-bottom:4px"><div><h4>Топ клиентов</h4><span class="sub">по доходу за период</span></div></div>${tp.length?tp.map(([n,o],i)=>`<div class="adr"><span class="adrk">${i+1}</span><i class="sa">${esc(n[0].toUpperCase())}</i><div class="nm"><b>${esc(n)}</b><div class="pb"><i style="width:${o.m/tm0*100}%"></i></div></div><div class="vl"><b>${rub(o.m)}</b><small>${o.c} зан. · ${H(o.h)}</small></div></div>`).join(''):'<div class="empty" style="padding:22px 0">Нет данных</div>'}</div>`;
+    const allc=`<div class="adcd"><h4>За всё время</h4><div class="adall"><div><small>Доход</small><b>${rub(aInc)}</b></div><div><small>Занятий</small><b>${all.length}</b></div><div><small>Часов</small><b>${H(aH)}</b></div><div><small>Клиентов</small><b>${allStu().length}</b></div></div></div>`;
+    const hid=an.per==='all'?' style="visibility:hidden" tabindex="-1"':'';
+    return `<div class="ad"><div class="adh"><div><h2>Аналитика</h2><p>${ttl}</p></div><div class="adn"><div class="adnv"><button class="ib" data-ao="-1" aria-label="Назад"${hid}>‹</button><b>${ttl}</b><button class="ib" data-ao="1" aria-label="Вперёд"${hid}>›</button></div><div class="seg"><button class="${an.per==='m'?'on':''}" data-ap="m">Месяц</button><button class="${an.per==='y'?'on':''}" data-ap="y">Год</button><button class="${an.per==='all'?'on':''}" data-ap="all">Всё время</button></div></div></div>
+    <div class="adk">${kp('Доход',rub(inc),dl(inc,pi))}${kp('Занятий',cnt,dl(cnt,pc))}${kp('Часов',H(hrs),dl(hrs,ph))}${kp('Средний чек',rub(avg),dl(avg,pc?pi/pc:0))}</div>
+    <div class="adg"><div class="adcol">${chart}${tops}</div><div class="adcol">${struct}${week}${allc}</div></div>
+    <p class="adnote">Доход считается по ставкам: урок ${rub(+(S.rate&&S.rate.lesson)||0)}/ч, запись ${rub(+(S.rate&&S.rate.rec)||0)}/ч — либо по цене, указанной в записи.</p></div>`;
+  }
   return `<button class="ib mbtn" data-menu aria-label="Меню"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>`+`<h3 style="text-transform:capitalize">Аналитика</h3>
   <div class="seg" style="margin-bottom:12px"><button class="${an.per==='m'?'on':''}" data-ap="m">Месяц</button><button class="${an.per==='y'?'on':''}" data-ap="y">Год</button><button class="${an.per==='all'?'on':''}" data-ap="all">Всё время</button></div>
   <div style="display:flex;align-items:center;margin-bottom:12px"><button class="ib" data-ao="-1" aria-label="Назад" ${an.per==='all'?'style="visibility:hidden" tabindex="-1"':''}>‹</button><b style="text-transform:capitalize;flex:1;text-align:center">${ttl}</b><button class="ib" data-ao="1" aria-label="Вперёд" ${an.per==='all'?'style="visibility:hidden" tabindex="-1"':''}>›</button></div>
@@ -345,13 +477,13 @@ const openDrawer=()=>{$('#drawer').classList.add('on');$('#scrim').classList.add
 let toastT;const toast=t=>{let el=$('#toast');if(!el){el=document.createElement('div');el.id='toast';el.className='toast';document.body.appendChild(el)}el.textContent=t;void el.offsetWidth;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),1800)};
 
 function detail(id){
-  const e=S.ev.find(x=>x.id===id);if(!e)return;
+  const e=calAll().find(x=>x.id===id);if(!e)return;
   sheet(`<h3>${esc(e.person)}</h3><span class="badge" style="background:var(--${e.type})">${T[e.type].n}</span>
-  <div class="card" style="margin-top:12px"><div class="r"><span>Дата</span><span>${pd(e.date).toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long'})}</span></div><div class="r"><span>Время</span><span>${hm(e.start)}–${hm(e.end)}</span></div>${e.note?`<div class="r"><span>Заметка</span><span>${esc(e.note)}</span></div>`:''}</div>
-  <button class="btn" data-edit="${id}">Изменить</button><button class="btn d" data-del="${id}">Удалить</button>`);
+  <div class="card" style="margin-top:12px"><div class="r"><span>Дата</span><span>${pd(e.date).toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long'})}</span></div><div class="r"><span>Время</span><span>${hm(e.start)}–${hm(e.end)}</span></div><div class="r"><span>Ведёт</span><span>${esc(e.owner)} · ${ROLE[e.role]||''}</span></div>${e.note?`<div class="r"><span>Заметка</span><span>${esc(e.note)}</span></div>`:''}</div>
+  ${e.own?`<button class="btn" data-edit="${id}">Изменить</button><button class="btn d" data-del="${id}">Удалить</button>`:'<p class="empty" style="padding:14px 0 0">Это запись другого пользователя — только просмотр</p>'}`);
 }
 function form(id,pre){
-  const e=S.ev.find(x=>x.id===id)||Object.assign({type:'lesson',person:'',date:iso(cur),start:10*60,end:11*60,note:''},pre||{});
+  const e=S.ev.find(x=>x.id===id)||Object.assign({type:ME.role==='sound'?'rec':'lesson',person:'',date:iso(cur),start:10*60,end:11*60,note:''},pre||{});
   let type=e.type,dval=e.date,dm=pd(e.date);const desk=matchMedia('(min-width:900px)').matches;let ts=e.start,te=e.end,tact=null,bk=null;
   tallNext=true;
   sheet(`<h3>${id?'Изменить':'Новая запись'}</h3>
@@ -415,7 +547,7 @@ function form(id,pre){
     const n={id:id||String(Date.now()),type,person:$('#fPerson').value.trim(),date:dval,start:ts,end:te,note:$('#fNote').value.trim(),pay,price:$('#fPrice').value.trim()===''?undefined:Math.max(0,+$('#fPrice').value||0)};
     const er=t=>$('#fErr').textContent=t;
     if(!n.person)return er('Укажите имя');if(!n.date)return er('Укажите дату');if(n.end<=n.start)return er('Конец должен быть позже начала');
-    const c=S.ev.find(x=>x.id!==n.id&&x.date===n.date&&x.start<n.end&&n.start<x.end);
+    const c=calAll().find(x=>x.id!==n.id&&x.date===n.date&&x.start<n.end&&n.start<x.end);
     if(c)return er(`Студия занята: ${c.person}, ${hm(c.start)}–${hm(c.end)}`);
     if(pay==='sub'&&stat(key(n.person),n.id).left<=0)return er('В абонементе не осталось занятий');
     if(!S.stu.some(x=>key(x.name)===key(n.person)))S.stu.push({id:n.id,name:n.person});
@@ -430,7 +562,7 @@ function setZoom(nh,fy){
   if(!c){H=nh;document.documentElement.style.setProperty('--h',H+'px');return}
   const off=c.offsetTop,t=(m.scrollTop+fy-off)/H;
   H=nh;document.documentElement.style.setProperty('--h',H+'px');
-  $$('.ev').forEach(el=>{const e=S.ev.find(x=>x.id===el.dataset.id);if(!e)return;el.style.top=(e.start-S0*60)/60*H+'px';el.style.height=Math.max((e.end-e.start)/60*H-2,22)+'px'});
+  $$('.ev').forEach(el=>{const e=calAll().find(x=>x.id===el.dataset.id);if(!e)return;el.style.top=(e.start-S0*60)/60*H+'px';el.style.height=Math.max((e.end-e.start)/60*H-2,22)+'px'});
   const n=$('.now');if(n){const d=new Date();n.style.top=(d.getHours()*60+d.getMinutes()-S0*60)/60*H+'px'}
   m.scrollTop=t*H+off-fy;
 }
@@ -517,7 +649,7 @@ if($('#instBtn'))$('#instBtn').onclick=async()=>{
   sheet(`<h3>Установка на телефон</h3><div class="card"><div class="r"><b>iPhone (Safari)</b></div><div>Нажмите «Поделиться» → «На экран „Домой“».</div></div><div class="card"><div class="r"><b>Android (Chrome)</b></div><div>Меню ⋮ → «Установить приложение» или «Добавить на главный экран».</div></div><button class="btn g" onclick="closeAll()">Понятно</button>`);
 };
 
-const accUpd=()=>{$('#accLbl').textContent=S.name||'Преподаватель 1'};
+const accUpd=()=>{$('#accLbl').innerHTML=esc(S.name||ME.name)+'<br><small style="color:var(--tx2);font-weight:400">'+ROLE[ME.role]+'</small>'};
 accUpd();applyTheme();render();
 setInterval(()=>{if(page==='cal'&&!$('#sheet').classList.contains('on'))render()},60000);
 </script>
