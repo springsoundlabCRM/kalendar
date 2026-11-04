@@ -154,6 +154,9 @@ body{padding-left:min(82vw,280px)}
 .vmenu button.on::after{content:"✓";color:var(--tx2)}
 .toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 16px);transform:translate(-50%,-12px);background:var(--tx);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:600;font-size:14px;box-shadow:var(--sh);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;white-space:nowrap}.toast.on{opacity:1;transform:translate(-50%,0)}
 #fPriceOk.done{pointer-events:none}#fPriceOk:disabled{opacity:1}.gp{stroke-dasharray:21;stroke-dashoffset:0}.gp.draw{animation:ckdraw .4s ease-out}@keyframes ckdraw{from{stroke-dashoffset:21}to{stroke-dashoffset:0}}
+/* Календарь: название месяца на одном уровне с заголовками «Ученики», «Аналитика», «Настройки» */
+@media (max-width:899px){body[data-pg="cal"] .top{padding-top:calc(env(safe-area-inset-top,0px) + 14px)}body[data-pg="cal"] .ttl{padding-left:6px}body[data-pg="cal"] .ttl b{font-size:20px}}
+@media (hover:hover) and (pointer:fine){body[data-pg="cal"] .top{padding-top:calc(env(safe-area-inset-top,0px) + 31px)}}
 </style>
 </head>
 <body>
@@ -234,7 +237,7 @@ function render(){
   $$('.nav[data-page]').forEach(n=>n.classList.toggle('on',n.dataset.page===page));
   if(!cal){const t={people:'Ученики',rep:'Загрузка',set:'Настройки'}[page];$('#title').textContent=t;$('#sub').textContent='';pages();return}
   $('#title').textContent=MN[cur.getMonth()];
-  $('#sub').textContent=view==='day'?cur.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}):view==='week'?(()=>{const a=nd===7?weekStart(cur):cur,b=addD(a,nd-1),o={day:'numeric',month:'long'};return a.getMonth()===b.getMonth()?a.getDate()+' – '+b.toLocaleDateString('ru-RU',o):a.toLocaleDateString('ru-RU',o)+' – '+b.toLocaleDateString('ru-RU',o)})():'Месяц';
+  $('#sub').textContent='';
   
   $$('#vmenu button').forEach(b=>b.classList.toggle('on',view==='month'?b.dataset.vm==='m':+b.dataset.vm===nd));
   const ws=weekStart(cur),td=iso(new Date());
