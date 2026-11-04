@@ -134,8 +134,10 @@ body{padding-left:min(82vw,280px)}
 #scrim.blur{background:rgba(0,0,0,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 }
 .xbtn,.mbtn{display:none}
+@media (max-width:899px){body:not([data-pg="cal"]) .top{padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 8px 4px}body:not([data-pg="cal"]) .ttl{padding-left:6px}body:not([data-pg="cal"]) .ttl b{font-size:20px}#pgClose{background:var(--bg2);border-radius:50%}#pgClose svg{width:18px;height:18px}.sth{justify-content:flex-end!important}.sth h2{display:none}}
+@media (min-width:900px){body[data-pg="people"] #title{display:none}}
 .bars{display:flex;align-items:flex-end;gap:3px;height:120px;margin-top:10px}.bc{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}.bc i{display:block;width:100%;background:var(--ac);border-radius:4px 4px 0 0;min-height:2px}.bc small{font-size:10px;color:var(--tx2);margin-top:4px;height:12px;line-height:12px}
-@media (max-width:899px){.sheet.full .mbtn{display:grid;place-items:center;position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:4px;width:48px;height:48px;z-index:2}.sheet.full:has(.mbtn) h3{padding-left:46px}.sheet.full{top:0;bottom:0;left:0;right:0;height:100%;max-height:none;border-radius:0;padding-top:calc(env(safe-area-inset-top,0px) + 18px);transform:translateX(105%)}.sheet.full.on{transform:none}.sheet.full .grab{display:none}.sheet.full h3{padding-right:48px;min-height:40px;display:flex;align-items:center;margin-bottom:14px}.sheet.full .xbtn{display:grid;place-items:center;position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:16px;width:40px;height:40px;border-radius:50%;background:var(--bg2);z-index:2}}
+@media (max-width:899px){.sheet.full .mbtn{display:grid;place-items:center;position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);left:4px;width:48px;height:48px;z-index:2}.sheet.full:has(.mbtn) h3{padding-left:46px}.sheet.full{top:0;bottom:0;left:0;right:0;height:100%;max-height:none;border-radius:0;padding-top:calc(env(safe-area-inset-top,0px) + 18px);transform:translateX(105%)}.sheet.full.on{transform:none}.sheet.full .grab{display:none}.sheet.full h3{padding-right:48px;min-height:40px;display:flex;align-items:center;margin-bottom:14px}.sheet.full .xbtn{display:grid;place-items:center;position:absolute;top:calc(env(safe-area-inset-top,0px) + 18px);right:16px;width:40px;height:40px;border-radius:50%;background:var(--bg2);z-index:2}}
 @media (max-width:899px){.sheet.tall{height:calc(100% - env(safe-area-inset-top,0px) - 28px);max-height:none;display:flex;flex-direction:column}.sheet.tall .grab{flex:none}.sheet.tall #sheetBody{flex:1;display:flex;flex-direction:column}.sheet.tall #fSave,.sheet.tall #saveStu{margin-top:auto}.sheet.tall #fErr{margin-bottom:14px}}
 @media (min-width:900px){.sheet{display:flex;flex-direction:column}#sheetBody{flex:1;display:flex;flex-direction:column}#fSave,#saveStu{margin-top:auto}#fErr{margin-bottom:14px}}
 .srow{display:grid;grid-template-columns:2fr 1fr 1.6fr 1fr 1fr;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--ln)}.srow:not(.h){cursor:pointer}.srow.h{color:var(--tx2);font-size:12px;font-weight:600}.srow:not(.h):hover{background:var(--bg2)}.stbl{border:1px solid var(--ln);border-radius:16px;overflow:hidden}.stbl .srow:last-child{border-bottom:0}.sn{display:flex;align-items:center;gap:10px;min-width:0}.sn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sa{width:34px;height:34px;border-radius:50%;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-style:normal;font-weight:700;flex:none}.pb{height:6px;border-radius:3px;background:var(--bg2);overflow:hidden;margin-bottom:4px}.pb i{display:block;height:100%;background:var(--ac)}.srow small{color:var(--tx2)}
@@ -224,10 +226,10 @@ const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
 const evOn=d=>S.ev.filter(e=>e.date===iso(d)&&(filt==='all'||e.type===filt)).sort((a,b)=>a.start-b.start);
 
 function render(){
-  const cal=page==='cal';
+  const cal=page==='cal';document.body.dataset.pg=page;
   $('#nv').style.display=$('#todayBtn').style.display=$('#vw').style.display=cal?'':'none';$('#zm').style.display=cal&&view!=='month'?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';$('#pgClose').style.display=cal?'none':'';
   $$('.nav[data-page]').forEach(n=>n.classList.toggle('on',n.dataset.page===page));
-  if(!cal){const t={people:'',rep:'Загрузка',set:'Настройки'}[page];$('#title').textContent=t;$('#sub').textContent='';pages();return}
+  if(!cal){const t={people:'Ученики',rep:'Загрузка',set:'Настройки'}[page];$('#title').textContent=t;$('#sub').textContent='';pages();return}
   $('#title').textContent=MN[cur.getMonth()];
   $('#sub').textContent=view==='day'?cur.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'}):view==='week'?(()=>{const a=nd===7?weekStart(cur):cur,b=addD(a,nd-1),o={day:'numeric',month:'long'};return a.getMonth()===b.getMonth()?a.getDate()+' – '+b.toLocaleDateString('ru-RU',o):a.toLocaleDateString('ru-RU',o)+' – '+b.toLocaleDateString('ru-RU',o)})():'Месяц';
   
@@ -259,7 +261,7 @@ const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 function pages(){
   let h='<div class="pg">';
   if(page==='people'){
-    h+=`<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px"><h2 style="margin:0">Ученики</h2><button class="btn" data-addstu style="width:auto;margin:0;padding:10px 16px">+ Ученик</button></div><input id="stuQ" placeholder="Поиск ученика" value="${esc(stuQv)}" style="margin:0 0 12px"><div class="stbl"><div class="srow h"><span>Ученик</span><span>Занятий</span><span>Абонемент</span><span>Оплачено</span><span>Последнее</span></div><div id="stuList">${stuRows()}</div></div>`;
+    h+=`<div class="sth" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px"><h2 style="margin:0">Ученики</h2><button class="btn" data-addstu style="width:auto;margin:0;padding:10px 16px">+ Ученик</button></div><input id="stuQ" placeholder="Поиск ученика" value="${esc(stuQv)}" style="margin:0 0 12px"><div class="stbl"><div class="srow h"><span>Ученик</span><span>Занятий</span><span>Абонемент</span><span>Оплачено</span><span>Последнее</span></div><div id="stuList">${stuRows()}</div></div>`;
   }
   $('#main').innerHTML=h+'</div>';
 }
