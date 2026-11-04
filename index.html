@@ -124,6 +124,9 @@ body{padding-left:min(82vw,280px)}
 @media (hover:none) and (pointer:coarse){#nv,#zm,.strip .ar{display:none}.strip{grid-template-columns:repeat(7,1fr)}}
 @media (max-width:899px){.top{padding-left:2px}#menuBtn{width:48px;height:48px}#menuBtn svg{width:30px;height:30px}}
 .acc{display:flex;align-items:center;gap:12px;padding:10px 8px}.acc .av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:var(--acx);display:grid;place-items:center;flex:none}.acc span{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xbtn{display:none}
+@media (max-width:899px){.sheet.full{top:0;bottom:0;left:0;right:0;height:100%;max-height:none;border-radius:0;padding-top:calc(env(safe-area-inset-top,0px) + 18px);transform:translateX(105%)}.sheet.full.on{transform:none}.sheet.full .grab{display:none}.sheet.full h3{padding-right:48px;min-height:40px;display:flex;align-items:center;margin-bottom:14px}.sheet.full .xbtn{display:grid;place-items:center;position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:16px;width:40px;height:40px;border-radius:50%;background:var(--bg2);z-index:2}}
+@media (max-width:899px){.sheet.tall{height:calc(100% - env(safe-area-inset-top,0px) - 28px);max-height:none;display:flex;flex-direction:column}.sheet.tall .grab{flex:none}.sheet.tall #sheetBody{flex:1;display:flex;flex-direction:column}.sheet.tall #fSave{margin-top:auto}.sheet.tall #fErr{margin-bottom:14px}}
 @media (min-width:900px){.sheet{display:flex;flex-direction:column}#sheetBody{flex:1;display:flex;flex-direction:column}#fSave{margin-top:auto}#fErr{margin-bottom:14px}}
 .vw{position:relative;flex:none}
 .vmenu{position:absolute;right:0;top:46px;min-width:160px;background:var(--bg);border:1px solid var(--ln);border-radius:14px;box-shadow:var(--sh);padding:6px;z-index:20;display:none}
@@ -237,19 +240,22 @@ function pages(){
 function report(){
   const mo=cur.getFullYear()+'-'+pad(cur.getMonth()+1),L=S.ev.filter(e=>e.date.startsWith(mo));
   const hrs=f=>L.filter(f).reduce((a,e)=>a+(e.end-e.start)/60,0);
-  sheet(`<h3 style="text-transform:capitalize">${MN[cur.getMonth()]} ${cur.getFullYear()}</h3>
+  fullNext=true;
+  sheet(`<button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button><h3 style="text-transform:capitalize">${MN[cur.getMonth()]} ${cur.getFullYear()}</h3>
   <div class="card"><div class="r"><span>Занято часов</span></div><div class="big">${+hrs(()=>1).toFixed(2)} ч</div><div class="r"><span>Всего занятий</span><span>${L.length}</span></div></div>
   <div class="card"><div class="r"><b>Записи песен</b><span>${+hrs(e=>e.type==='rec').toFixed(2)} ч</span></div><div class="r"><span>Занятий</span><span>${L.filter(e=>e.type==='rec').length}</span></div></div>
   <div class="card"><div class="r"><b>Уроки вокала</b><span>${+hrs(e=>e.type==='lesson').toFixed(2)} ч</span></div><div class="r"><span>Занятий</span><span>${L.filter(e=>e.type==='lesson').length}</span></div></div>
   <p style="color:var(--tx2);font-size:13px">Месяц выбирается в календаре.</p>`);
 }
 function settings(){
-  sheet(`<h3>Настройки</h3>
+  fullNext=true;
+  sheet(`<button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button><h3>Настройки</h3>
   <div class="card"><label style="margin-top:0">Имя аккаунта</label><div class="row" style="align-items:center;margin-top:5px"><input id="setName" style="margin-top:0" value="${esc(S.name)}" placeholder="Преподаватель 1" maxlength="40"><button class="btn" id="saveName" style="width:auto;flex:none;margin:0;padding:12px 18px">Сохранить</button></div></div>
   <div class="card"><label style="margin-top:0">Данные</label><div class="row" style="margin-top:8px"><button class="btn g" id="exp" style="margin:0;background:var(--bg);flex:1;font-size:15px">Резервная копия</button><button class="btn d" id="clr" style="margin:0;background:var(--bg);flex:1;font-size:15px">Удалить всё</button></div><p style="color:var(--tx2);font-size:13px;margin:10px 0 0">Данные хранятся на этом устройстве.</p></div>`);
 }
 
-const sheet=html=>{$('#sheetBody').innerHTML=html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')};
+let tallNext=false,fullNext=false;
+const sheet=html=>{const sh=$('#sheet');$('#sheetBody').innerHTML=html;sh.style.transition='none';sh.classList.toggle('tall',tallNext);sh.classList.toggle('full',fullNext);tallNext=fullNext=false;void sh.offsetWidth;sh.style.transition='';void sh.offsetWidth;sh.classList.add('on');$('#scrim').classList.add('on')};
 const closeAll=()=>{$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
 const openDrawer=()=>{$('#drawer').classList.add('on');$('#scrim').classList.add('on')};
 
@@ -262,6 +268,7 @@ function detail(id){
 function form(id,pre){
   const e=S.ev.find(x=>x.id===id)||Object.assign({type:'lesson',person:'',date:iso(cur),start:10*60,end:11*60,note:''},pre||{});
   let type=e.type,dval=e.date,dm=pd(e.date);const desk=matchMedia('(min-width:900px)').matches;let ts=e.start,te=e.end,tact=null,bk=null;
+  tallNext=true;
   sheet(`<h3>${id?'Изменить':'Новая запись'}</h3>
   <div class="seg" id="fType"><button data-v="lesson">Урок вокала</button><button data-v="rec">Запись песни</button></div>
   <label id="fWho"></label><input id="fPerson" value="${esc(e.person)}" placeholder="Имя">
@@ -335,6 +342,7 @@ let pinch=null;
 document.addEventListener('click',e=>{
   const t=e.target,q=s=>t.closest(s);
   let b;
+  if(q('.xbtn')){closeAll();return}
   if(b=q('[data-z]')){setZoom(H*(b.dataset.z>0?1.25:0.8),$('#main').clientHeight/2);S.zoom=Math.round(H*100)/100;save();return}
   if(b=q('.ev,.mev'))return detail(b.dataset.id);
   if(!q('#vw'))$('#vmenu').classList.remove('on');
