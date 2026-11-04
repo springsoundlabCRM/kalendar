@@ -124,6 +124,13 @@ body{padding-left:min(82vw,280px)}
 @media (hover:none) and (pointer:coarse){#nv,#zm,.strip .ar{display:none}.strip{grid-template-columns:repeat(7,1fr)}}
 @media (max-width:899px){.top{padding-left:2px}#menuBtn{width:48px;height:48px}#menuBtn svg{width:30px;height:30px}}
 .acc{display:flex;align-items:center;gap:12px;padding:10px 8px}.acc .av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:var(--acx);display:grid;place-items:center;flex:none}.acc span{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (min-width:900px){
+.sheet.full{top:50%;left:50%;right:auto;bottom:auto;width:min(520px,calc(100% - 48px));height:auto;max-height:calc(100% - 64px);border-radius:24px;padding:28px;transform:translate(-50%,-47%) scale(.97);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.2,.8,.2,1),opacity .2s;box-shadow:var(--sh)}
+.sheet.full.on{transform:translate(-50%,-50%);opacity:1;pointer-events:auto}
+.sheet.full h3{padding-right:48px;min-height:36px;display:flex;align-items:center}
+.sheet.full .xbtn{display:grid;place-items:center;position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:var(--bg2);z-index:2}
+#scrim.blur{background:rgba(0,0,0,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+}
 .xbtn{display:none}
 @media (max-width:899px){.sheet.full{top:0;bottom:0;left:0;right:0;height:100%;max-height:none;border-radius:0;padding-top:calc(env(safe-area-inset-top,0px) + 18px);transform:translateX(105%)}.sheet.full.on{transform:none}.sheet.full .grab{display:none}.sheet.full h3{padding-right:48px;min-height:40px;display:flex;align-items:center;margin-bottom:14px}.sheet.full .xbtn{display:grid;place-items:center;position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:16px;width:40px;height:40px;border-radius:50%;background:var(--bg2);z-index:2}}
 @media (max-width:899px){.sheet.tall{height:calc(100% - env(safe-area-inset-top,0px) - 28px);max-height:none;display:flex;flex-direction:column}.sheet.tall .grab{flex:none}.sheet.tall #sheetBody{flex:1;display:flex;flex-direction:column}.sheet.tall #fSave{margin-top:auto}.sheet.tall #fErr{margin-bottom:14px}}
@@ -256,8 +263,8 @@ function settings(){
 }
 
 let tallNext=false,fullNext=false;
-const sheet=html=>{const sh=$('#sheet');$('#sheetBody').innerHTML=html;sh.style.transition='none';sh.classList.toggle('tall',tallNext);sh.classList.toggle('full',fullNext);tallNext=fullNext=false;void sh.offsetWidth;sh.style.transition='';void sh.offsetWidth;sh.classList.add('on');$('#scrim').classList.add('on')};
-const closeAll=()=>{$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
+const sheet=html=>{const sh=$('#sheet');$('#scrim').classList.toggle('blur',fullNext);$('#sheetBody').innerHTML=html;sh.style.transition='none';sh.classList.toggle('tall',tallNext);sh.classList.toggle('full',fullNext);tallNext=fullNext=false;void sh.offsetWidth;sh.style.transition='';void sh.offsetWidth;sh.classList.add('on');$('#scrim').classList.add('on')};
+const closeAll=()=>{$('#scrim').classList.remove('blur');$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
 const openDrawer=()=>{$('#drawer').classList.add('on');$('#scrim').classList.add('on')};
 
 function detail(id){
