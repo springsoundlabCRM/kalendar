@@ -157,6 +157,8 @@ body{padding-left:min(82vw,280px)}
 /* Календарь: название месяца на одном уровне с заголовками «Ученики», «Аналитика», «Настройки» */
 @media (max-width:899px){body[data-pg="cal"] .top{padding-top:calc(env(safe-area-inset-top,0px) + 14px)}body[data-pg="cal"] .ttl{padding-left:6px}body[data-pg="cal"] .ttl b{font-size:20px}}
 @media (hover:hover) and (pointer:fine){body[data-pg="cal"] .top{padding-top:calc(env(safe-area-inset-top,0px) + 31px)}}
+/* Карточка ученика на компьютере: правая панель, кнопка действия всегда внизу */
+@media (min-width:900px){#scrim.soft{background:rgba(0,0,0,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.sheet.stu .xbtn{display:grid;place-items:center;position:absolute;top:24px;right:24px;width:36px;height:36px;border-radius:50%;background:var(--bg2);z-index:2}.sheet.stu h3{padding-right:48px;min-height:36px;display:flex;align-items:center}.stk{margin:auto 0 -28px;padding:14px 0 28px;position:sticky;bottom:-28px;background:var(--bg)}.stk .btn{margin:0}}
 </style>
 </head>
 <body>
@@ -204,10 +206,10 @@ const dshort=d=>pd(d).toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
 function stuRows(){const q=key(stuQv),R=allStu().filter(([k])=>k.includes(q)).map(([k,nm])=>({k,nm,...stat(k)})).sort((a,b)=>(b.last>a.last)-(b.last<a.last)||a.nm.localeCompare(b.nm));
   return R.length?R.map(o=>`<div class="srow" data-stu="${esc(o.k)}"><div class="sn"><i class="sa">${esc(o.nm[0].toUpperCase())}</i><b>${esc(o.nm)}</b></div><span>${o.n}</span><div>${subCell(o)}</div><span>${rub(o.paid)}</span><span>${o.last?dshort(o.last):'—'}</span></div>`).join(''):'<div class="empty" style="padding:24px">Нет учеников</div>'}
 const XB='<button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>';
-function stuHtml(){const k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1],o=stat(k),kp=(t,v)=>`<div class="card" style="margin:0"><small style="color:var(--tx2)">${t}</small><div class="big">${v}</div></div>`;
+function stuHtml(){const dsk=matchMedia('(min-width:900px)').matches,AB='<button class="btn" data-addsub style="margin:10px 0 0">Добавить абонемент</button>',k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1],o=stat(k),kp=(t,v)=>`<div class="card" style="margin:0"><small style="color:var(--tx2)">${t}</small><div class="big">${v}</div></div>`;
   return XB+`<h3>${esc(nm)}</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">${kp('Занятий',o.n)}${kp('Часов',+o.h.toFixed(1))}${kp('Оплачено',rub(o.paid))}${kp('В абонементе',o.total?o.left+' из '+o.total:'—')}</div>
-  <div class="card"><b>Абонементы</b>${o.su.map(x=>`<div class="r"><span>${dshort(x.date)} · ${x.total} × ${rub(x.unit||(x.price/x.total))}</span><span>${rub(x.price)}</span></div>`).join('')||'<div class="r"><span>Пока нет</span></div>'}<div class="row" style="margin-top:10px"><input id="subN" type="number" min="1" placeholder="Занятий" style="margin:0"><input id="subP" type="number" min="0" placeholder="Цена за занятие, ₽" style="margin:0"></div><div class="r" style="margin-top:10px"><span>Итого</span><b id="subT">0 ₽</b></div><button class="btn" data-addsub style="margin:10px 0 0">Добавить абонемент</button></div>
-  <div class="card"><b>История</b>${o.ev.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(e=>`<div class="r"><span>${dshort(e.date)} · ${T[e.type].n}</span><span>${e.pay==='sub'?'Абонемент':'Наличные'}</span></div>`).join('')||'<div class="r"><span>Пока нет занятий</span></div>'}</div>`}
+  <div class="card"><b>Абонементы</b>${o.su.map(x=>`<div class="r"><span>${dshort(x.date)} · ${x.total} × ${rub(x.unit||(x.price/x.total))}</span><span>${rub(x.price)}</span></div>`).join('')||'<div class="r"><span>Пока нет</span></div>'}<div class="row" style="margin-top:10px"><input id="subN" type="number" min="1" placeholder="Занятий" style="margin:0"><input id="subP" type="number" min="0" placeholder="Цена за занятие, ₽" style="margin:0"></div><div class="r" style="margin-top:10px"><span>Итого</span><b id="subT">0 ₽</b></div>${dsk?'':AB}</div>
+  <div class="card"><b>История</b>${o.ev.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(e=>`<div class="r"><span>${dshort(e.date)} · ${T[e.type].n}</span><span>${e.pay==='sub'?'Абонемент':'Наличные'}</span></div>`).join('')||'<div class="r"><span>Пока нет занятий</span></div>'}</div>${dsk?`<div class="stk">${AB}</div>`:''}`}
 document.addEventListener('input',e=>{if(e.target.id==='subN'||e.target.id==='subP')$('#subT').textContent=rub((+$('#subN').value||0)*(+$('#subP').value||0));if(e.target.id==='stuQ'){stuQv=e.target.value;$('#stuList').innerHTML=stuRows()}});
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const pad=n=>String(n).padStart(2,'0');
@@ -329,9 +331,9 @@ function settings(){
   applyTheme();
 }
 
-let tallNext=false,fullNext=false;
-const sheet=html=>{const sh=$('#sheet');$('#scrim').classList.toggle('blur',fullNext);$('#sheetBody').innerHTML=html;sh.style.transition='none';sh.classList.remove('an');sh.classList.toggle('tall',tallNext);sh.classList.toggle('full',fullNext);tallNext=fullNext=false;void sh.offsetWidth;sh.style.transition='';void sh.offsetWidth;sh.classList.add('on');$('#scrim').classList.add('on')};
-const closeAll=()=>{$('#scrim').classList.remove('blur');$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
+let tallNext=false,fullNext=false,stuNext=false;
+const sheet=html=>{const sh=$('#sheet');$('#scrim').classList.toggle('blur',fullNext);$('#sheetBody').innerHTML=html;sh.style.transition='none';sh.classList.remove('an');sh.classList.toggle('tall',tallNext);sh.classList.toggle('full',fullNext);sh.classList.toggle('stu',stuNext);$('#scrim').classList.toggle('soft',stuNext);tallNext=fullNext=stuNext=false;void sh.offsetWidth;sh.style.transition='';void sh.offsetWidth;sh.classList.add('on');$('#scrim').classList.add('on')};
+const closeAll=()=>{$('#scrim').classList.remove('blur','soft');$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
 const openDrawer=()=>{$('#drawer').classList.add('on');$('#scrim').classList.add('on')};
 let toastT;const toast=t=>{let el=$('#toast');if(!el){el=document.createElement('div');el.id='toast';el.className='toast';document.body.appendChild(el)}el.textContent=t;void el.offsetWidth;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),1800)};
 
@@ -433,7 +435,7 @@ document.addEventListener('click',e=>{
   let b;
   if(q('[data-menu]')){closeAll();openDrawer();return}
   if(q('.xbtn')){closeAll();return}
-  if(b=q('[data-stu]')){stuK=b.dataset.stu;fullNext=true;return sheet(stuHtml())}
+  if(b=q('[data-stu]')){stuK=b.dataset.stu;if(matchMedia('(min-width:900px)').matches)stuNext=true;else fullNext=true;return sheet(stuHtml())}
   if(q('[data-addstu]')){tallNext=true;return sheet('<h3>Новый ученик</h3><label>Имя</label><input id="newStu" placeholder="Имя ученика"><button class="btn" id="saveStu">Добавить</button>')}
   if(q('#saveStu')){const n=$('#newStu').value.trim();if(n&&!allStu().some(a=>a[0]===key(n)))S.stu.push({id:String(Date.now()),name:n});save();closeAll();return render()}
   if(q('[data-addsub]')){const n=+$('#subN').value,u=+$('#subP').value||0;if(n>0){S.subs.push({id:String(Date.now()),k:stuK,total:n,unit:u,price:n*u,date:iso(new Date())});save();$('#sheetBody').innerHTML=stuHtml();render()}return}
@@ -462,7 +464,7 @@ document.addEventListener('click',e=>{
   if(q('#exp')){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='studio-backup.json';a.click();return}
   if(q('#clr')){if(confirm('Удалить все записи?')){S.ev=[];save();closeAll();render()}return}
 });
-$('#menuBtn').onclick=openDrawer;$('#scrim').onclick=closeAll;$('#dpop').onclick=e=>{if(e.target.id==='dpop')$('#dpop').classList.remove('on')};
+$('#menuBtn').onclick=openDrawer;$('#scrim').onclick=e=>{if($('#sheet').classList.contains('stu')&&$('#sheet').classList.contains('on')){const r=document.elementsFromPoint(e.clientX,e.clientY).map(x=>x.closest('[data-stu]')).find(Boolean);if(r){stuK=r.dataset.stu;$('#sheetBody').innerHTML=stuHtml();$('#sheet').scrollTop=0;return}}closeAll()};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#sheet').classList.contains('stu')&&$('#sheet').classList.contains('on'))closeAll()});$('#dpop').onclick=e=>{if(e.target.id==='dpop')$('#dpop').classList.remove('on')};
 
 $('#todayBtn').onclick=()=>{cur=new Date();render()};
 
