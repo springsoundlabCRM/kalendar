@@ -99,12 +99,12 @@ input,textarea{width:100%;margin-top:5px;padding:12px;border-radius:12px;border:
 .dpg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}.dpg small{color:var(--tx2);font-size:11px;text-transform:uppercase;padding:4px 0}
 .dpg button{height:40px;border-radius:50%;font-size:15px}.dpg button:active{background:var(--ln)}.dpg .tdy{outline:2px solid var(--ac);outline-offset:-2px}.dpg .sel{background:var(--ac);color:var(--acx);font-weight:700}
 .dbtn{display:flex;justify-content:space-between;align-items:center;color:var(--tx)}.dbtn svg{color:var(--tx2)}
-.dpop{z-index:30;display:grid;place-items:center}
-.dpop .dp{margin:0;width:min(92vw,340px);background:var(--bg);box-shadow:var(--sh);padding:14px;transform:scale(.96);transition:transform .2s}.dpop.on .dp{transform:none}
+.dpop{z-index:30;display:grid;place-items:center;transition:opacity .45s cubic-bezier(.4,0,.2,1)}
+.dpop .dp{margin:0;width:min(92vw,340px);background:var(--bg);box-shadow:var(--sh);padding:14px;transform:scale(.96);transition:transform .45s cubic-bezier(.4,0,.2,1)}.dpop.on .dp{transform:none}
 textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
 .sheet{overflow-x:hidden;overscroll-behavior-y:contain}
-.dpin{max-height:0;overflow:hidden;transition:max-height .28s ease,margin .28s ease,padding .28s ease;background:var(--bg2);border-radius:16px;padding:0 10px;margin-top:0;border:1px solid transparent}
-.dpin.open{max-height:380px;margin-top:8px;padding:10px;border-color:var(--ln)}
+.dpin{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s cubic-bezier(.4,0,.2,1),margin .45s cubic-bezier(.4,0,.2,1),padding .45s cubic-bezier(.4,0,.2,1),opacity 0s linear .45s,background-color 0s linear .45s,box-shadow 0s linear .45s;background-color:transparent;border-radius:16px;padding:0 10px;margin-top:0;border:0;box-shadow:inset 0 0 0 1px transparent}
+.dpin.open{transition:max-height .45s cubic-bezier(.4,0,.2,1),margin .45s cubic-bezier(.4,0,.2,1),padding .45s cubic-bezier(.4,0,.2,1),opacity .45s ease,background-color .45s ease,box-shadow .45s ease;max-height:380px;margin-top:8px;padding:10px;opacity:1;background-color:var(--bg2);box-shadow:inset 0 0 0 1px var(--ln)}
 @media (max-width:899px){.dpin{display:none}}
 .dpg button{width:40px;height:40px;justify-self:center;border-radius:50%}
 .drawer,.sheet{box-shadow:none}.drawer.on,.sheet.on{box-shadow:var(--sh)}
@@ -115,7 +115,6 @@ textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
 .wcol::-webkit-scrollbar{display:none}
 .wv{height:44px;line-height:44px;text-align:center;font-size:22px;scroll-snap-align:center;color:var(--tx2);cursor:pointer;font-variant-numeric:tabular-nums}.wv.on{color:var(--tx);font-weight:700}
 .wsep{font-size:24px}.wband{position:absolute;left:8%;right:8%;top:88px;height:44px;border-radius:12px;background:rgba(255,204,0,.28);pointer-events:none}
-.dpin:not(.open){background:none;border-width:0}
 @media (hover:hover) and (pointer:fine){
 body{padding-left:min(82vw,280px)}
 .drawer{transform:none!important;z-index:9}.drawer,.drawer.on{box-shadow:none;border-right:1px solid var(--ln)}
@@ -262,8 +261,8 @@ body{padding-left:min(82vw,280px)}
 @media (max-width:899px){.sheet.full:has(.sbk){display:flex;flex-direction:column}.sheet.full:has(.sbk) #sheetBody{flex:1;display:flex;flex-direction:column}.sheet.full:has(.sbk) #sheetBody>*{flex:none}.sheet.full:has(.sbk) #sheetBody>.sbk{margin-top:auto}}
 .hhd{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}
 .hopen{width:34px;height:34px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;color:var(--tx)}.hopen:active{transform:scale(.94)}
-.hopen svg{transition:transform .25s}.hhd.open .hopen svg{transform:rotate(180deg)}
-.hacc{overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.2,1);scrollbar-width:none;-ms-overflow-style:none}
+.hopen svg{transition:transform .45s cubic-bezier(.4,0,.2,1)}.hhd.open .hopen svg{transform:rotate(180deg)}
+.hacc{overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);scrollbar-width:none;-ms-overflow-style:none}
 .hacc.open{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .hacc::-webkit-scrollbar{display:none;width:0;height:0}
 /* Без прыжков ширины: полоса прокрутки не появляется/не исчезает */
@@ -394,7 +393,7 @@ const ordHistL=o=>{const used=new Set(),pr=new Map();o.ord.filter(x=>x.evId).for
 const ordHistC=h=>`<div class="card"><div class="r"><span>Дата</span><span>${dshort(h.d)}</span></div>${h.tm?`<div class="r"><span>Время</span><span>${h.tm}</span></div>`:''}<div class="r"><span>Услуга</span><span>${h.n}</span></div>${h.s?`<div class="r"><span>Сумма</span><span>${h.s}</span></div>`:''}${h.st==='unpaid'?`<div class="r"><span>Статус</span><span style="color:${ST[h.st].c};font-weight:600">${ST[h.st].n}</span></div>`:''}</div>`;
 const ordHistH=o=>{const hist=ordHistL(o);setTimeout(histFit,0);return '<div class="hhd'+(histOpen&&hist.length>1?' open':'')+'"><b>История</b>'+(hist.length>1?'<button class="hopen" data-histopen aria-label="Вся история"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>':'')+'</div>'+(hist.length?'<div class=\"hacc'+(histOpen&&hist.length>1?' open':'')+'\">'+hist.map(ordHistC).join('')+'</div>':'<div class=\"card\"><div class=\"r\"><span>Пока пусто</span></div></div>')};
 var histOpen=false;
-function histFit(){const a=document.querySelector('#ordHist .hacc');if(!a)return;const c=a.children;if(!c.length)return;const r=a.getBoundingClientRect(),h1=c[0].getBoundingClientRect().bottom-r.top,hn=c.length>3?c[2].getBoundingClientRect().bottom-r.top:a.scrollHeight;a.style.maxHeight=Math.ceil(a.classList.contains('open')?hn:h1)+'px'}
+function histFit(){const a=document.querySelector('#ordHist .hacc');if(!a)return;const c=a.children;if(!c.length)return;const h1=c[0].offsetHeight,hn=c.length>3?c[2].offsetTop+c[2].offsetHeight-c[0].offsetTop:a.scrollHeight;a.style.maxHeight=Math.ceil(a.classList.contains('open')?hn:h1)+'px'}
 addEventListener('resize',()=>histFit());
 const ordDebtH=o=>o.debt>0?`<div class="card debtc${debtOpen?' open':''}"><button class="dbh" data-debtopen aria-expanded="${debtOpen}"><b>Задолженность</b><span class="dbs"><b>${rub(o.debt)}</b><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></button><div class="dbb"${debtOpen?'':' hidden'}><input id="debtIn" type="number" inputmode="numeric" min="0" placeholder="Сколько внесено, ₽" style="margin:0"><div class="r" style="margin-top:12px"><span>Останется</span><b id="debtLeft">${rub(o.debt)}</b></div><button class="btn" data-debtpay disabled>Внести</button></div></div>`:'';
 function stuHtmlS(){const k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1],o=stat(k);oS=oNew();ordId=null;debtOpen=false;histOpen=false;stBefore='';if(fixSt(k)){save();const l=$('#stuList');if(l)l.innerHTML=stuRows()}stBefore=stOf(k);
@@ -425,8 +424,9 @@ function oBuild(el){const v=oS.act==='s'?oS.s:oS.e,hi=Math.floor(v/60),mi=v%60;
   [ch,cm].forEach(c=>c.addEventListener('wheel',ev=>{ev.preventDefault();c._a=(c._a||0)+ev.deltaY*(ev.deltaMode===1?33:1);if(Math.abs(c._a)<30)return;const st=Math.sign(c._a);c._a=0;const n=c.children.length-1,base=Date.now()-(c._wt||0)<400?c._i:Math.round(c.scrollTop/44);c._i=Math.max(0,Math.min(n,base+st));c._wt=Date.now();c.scrollTo({top:c._i*44,behavior:'smooth'})},{passive:false}));
   [ch,cm].forEach(c=>c.onscroll=()=>{const L=c===c.parentNode.children[0]?24:60;if(c.scrollTop<L*22||c.scrollTop>L*44*6.5)oWrap(c,L);oMark(c);if(lock)return;clearTimeout(c._t);c._t=setTimeout(()=>{oWrap(ch,24);oWrap(cm,60);const nv=(Math.round(ch.scrollTop/44)%24)*60+Math.round(cm.scrollTop/44)%60;if(oS.act==='s'){const d=oS.e-oS.s;oS.s=nv;oS.e=Math.min(oS.s+d,1439)}else oS.e=nv;oS.sch=true;oShow()},100)})}
 function oTclick(ev){const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tcancel]')){if(oS.bk){oS.s=oS.bk[0];oS.e=oS.bk[1];oS.sch=oS.bk[2];oShow()}return oCloseT()}if(ev.target.closest('[data-tdone]')){oS.sch=true;oShow();oCloseT()}}
-function oOpenD(){oCloseT();$('#dp').onclick=$('#odpin').onclick=oDpClick;oS.dm=pd(oS.d);if(oDesk()){const p=$('#odpin');if(p.classList.contains('open'))return p.classList.remove('open');oDraw();return p.classList.add('open')}oDraw();$('#dpop').classList.add('on')}
-function oOpenT(k){$('#tpop').onclick=ev=>{if(ev.target.id==='tpop')oCloseT()};$('#otpin').onclick=$('#tpw').onclick=oTclick;if(oS.act===null)oS.bk=[oS.s,oS.e,oS.sch];if(oDesk()){$('#odpin').classList.remove('open');const p=$('#otpin');if(p.classList.contains('open')&&oS.act===k)return oCloseT();oS.act=k;oBuild(p);p.classList.add('open')}else{oS.act=k;oBuild($('#tpw'));$('#tpop').classList.add('on')}}
+function oCenter(p){const sh=$('#sheet'),bar=sh.querySelector('.sbk'),cs=getComputedStyle(p),pv=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom),r=p.getBoundingClientRect(),s=sh.getBoundingClientRect(),vb=s.bottom-(bar?bar.offsetHeight:0),top=r.top+8-parseFloat(cs.marginTop),h=Math.min(380,p.scrollHeight-pv+22),st=sh.scrollTop,tg=st+(top+h/2)-(s.top+vb)/2,t0=performance.now();if(Math.abs(tg-st)<2)return;(function f(n){if(!p.classList.contains('open'))return;const k=Math.min(1,(n-t0)/450),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;sh.scrollTop=st+(tg-st)*e;if(k<1)requestAnimationFrame(f)})(t0)}
+function oOpenD(){oCloseT();$('#dp').onclick=$('#odpin').onclick=oDpClick;oS.dm=pd(oS.d);if(oDesk()){const p=$('#odpin');if(p.classList.contains('open'))return p.classList.remove('open');oDraw();p.classList.add('open');return oCenter(p)}oDraw();$('#dpop').classList.add('on')}
+function oOpenT(k){$('#tpop').onclick=ev=>{if(ev.target.id==='tpop')oCloseT()};$('#otpin').onclick=$('#tpw').onclick=oTclick;if(oS.act===null)oS.bk=[oS.s,oS.e,oS.sch];if(oDesk()){$('#odpin').classList.remove('open');const p=$('#otpin');if(p.classList.contains('open')&&oS.act===k)return oCloseT();oS.act=k;oBuild(p);p.classList.add('open');oCenter(p)}else{oS.act=k;oBuild($('#tpw'));$('#tpop').classList.add('on')}}
 document.addEventListener('click',e=>{const t=e.target;if(t.closest('#oDateBtn'))oOpenD();else if(t.closest('#oTs'))oOpenT('s');else if(t.closest('#oTe'))oOpenT('e')});
 /* Назначение даты и времени из карточки клиента: создаёт запись в календаре и привязывает к ней заказ */
 function ordSchedule(){if(!oS.sch)return true;const k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1];
