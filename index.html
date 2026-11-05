@@ -266,6 +266,10 @@ body{padding-left:min(82vw,280px)}
 .hacc{overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.2,1);scrollbar-width:none;-ms-overflow-style:none}
 .hacc.open{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .hacc::-webkit-scrollbar{display:none;width:0;height:0}
+/* Без прыжков ширины: полоса прокрутки не появляется/не исчезает */
+#main{scrollbar-gutter:stable}
+.sheet{scrollbar-width:none;-ms-overflow-style:none}
+.sheet::-webkit-scrollbar{display:none;width:0;height:0}
 </style>
 </head>
 <body>
