@@ -249,6 +249,7 @@ body{padding-left:min(82vw,280px)}
 .ordplus{width:52px;height:52px;border-radius:17px;background:var(--ac);color:var(--acx);font-size:30px;line-height:1;box-shadow:var(--sh);display:grid;place-items:center}
 .ordplus svg{display:block;pointer-events:none}
 .ordplus:active{transform:scale(.95)}
+@media (max-width:899px){.ordplus{width:44px;height:44px;border-radius:15px;padding:0;display:flex;align-items:center;justify-content:center;line-height:0}.ordplus svg{width:22px;height:22px;margin:0;flex:none}}
 .sbk .btn{margin:0}.sbk .btn:disabled{opacity:.45;pointer-events:none}
 /* Задолженность в карточке клиента */
 .debtc{padding:0;overflow:hidden}
@@ -769,7 +770,7 @@ document.addEventListener('click',e=>{
   if(q('#saveStu')){const n=$('#newStu').value.trim();if(n&&!allStu().some(a=>a[0]===key(n)))S.stu.push({id:String(Date.now()),name:n});save();closeAll();return render()}
   if(q('[data-debtopen]')){debtOpen=!debtOpen;const c=q('.debtc');c.classList.toggle('open',debtOpen);c.querySelector('.dbb').hidden=!debtOpen;q('[data-debtopen]').setAttribute('aria-expanded',debtOpen);if(debtOpen){$('#debtIn').focus({preventScroll:true});c.scrollIntoView({block:'nearest',behavior:'smooth'})}return}
   if(q('[data-debtpay]')){debtPay();return}
-  if(q('[data-ordplus]')){const w=$('#ordWrap');if(w.hidden){w.hidden=false;w.classList.remove('owin');void w.offsetWidth;w.classList.add('owin');$('[data-ordok]').disabled=false;ordPartUi()}else{ordId=null;$('#ordS').value='';$('#ordP').value='';$('#ordPd').value='';ordPartUi();oReset()}$('#ordS').focus({preventScroll:true});w.scrollIntoView({block:'nearest',behavior:'smooth'});return}
+  if(q('[data-ordplus]')){const w=$('#ordWrap');if(w.hidden){w.hidden=false;w.classList.remove('owin');void w.offsetWidth;w.classList.add('owin');$('[data-ordok]').disabled=false;ordPartUi()}else{ordId=null;$('#ordS').value='';$('#ordP').value='';$('#ordPd').value='';ordPartUi();oReset()}if(!matchMedia('(max-width:899px)').matches)$('#ordS').focus({preventScroll:true});w.scrollIntoView({block:'nearest',behavior:'smooth'});return}
   if(q('[data-ordok]')){const ce=ordCheck();if(ce){toast(ce);return}if(!ordSchedule())return;const had=!!ordId;ordId=null;$('#ordS').value='';$('#ordP').value='';$('#ordPd').value='';$('#ordWrap').hidden=true;$('[data-ordok]').disabled=true;const fx=ordFinish();if(had)toast(fx==='part'?'Заказ сохранён · есть задолженность':'Заказ сохранён');return}
   if(q('[data-addsub]')){const n=+$('#subN').value,b=S.price!=null?+S.price:0,u=$('#subP').value.trim()===''?b:(+$('#subP').value||0);if(n>0){S.subs.push({id:String(Date.now()),k:stuK,total:n,unit:u,price:n*u,base:b,disc:b>u?(b-u)*n:0,date:iso(new Date())});save();$('#sheetBody').innerHTML=stuHtml();render();const c=$('#subCard');if(c){c.classList.add('shine');c.addEventListener('animationend',()=>c.classList.remove('shine'),{once:true})}}return}
   if(b=q('[data-ap]')){an.per=b.dataset.ap;anUp();return}
