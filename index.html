@@ -144,7 +144,7 @@ body{padding-left:min(82vw,280px)}
 @media (max-width:899px){.sheet.tall{height:calc(100% - env(safe-area-inset-top,0px) - 28px);max-height:none;display:flex;flex-direction:column}.sheet.tall .grab{flex:none}.sheet.tall #sheetBody{flex:1;display:flex;flex-direction:column}.sheet.tall #fSave,.sheet.tall #saveStu{margin-top:auto}.sheet.tall #fErr{margin-bottom:14px}}
 @media (min-width:900px){.sheet{display:flex;flex-direction:column}#sheetBody{flex:1;display:flex;flex-direction:column}#fSave,#saveStu{margin-top:auto}#fErr{margin-bottom:14px}}
 .srow{display:grid;grid-template-columns:2fr .8fr 1.6fr 1fr 1fr 1.1fr 34px;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--ln)}.srow:not(.h){cursor:pointer}.srow.h{color:var(--tx2);font-size:12px;font-weight:600}.srow:not(.h):hover{background:var(--bg2)}.stbl{border:1px solid var(--ln);border-radius:16px;overflow:hidden}.stbl .srow:last-child{border-bottom:0}.sn{display:flex;align-items:center;gap:10px;min-width:0}.sn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sa{width:34px;height:34px;border-radius:50%;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-style:normal;font-weight:700;flex:none}.pb{height:6px;border-radius:3px;background:var(--bg2);overflow:hidden;margin-bottom:4px}.pb i{display:block;height:100%;background:var(--ac)}.srow small{color:var(--tx2)}
-@media (max-width:899px){.srow{grid-template-columns:1fr 120px 34px}.srow>:nth-child(2),.srow>:nth-child(4),.srow>:nth-child(5),.srow>:nth-child(6){display:none}.sdot{display:inline-block!important}.srow.h{display:none}}
+@media (max-width:899px){.srow{grid-template-columns:1fr 120px 34px}.srow>:nth-child(2),.srow>:nth-child(4),.srow>:nth-child(5),.srow>:nth-child(6){display:none}.srow .sn{display:grid;grid-template-columns:34px minmax(0,min(var(--nw,100%),calc(100% - 96px))) 8px;justify-content:start;gap:10px}.srow .sn .sdot{justify-self:start;margin:0 0 0 -2px}.sdot{display:inline-block!important}.srow.h{display:none}}
 @media (min-width:900px){.srow.sd{grid-template-columns:2fr .8fr 1.6fr 1fr .75fr .9fr minmax(72px,.65fr) 34px}}
 @media (max-width:899px){.sdebt{display:none}}
 @media (min-width:900px){.srow .sdel{margin-right:20px}.srow.h .hdel{justify-self:end;margin-right:37px;transform:translateX(50%);white-space:nowrap}}
@@ -1006,6 +1006,12 @@ const accUpd=()=>{$('#accLbl').innerHTML=esc(S.name||ME.name)+'<br><small style=
 document.addEventListener('input',e=>{if(e.target.id==='accCus'){S.accent=e.target.value;save();applyAccent()}});
 accUpd();applyTheme();if(SOUND){const n=$('.nav[data-page="people"]');if(n&&n.lastChild)n.lastChild.textContent=' Клиенты студии'}try{const sp=localStorage.getItem('crm_pg');if(matchMedia('(min-width:900px)').matches&&['cal','people','rep'].includes(sp)){page=sp;if(sp==='rep'){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()}}}}catch(e){}render();
 setInterval(()=>{if(page==='cal'&&!$('#sheet').classList.contains('on'))render()},60000);
+</script>
+<script>
+/* Мобильная версия: точки статусов — отдельной ровной колонкой сразу за самым длинным именем */
+(function(){var raf=0;function al(){raf=0;var mq=matchMedia('(max-width:899px)').matches;document.querySelectorAll('#stuList').forEach(function(l){l.style.removeProperty('--nw');if(!mq)return;var m=0;l.querySelectorAll('.sn b').forEach(function(b){m=Math.max(m,b.scrollWidth)});if(m)l.style.setProperty('--nw',(Math.ceil(m)+1)+'px')})}
+function q(){if(!raf)raf=requestAnimationFrame(al)}
+new MutationObserver(q).observe(document.body,{childList:true,subtree:true});addEventListener('resize',q);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(q);q()})();
 </script>
 </body>
 </html>
