@@ -99,8 +99,8 @@ input,textarea{width:100%;margin-top:5px;padding:12px;border-radius:12px;border:
 .dpg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}.dpg small{color:var(--tx2);font-size:11px;text-transform:uppercase;padding:4px 0}
 .dpg button{height:40px;border-radius:50%;font-size:15px}.dpg button:active{background:var(--ln)}.dpg .tdy{outline:2px solid var(--ac);outline-offset:-2px}.dpg .sel{background:var(--ac);color:var(--acx);font-weight:700}
 .dbtn{display:flex;justify-content:space-between;align-items:center;color:var(--tx)}.dbtn svg{color:var(--tx2)}
-.dpop{z-index:30;display:grid;place-items:center;transition:opacity .45s cubic-bezier(.4,0,.2,1)}
-.dpop .dp{margin:0;width:min(92vw,340px);background:var(--bg);box-shadow:var(--sh);padding:14px;transform:scale(.96);transition:transform .45s cubic-bezier(.4,0,.2,1)}.dpop.on .dp{transform:none}
+.dpop{z-index:30;display:grid;place-items:center}
+.dpop .dp{margin:0;width:min(92vw,340px);background:var(--bg);box-shadow:var(--sh);padding:14px;transform:scale(.96);transition:transform .2s}.dpop.on .dp{transform:none}
 textarea{resize:vertical;max-width:100%;min-height:64px;display:block}
 .sheet{overflow-x:hidden;overscroll-behavior-y:contain}
 .dpin{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s cubic-bezier(.4,0,.2,1),margin .45s cubic-bezier(.4,0,.2,1),padding .45s cubic-bezier(.4,0,.2,1),opacity 0s linear .45s,background-color 0s linear .45s,box-shadow 0s linear .45s;background-color:transparent;border-radius:16px;padding:0 10px;margin-top:0;border:0;box-shadow:inset 0 0 0 1px transparent}
@@ -260,8 +260,8 @@ body{padding-left:min(82vw,280px)}
 /* Телефон: кнопки карточки клиента прижаты к низу, как «Сохранить» в новой записи */
 @media (max-width:899px){.sheet.full:has(.sbk){display:flex;flex-direction:column}.sheet.full:has(.sbk) #sheetBody{flex:1;display:flex;flex-direction:column}.sheet.full:has(.sbk) #sheetBody>*{flex:none}.sheet.full:has(.sbk) #sheetBody>.sbk{margin-top:auto}}
 .hhd{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}
-.hopen{width:34px;height:34px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;color:var(--tx)}.hopen:active{transform:scale(.94)}
-.hopen svg{transition:transform .45s cubic-bezier(.4,0,.2,1)}.hhd.open .hopen svg{transform:rotate(180deg)}
+.hopen{width:34px;height:34px;min-width:34px;flex:none;padding:0;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;line-height:0;color:var(--tx)}.hopen:active{transform:scale(.94)}
+.hopen svg{display:block;flex:none;margin:0;transition:transform .45s cubic-bezier(.4,0,.2,1)}.hhd.open .hopen svg{transform:rotate(180deg)}
 .hacc{overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);scrollbar-width:none;-ms-overflow-style:none}
 .hacc.open{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .hacc::-webkit-scrollbar{display:none;width:0;height:0}
@@ -808,7 +808,7 @@ document.addEventListener('click',e=>{
   if(b=q('[data-f]')){filt=b.dataset.f;return render()}
   if(b=q('[data-page]')){if(b.dataset.page==='set'){closeAll();return settings()}if(b.dataset.page==='rep'&&!matchMedia('(min-width:900px)').matches){closeAll();return analytics()}if(b.dataset.page==='rep'){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()}}if(b.dataset.page==='people'&&matchMedia('(max-width:899px)').matches){closeAll();return people()}page=b.dataset.page;closeAll();return render()}
   if(b=q('#themeSeg button')){S.theme=b.dataset.t;save();return applyTheme()}
-  if(b=q('.col')){const r=b.getBoundingClientRect(),m=Math.floor((e.clientY-r.top)/H*4)/4*60+S0*60;return form(null,{date:b.dataset.date,start:m,end:m+60})}
+  if(b=q('.col')){const r=b.getBoundingClientRect(),m=Math.floor((e.clientY-r.top)/H)*60+S0*60;return form(null,{date:b.dataset.date,start:m,end:m+60})}
   if(q('#saveSet')){S.rate={rec:+$('#r1').value||0,lesson:+$('#r2').value||0};save();return alert('Сохранено')}
   if(q('#saveName')){S.name=$('#setName').value.trim();save();accUpd();const bt=$('#saveName');bt.textContent='Сохранено ✓';setTimeout(()=>{bt.textContent='Сохранить'},1500);return}
   if(q('#exp')){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='studio-backup.json';a.click();return}
