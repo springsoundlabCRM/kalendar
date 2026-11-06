@@ -274,6 +274,7 @@ body{padding-left:min(82vw,280px)}
 /* Одинаковый шрифт и размер заголовков: Календарь, Клиенты студии, Аналитика (компьютер) */
 .sth h2{font-size:26px}
 @media (min-width:900px){body[data-pg="cal"] .ttl b{font-size:26px;line-height:25.65px}}
+@media (max-width:899px){body.dtop .drawer{z-index:26}body.dtop #scrim{z-index:25}}
 </style>
 </head>
 <body>
@@ -484,7 +485,7 @@ const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
 const evOn=d=>calAll().filter(e=>e.date===iso(d)&&(filt==='all'||e.type===filt)).sort((a,b)=>a.start-b.start);
 
 function render(){_ca=null;
-  const cal=page==='cal';document.body.dataset.pg=page;
+  const cal=page==='cal';document.body.dataset.pg=page;try{localStorage.setItem('crm_pg',page)}catch(e){}
   $('#nv').style.display=$('#todayBtn').style.display=$('#vw').style.display=cal?'':'none';$('#zm').style.display=cal&&view!=='month'?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';$('#pgClose').style.display=cal?'none':'';
   $$('.nav[data-page]').forEach(n=>n.classList.toggle('on',n.dataset.page===page));
   if(!cal){const t={people:W.pl,rep:'Аналитика',set:'Настройки'}[page];$('#title').textContent=t;$('#sub').textContent='';pages();return}
@@ -662,7 +663,7 @@ function people(){
   if(!el){
     el=document.createElement('div');el.className='sheet full';el.id='pplSheet';
     $('#sheet').before(el);
-    el.addEventListener('click',e=>{if(e.target.closest('.xbtn,[data-menu]'))el.classList.remove('on')});
+    el.addEventListener('click',e=>{if(e.target.closest('.xbtn'))el.classList.remove('on')});
     sheetDrag(el,()=>{el.classList.remove('on');$('#scrim').classList.remove('blur','on')});
     $('#scrim').addEventListener('click',()=>el.classList.remove('on'));
     new MutationObserver(()=>{if(!$('#sheet').classList.contains('on')&&el.classList.contains('on')&&$('#stuList'))$('#stuList').innerHTML=stuRows()}).observe($('#sheet'),{attributes:true,attributeFilter:['class']});
@@ -683,8 +684,10 @@ function settings(){
 
 let tallNext=false,fullNext=false,stuNext=false;
 const sheet=html=>{const sh=$('#sheet');$('#scrim').classList.toggle('blur',fullNext);$('#sheetBody').innerHTML=(tallNext?XB:'')+html;sh.style.transition='none';sh.classList.remove('an');sh.classList.toggle('tall',tallNext);sh.classList.toggle('full',fullNext);sh.classList.toggle('stu',stuNext);$('#scrim').classList.toggle('soft',stuNext);tallNext=fullNext=stuNext=false;void sh.offsetWidth;sh.style.transition='';void sh.offsetWidth;sh.classList.add('on');$('#scrim').classList.add('on')};
-const closeAll=()=>{$('#scrim').classList.remove('blur','soft');$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
-const openDrawer=()=>{$('#drawer').classList.add('on');$('#scrim').classList.add('on')};
+const closeAll=()=>{document.body.classList.remove('dtop');$('#scrim').classList.remove('blur','soft');$('#sheet').classList.remove('on');$('#drawer').classList.remove('on');$('#scrim').classList.remove('on')};
+const openDrawer=()=>{const pp=$('#pplSheet');if(matchMedia('(max-width:899px)').matches&&($('#sheet').classList.contains('on')||(pp&&pp.classList.contains('on'))))document.body.classList.add('dtop');$('#drawer').classList.add('on');$('#scrim').classList.add('on')};
+const closeDrawer=()=>{if(document.body.classList.contains('dtop')){document.body.classList.remove('dtop');$('#drawer').classList.remove('on')}else closeAll()};
+$('#scrim').addEventListener('click',e=>{if(document.body.classList.contains('dtop')){e.stopImmediatePropagation();closeDrawer()}},true);
 let toastT;const toast=t=>{let el=$('#toast');if(!el){el=document.createElement('div');el.id='toast';el.className='toast';document.body.appendChild(el)}el.textContent=t;void el.offsetWidth;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),1800)};
 
 function detail(id){
@@ -787,7 +790,7 @@ let pinch=null;
 document.addEventListener('click',e=>{
   const t=e.target,q=s=>t.closest(s);
   let b;
-  if(q('[data-menu]')){closeAll();openDrawer();return}
+  if(q('[data-menu]')){openDrawer();return}
   if(q('[data-histopen]')){histOpen=!histOpen;const h=$('#ordHist'),a=h.querySelector('.hacc');h.querySelector('.hhd').classList.toggle('open',histOpen);if(a){a.classList.toggle('open',histOpen);if(!histOpen)a.scrollTo({top:0,behavior:'smooth'});histFit()}return}
   if(q('.xbtn')){closeAll();return}
   if(b=q('[data-delstu]')){delK=b.dataset.delstu;const nm=(allStu().find(a=>a[0]===delK)||[delK,delK])[1];$('#cfmT').textContent=SOUND?'Удалить клиента?':'Удалить ученика?';$('#cfmM').textContent='«'+nm+'» будет удалён'+(SOUND?' вместе с записями в календаре и заказами.':' вместе с занятиями в календаре и абонементами.')+' Это действие нельзя отменить.';$('#cfm').classList.add('on');return}
@@ -826,7 +829,7 @@ document.addEventListener('click',e=>{
   if(q('#exp')){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='studio-backup.json';a.click();return}
   if(q('#clr')){if(confirm('Удалить все записи?')){S.ev=[];save();closeAll();render()}return}
 });
-$('#menuBtn').onclick=openDrawer;$('#scrim').onclick=()=>closeAll();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#sheet').classList.contains('stu')&&$('#sheet').classList.contains('on'))closeAll()});$('#dpop').onclick=e=>{if(e.target.id==='dpop')$('#dpop').classList.remove('on')};
+$('#menuBtn').onclick=openDrawer;$('#scrim').onclick=()=>closeDrawer();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#sheet').classList.contains('stu')&&$('#sheet').classList.contains('on'))closeAll()});$('#dpop').onclick=e=>{if(e.target.id==='dpop')$('#dpop').classList.remove('on')};
 
 $('#todayBtn').onclick=()=>{cur=new Date();render()};
 
@@ -848,8 +851,8 @@ const unlockY=()=>{$('#main').style.overflowY='';axis=null};
 document.addEventListener('touchcancel',()=>{if(pinch){S.zoom=Math.round(H*100)/100;save();pinch=null}unlockY()},{passive:true});
 document.addEventListener('touchend',e=>{if(pinch){if(!pinch.s){pinch.s=1;S.zoom=Math.round(H*100)/100;save()}if(!e.touches.length){pinch=null;unlockY()}return}unlockY();const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
   if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*.7)return;
-  if(edge&&dx>0){const sh=$('#sheet'),pp=$('#pplSheet');if((sh.classList.contains('on')&&sh.classList.contains('full'))||(pp&&pp.classList.contains('on'))){if(pp)pp.classList.remove('on');closeAll()}return openDrawer()}
-  if(inDrawer&&dx<0)return closeAll();
+  if(edge&&dx>0){if($('#drawer').classList.contains('on'))return;return openDrawer()}
+  if(inDrawer&&dx<0)return closeDrawer();
   if(dx>0&&$('#sheet').classList.contains('on'))return;
   if(page==='cal'&&e.target.closest('#main,#strip')&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')){cur=addD(cur,(dx<0?1:-1)*(view==='week'?nd:1));render()}
 },{passive:true});
@@ -858,7 +861,7 @@ function sheetDrag(el,onClose){
   const sc=$('#scrim'),mob=()=>matchMedia('(max-width:899px)').matches,EZ='cubic-bezier(.2,.8,.2,1)';
   let y0=0,x0=0,ly=0,lt=0,v=0,d=0,on=false,ok=false,can=false;
   el.addEventListener('touchstart',e=>{
-    ok=e.touches.length===1&&mob()&&el.classList.contains('on')&&!e.target.closest('.wcol,.sg,textarea');on=false;v=0;d=0;can=el.scrollTop<1;   /* закрытие только жестом, начатым уже у самого верха */
+    ok=e.touches.length===1&&mob()&&el.classList.contains('on')&&!document.body.classList.contains('dtop')&&!e.target.closest('.wcol,.sg,textarea');on=false;v=0;d=0;can=el.scrollTop<1;   /* закрытие только жестом, начатым уже у самого верха */
     if(!ok)return;const t=e.touches[0];y0=ly=t.clientY;x0=t.clientX;lt=e.timeStamp},{passive:true});
   el.addEventListener('touchmove',e=>{
     if(!ok)return;
@@ -910,7 +913,7 @@ if($('#instBtn'))$('#instBtn').onclick=async()=>{
 };
 
 const accUpd=()=>{$('#accLbl').innerHTML=esc(S.name||ME.name)+'<br><small style="color:var(--tx2);font-weight:400">'+ROLE[ME.role]+'</small>'};
-accUpd();applyTheme();if(SOUND){const n=$('.nav[data-page="people"]');if(n&&n.lastChild)n.lastChild.textContent=' Клиенты студии'}render();
+accUpd();applyTheme();if(SOUND){const n=$('.nav[data-page="people"]');if(n&&n.lastChild)n.lastChild.textContent=' Клиенты студии'}try{const sp=localStorage.getItem('crm_pg');if(matchMedia('(min-width:900px)').matches&&['cal','people','rep'].includes(sp)){page=sp;if(sp==='rep'){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()}}}}catch(e){}render();
 setInterval(()=>{if(page==='cal'&&!$('#sheet').classList.contains('on'))render()},60000);
 </script>
 </body>
