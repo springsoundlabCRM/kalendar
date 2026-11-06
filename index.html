@@ -826,7 +826,7 @@ $('#todayBtn').onclick=()=>{cur=new Date();render()};
 let sx,sy,edge=false,inDrawer=false,axis=null,inCal=false,st0=0;
 document.addEventListener('touchstart',e=>{
   if(e.touches.length===2){if(page==='cal'&&view!=='month'&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')){const a=e.touches[0],b=e.touches[1];pinch={d0:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1,H0:H};axis='p';$('#main').style.overflowY=''}return}
-  const t=e.touches[0];sx=t.clientX;sy=t.clientY;edge=sx<22;inDrawer=!!e.target.closest('#drawer');
+  const t=e.touches[0];sx=t.clientX;sy=t.clientY;edge=sx<56;inDrawer=!!e.target.closest('#drawer');
   axis=null;st0=$('#main').scrollTop;inCal=page==='cal'&&!!e.target.closest('#main,#strip')&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')&&!edge},{passive:true});
 document.addEventListener('touchmove',e=>{
   if(pinch){if(e.touches.length<2)return;if(e.cancelable)e.preventDefault();const a=e.touches[0],b=e.touches[1];setZoom(pinch.H0*Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)/pinch.d0,(a.clientY+b.clientY)/2-$('#main').getBoundingClientRect().top);return}
