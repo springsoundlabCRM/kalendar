@@ -913,7 +913,7 @@ document.addEventListener('click',e=>{
   if(b=q('[data-d]')){cur=pd(b.dataset.d);return render()}
   if(b=q('[data-nav]')){cur=addD(cur,+b.dataset.nav);return render()}
   if(b=q('[data-f]')){filt=b.dataset.f;return render()}
-  if(b=q('[data-page]')){if(b.dataset.page==='set'){closeAll();return settings()}if(b.dataset.page==='rep'&&!matchMedia('(min-width:900px)').matches){closeAll();return analytics()}if(b.dataset.page==='rep'){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()}}if(b.dataset.page==='people'&&matchMedia('(max-width:899px)').matches){closeAll();return people()}page=b.dataset.page;closeAll();return render()}
+  if(b=q('[data-page]')){{const pp=$('#pplSheet');if(pp&&b.dataset.page!=='people')pp.classList.remove('on')}if(b.dataset.page==='set'){closeAll();return settings()}if(b.dataset.page==='rep'&&!matchMedia('(min-width:900px)').matches){closeAll();return analytics()}if(b.dataset.page==='rep'){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()}}if(b.dataset.page==='people'&&matchMedia('(max-width:899px)').matches){closeAll();return people()}page=b.dataset.page;closeAll();return render()}
   if(b=q('#accMode [data-am]')){accMode=b.dataset.am;return applyAccent()}
   if(b=q('#accCalSw [data-cc]')){const c=b.dataset.cc,tk=takenCal();if(tk[c]&&c!==myCal())return toast('Цвет занят: '+tk[c]);S.calColor=c;_ca=null;applyAccent();render();return}
   if(b=q('#accCus')){return openPicker()}
