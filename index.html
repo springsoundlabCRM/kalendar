@@ -252,7 +252,7 @@ body{padding-left:min(82vw,280px)}
 #cfm .dp{padding:22px}#cfm h3{margin:0 0 8px}#cfm p{margin:0;color:var(--tx2);line-height:1.4}
 #cfm .row{margin-top:6px}#cfm .btn{margin-top:14px}
 /* Звукорежиссёр: плюс и «Подтвердить» внизу карточки */
-.sbr{display:flex;justify-content:flex-end;margin-bottom:0}.sbk [hidden]{display:none!important}
+.sbr{display:flex;justify-content:flex-end;margin-bottom:0;transition:opacity .2s ease}.sbr.dim{opacity:0;pointer-events:none}.sbk [hidden]{display:none!important}
 .ordplus{width:52px;height:52px;border-radius:17px;background:var(--ac);color:var(--acx);font-size:30px;line-height:1;box-shadow:var(--sh);display:grid;place-items:center}
 .ordplus svg{display:block;pointer-events:none}
 .ordplus:active{transform:scale(.95)}
@@ -263,8 +263,8 @@ body{padding-left:min(82vw,280px)}
 #ordDebtWrap .debtc{margin-top:18px}
 #ordHist .hacc{transition:max-height .45s cubic-bezier(.4,0,.2,1),margin-bottom .45s cubic-bezier(.4,0,.2,1)}#ordHist .hacc:not(.open){margin-bottom:10px}
 .dbh{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:14px;text-align:left}
-.dbs{display:flex;align-items:center;gap:8px;color:#f04438}.dbs svg{transition:transform .45s cubic-bezier(.4,0,.2,1)}.debtc.open .dbs svg{transform:rotate(180deg)}
-.dbb{padding:0 14px;max-height:0;overflow:hidden;visibility:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1),visibility 0s linear .45s}.debtc.open .dbb{visibility:visible;transition-delay:0s}.dbb .btn{margin:12px 0 14px}.dbb .btn:disabled{opacity:.45;pointer-events:none}
+.dbs{display:flex;align-items:center;gap:8px;color:#f04438}.dbs svg{transition:transform .32s cubic-bezier(.4,0,.2,1)}.debtc.open .dbs svg{transform:rotate(180deg)}
+.dbb{padding:0 14px;max-height:0;overflow:hidden;visibility:hidden;transition:max-height .32s cubic-bezier(.4,0,.2,1),visibility 0s linear .32s}.debtc.open .dbb{visibility:visible;transition-delay:0s}.dbb .btn{margin:12px 0 14px}.dbb .btn:disabled{opacity:.45;pointer-events:none}
 @media (max-width:899px){.sbk{margin-top:6px}}
 .owin{animation:owin .25s ease-out}@keyframes owin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 /* Телефон: кнопки карточки клиента прижаты к низу, как «Сохранить» в новой записи */
@@ -487,7 +487,7 @@ function ordSchedule(){if(!oS.sch)return true;const k=stuK,nm=(allStu().find(a=>
   save();render();const o=stat(k);$('#ordKp').innerHTML=ordKpH(o);$('#ordHist').innerHTML=ordHistH(o);const l=$('#stuList');if(l)l.innerHTML=stuRows();oReset();return true}
 function ordCheck(){const sv=$('#ordS').value.trim(),pv=$('#ordP').value.trim(),pdv=$('#ordPd').value.trim();if(!sv&&!pv&&!pdv)return'';const pr=+pv||0;if(!sv)return'Укажите услугу';if(!(pr>0))return'Укажите стоимость';if(stOf(stuK)==='part'){const d=+pdv||0;if(!(d>0))return'Укажите, сколько внесено';if(d>=pr)return'Внесено должно быть меньше стоимости'}return''}
 function dFit(c){const sh=$('#sheet'),bar=sh.querySelector('.sbk'),r=c.getBoundingClientRect(),top=bar?bar.getBoundingClientRect().top:sh.getBoundingClientRect().bottom,n=r.bottom-(top-14);if(n>0)sh.scrollTo({top:sh.scrollTop+n,behavior:'smooth'})}
-function barSync(){const sb=$('.sbr'),w=$('#ordWrap');if(!sb||!w)return;sb.hidden=!w.hidden?true:(!!debtOpen&&matchMedia('(max-width:899px)').matches)}
+function barSync(){const sb=$('.sbr'),w=$('#ordWrap');if(!sb||!w)return;sb.hidden=!w.hidden;sb.classList.toggle('dim',w.hidden&&!!debtOpen&&matchMedia('(max-width:899px)').matches)}
 function dSpace(){const w=$('#ordDebtWrap');if(w)w.classList.toggle('dsp',!!debtOpen&&matchMedia('(max-width:899px)').matches)}
 function dCenter(c){const sh=$('#sheet'),bar=sh.querySelector('.sbk'),vv=window.visualViewport,s=sh.getBoundingClientRect(),r=c.getBoundingClientRect(),kb=vv&&vv.height<innerHeight-80,b=Math.min(s.bottom,vv?vv.offsetTop+vv.height:innerHeight)-(bar&&!kb?bar.offsetHeight:0),mid=s.top+(b-s.top)*.45;sh.scrollTo({top:sh.scrollTop+(r.top+r.height/2)-mid,behavior:'smooth'})}
 function refreshDebt(){const w=$('#ordDebtWrap');if(w){w.innerHTML=ordDebtH(stat(stuK));barSync()}}
@@ -895,7 +895,7 @@ document.addEventListener('click',e=>{
   if(b=q('[data-stu]')){stuK=b.dataset.stu;if(matchMedia('(min-width:900px)').matches)stuNext=true;else fullNext=true;return sheet(stuHtml())}
   if(q('[data-addstu]')){tallNext=true;return sheet('<h3>'+W.newT+'</h3><label>Имя</label><input id="newStu" placeholder="'+W.newP+'"><button class="btn" id="saveStu">Добавить</button>')}
   if(q('#saveStu')){const n=$('#newStu').value.trim();if(n&&!allStu().some(a=>a[0]===key(n)))S.stu.push({id:String(Date.now()),name:n});save();closeAll();return render()}
-  if(q('[data-debtopen]')){debtOpen=!debtOpen;barSync();const c=q('.debtc');c.classList.toggle('open',debtOpen);{const bb=c.querySelector('.dbb');if(debtOpen){bb.style.maxHeight=bb.scrollHeight+'px'}else{bb.style.maxHeight=bb.scrollHeight+'px';void bb.offsetHeight;bb.style.maxHeight='0px'}}q('[data-debtopen]').setAttribute('aria-expanded',debtOpen);if(debtOpen){if(matchMedia('(max-width:899px)').matches){barSync();scrollToEnd(c,480)}else{$('#debtIn').focus({preventScroll:true});setTimeout(()=>dFit(c),460)}}return}
+  if(q('[data-debtopen]')){debtOpen=!debtOpen;barSync();const c=q('.debtc');c.classList.toggle('open',debtOpen);{const bb=c.querySelector('.dbb');if(debtOpen){bb.style.maxHeight=bb.scrollHeight+'px'}else{bb.style.maxHeight=bb.scrollHeight+'px';void bb.offsetHeight;bb.style.maxHeight='0px'}}q('[data-debtopen]').setAttribute('aria-expanded',debtOpen);if(debtOpen){if(matchMedia('(max-width:899px)').matches){barSync();scrollToEnd(c,360)}else{$('#debtIn').focus({preventScroll:true});setTimeout(()=>dFit(c),340)}}return}
   if(q('[data-debtpay]')){debtPay();return}
   if(q('[data-ordplus]')){const w=$('#ordWrap');if(w.hidden){w.hidden=false;w.classList.remove('owin');void w.offsetWidth;w.classList.add('owin');$('[data-ordok]').disabled=false;$('[data-ordok]').hidden=false;$('.sbr').hidden=true;ordPartUi()}else{ordId=null;$('#ordS').value='';$('#ordP').value='';$('#ordPd').value='';ordPartUi();oReset()}w.scrollIntoView({block:'nearest',behavior:'smooth'});return}
   if(q('[data-ordok]')){const ce=ordCheck();if(ce){toast(ce);return}if(!ordSchedule())return;const had=!!ordId;ordId=null;$('#ordS').value='';$('#ordP').value='';$('#ordPd').value='';$('#ordWrap').hidden=true;$('[data-ordok]').disabled=true;$('[data-ordok]').hidden=true;barSync();const fx=ordFinish();if(had)toast(fx==='part'?'Заказ сохранён · есть задолженность':'Заказ сохранён');return}
