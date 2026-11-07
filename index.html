@@ -303,6 +303,8 @@ body{padding-left:min(82vw,280px)}
 .sheet.full h3.hx{padding-right:150px}@media (min-width:900px){.sheet.full:has(.setbar){max-height:calc(100% - 24px)}}
 @media (max-width:899px){.hbtn{top:calc(env(safe-area-inset-top,0px) + 18px);right:64px;height:40px;border-radius:20px}}
 @media (max-width:560px){.hbtn{padding:0 12px;gap:6px;font-size:13px}.sheet.full h3.hx{padding-right:104px;font-size:19px}.sheet.full:has(.setbar){height:100%}}
+.hx .hs{display:none}
+@media (max-width:899px){.sheet.full .hbtn{width:40px;padding:0;gap:0;justify-content:center;border-radius:50%}.sheet.full .hbtn span{display:none}.hx .hl{display:none}.hx .hs{display:inline}}
 @media (min-width:900px){.sheet.full:has(.setbar) .xbtn,.sheet.full:has(.setbar) .hbtn{top:28px}}
 </style>
 </head>
@@ -753,7 +755,7 @@ function people(){
 }
 function extraSettings(){
   fullNext=true;
-  sheet(`<button class="ib mbtn" data-menu aria-label="Меню"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button><button class="hbtn" id="goMain" aria-label="Настройки" title="Настройки"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>Настройки</span></button><h3 class="hx">Дополнительные настройки</h3>
+  sheet(`<button class="ib mbtn" data-menu aria-label="Меню"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button><button class="hbtn" id="goMain" aria-label="Настройки" title="Настройки"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>Настройки</span></button><h3 class="hx"><span class="hl">Дополнительные настройки</span><span class="hs">Доп. настройки</span></h3>
   <div class="card"><label style="margin-top:0">Данные</label><div class="row" style="margin-top:8px"><button class="btn g" id="exp" style="margin:0;background:var(--bg);flex:1;font-size:15px">Резервная копия</button><button class="btn d" id="clr" style="margin:0;background:var(--bg);flex:1;font-size:15px">Удалить всё</button></div><p style="color:var(--tx2);font-size:13px;margin:10px 0 0">Данные хранятся на этом устройстве.</p></div>
   <div class="setbar"><div class="row"><button class="btn g" id="setCancel">Отмена</button><button class="btn" id="setSave">Сохранить</button></div></div>`);
   applyTheme();fitSet();
@@ -896,7 +898,7 @@ document.addEventListener('click',e=>{
   if(q('[data-ordplus]')){const w=$('#ordWrap');if(w.hidden){w.hidden=false;w.classList.remove('owin');void w.offsetWidth;w.classList.add('owin');$('[data-ordok]').disabled=false;$('[data-ordok]').hidden=false;$('.sbr').hidden=true;ordPartUi()}else{ordId=null;$('#ordS').value='';$('#ordP').value='';$('#ordPd').value='';ordPartUi();oReset()}w.scrollIntoView({block:'nearest',behavior:'smooth'});return}
   if(q('[data-ordok]')){const ce=ordCheck();if(ce){toast(ce);return}if(!ordSchedule())return;const had=!!ordId;ordId=null;$('#ordS').value='';$('#ordP').value='';$('#ordPd').value='';$('#ordWrap').hidden=true;$('[data-ordok]').disabled=true;$('[data-ordok]').hidden=true;barSync();const fx=ordFinish();if(had)toast(fx==='part'?'Заказ сохранён · есть задолженность':'Заказ сохранён');return}
   if(q('[data-addsub]')){const n=+$('#subN').value,b=S.price!=null?+S.price:0,u=$('#subP').value.trim()===''?b:(+$('#subP').value||0);if(n>0){S.subs.push({id:String(Date.now()),k:stuK,total:n,unit:u,price:n*u,base:b,disc:b>u?(b-u)*n:0,date:iso(new Date())});save();$('#sheetBody').innerHTML=stuHtml();render();const c=$('#subCard');if(c){c.classList.add('shine');c.addEventListener('animationend',()=>c.classList.remove('shine'),{once:true})}}return}
-  if(b=q('[data-ap]')){an.per=b.dataset.ap;anUp();return}
+  if(b=q('[data-ap]')){const sg0=b.closest('.seg.sx'),oi=sg0?sg0.dataset.i:null;an.per=b.dataset.ap;anUp();if(oi!==null){const sg1=$$('.seg.sx').find(x=>x.querySelector('[data-ap]'));if(sg1){const ni=sg1.dataset.i;if(ni!==oi){sg1.dataset.i=oi;void sg1.offsetWidth;sg1.dataset.i=ni}}}return}
   if(b=q('[data-ao]')){const o=+b.dataset.ao;if(an.per==='y')an.y+=o;else{const d=new Date(an.y,an.m+o,1);an.y=d.getFullYear();an.m=d.getMonth()}anUp();return}
   if(q('#pgClose')){page='cal';first=true;return render()}
   if(b=q('[data-z]')){setZoom(H*(b.dataset.z>0?1.25:0.8),$('#main').clientHeight/2);S.zoom=Math.round(H*100)/100;save();return}
