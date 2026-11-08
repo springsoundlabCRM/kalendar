@@ -417,7 +417,7 @@ document.addEventListener('click',e=>{const t=e.target;let b;
   if(b=t.closest('[data-sfb]')){const m=b.parentNode.querySelector('.stm'),o=!m.classList.contains('on');$$('.stm').forEach(x=>x.classList.remove('on'));m.classList.toggle('on',o);return}
   if(b=t.closest('[data-sf]')){stuF=b.dataset.sf;return refreshStu()}
   if(b=t.closest('[data-sb]')){stuB=b.dataset.sb;return refreshStu()}
-  if(b=t.closest('[data-book]')){const pp=$('#pplSheet');if(pp)pp.classList.remove('on');closeAll();page='cal';cur=new Date();first=true;render();return form(null,{person:b.dataset.book,date:iso(cur)})}
+  if(b=t.closest('[data-book]')){const pp=$('#pplSheet');if(pp)pp.classList.remove('on');closeAll();return form(null,{person:b.dataset.book,date:iso(new Date())})}
   if(b=t.closest('[data-ss]')){S.st[stuK]=b.dataset.ss;save();$$('#stSeg button').forEach(x=>x.classList.toggle('on',x===b));{const sg=$('#stSeg');if(sg)sg.dataset.i=Object.keys(ST).indexOf(S.st[stuK])}const l=$('#stuList');if(l)l.innerHTML=stuRows();if(SOUND&&$('#ordWrap')){ordPartUi();ordSave()}return}
   $$('.stm.on').forEach(x=>x.classList.remove('on'))});
 const allStu=()=>{const m=new Map();S.stu.forEach(s=>m.set(key(s.name),s.name));S.ev.forEach(e=>{const k=key(e.person);if(k&&!m.has(k))m.set(k,e.person.trim())});return[...m]};
