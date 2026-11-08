@@ -56,6 +56,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .sbf{position:absolute;left:0;top:0;bottom:0;overflow:hidden;background:var(--ac);color:var(--acx);border-radius:99px;transition:width .3s}
 .sbf span{position:absolute;left:0}
 #subCard .hopen{background:var(--bg)}
+#subCard{transition:margin-top .45s cubic-bezier(.4,0,.2,1)}#ordHist:has(.hacc.open)+#subCard{margin-top:18px}
 .sbb{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1),visibility 0s linear .45s}
 #subCard.open .sbb{grid-template-rows:1fr;visibility:visible;transition-delay:0s}
 .sbb>div{overflow:hidden;min-height:0}
