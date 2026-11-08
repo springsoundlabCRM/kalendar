@@ -50,19 +50,16 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .pg{padding:14px 16px 40px}.pg h2{margin:4px 0 14px}
 .card{background:var(--bg2);border-radius:16px;padding:14px;margin-bottom:10px}
 .card .r{display:flex;justify-content:space-between;gap:10px;padding:3px 0}.card .r span:first-child{color:var(--tx2)}
-.sbi{background:var(--bg);border-radius:14px;margin:10px 0 0;overflow:hidden}
-.sbh{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:14px}
-.sbt{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:600}
-.sbt small{color:var(--tx2);font-weight:400;font-size:12px;margin-left:6px}
-.sbt svg{flex:none;color:var(--tx2);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.sbi.open .sbt svg{transform:rotate(180deg)}
-.sbp{height:8px;border-radius:99px;background:var(--ln);margin-top:10px;overflow:hidden}
-.sbp i{display:block;height:100%;border-radius:99px;background:var(--ac);transition:width .3s}
-.sbi.done .sbp i{background:#2fb344}
+.sbi{margin:10px 0 0}
+.sbh{display:block;width:100%;padding:0;border-radius:14px}
+.sbp{position:relative;height:30px;border-radius:99px;background:var(--bg);overflow:hidden;color:var(--tx);box-shadow:inset 0 0 0 1px var(--ln)}
+.sbp span{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;width:100%;font-weight:600;font-size:14px;white-space:nowrap}
+.sbf{position:absolute;left:0;top:0;bottom:0;overflow:hidden;background:var(--ac);color:var(--acx);border-radius:99px;transition:width .3s}
+.sbf span{position:absolute;left:0}
 .sbb{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .3s cubic-bezier(.4,0,.2,1),visibility 0s linear .3s}
 .sbi.open .sbb{grid-template-rows:1fr;visibility:visible;transition-delay:0s}
 .sbb>div{overflow:hidden;min-height:0}
-.sbb .sbd{padding:0 14px 12px}
+.sbb .sbd{padding-top:8px}
 .big{font-size:26px;font-weight:700}
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s;z-index:10}
 .scrim.on{opacity:1;pointer-events:auto}
@@ -433,8 +430,8 @@ function stuRows(){if(fixAll())save();const q=key(stuQv),R=allStu().filter(([k])
 const XB='<button class="xbtn" aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>';
 const subOpen=new Set();
 function subList(o){const srt=[...o.su].sort((a,b)=>(a.date+a.id).localeCompare(b.date+b.id));let used=o.ev.filter(e=>e.pay==='sub').length;const u={};srt.forEach(x=>{const n=Math.min(used,x.total);u[x.id]=n;used-=n});
-return o.su.map(x=>{const us=u[x.id]||0,left=x.total-us,pc=x.total?Math.round(us/x.total*100):0,op=subOpen.has(x.id),dn=left<=0;
-return `<div class="sbi${op?' open':''}${dn?' done':''}" data-sid="${esc(x.id)}"><button type="button" class="sbh" data-subtg="${esc(x.id)}" aria-expanded="${op}"><div class="sbt"><span>${dn?'Закончился':'Осталось '+left+' из '+x.total}<small>${dshort(x.date)}</small></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div><div class="sbp" role="progressbar" aria-valuemin="0" aria-valuemax="${x.total}" aria-valuenow="${us}"><i style="width:${pc}%"></i></div></button><div class="sbb"><div><div class="sbd"><div class="r"><span>${dshort(x.date)} · ${x.total} × ${rub(x.unit||(x.price/x.total))}</span><span>${rub(x.price)}</span></div><div class="r"><span>Использовано</span><span>${us} из ${x.total}</span></div>${x.disc>0?`<div style="margin:-4px 0 6px"><small style="color:#2fb344">Скидка ${rub(x.disc)} · ${Math.round(x.disc/(x.base*x.total)*100)}%</small></div>`:''}</div></div></div></div>`}).join('')||'<div class="r"><span>Пока нет</span></div>'}
+return o.su.map(x=>{const us=u[x.id]||0,left=x.total-us,pc=x.total?Math.round(left/x.total*100):0,op=subOpen.has(x.id),tx='Осталось '+left+' из '+x.total;
+return `<div class="sbi${op?' open':''}" data-sid="${esc(x.id)}"><button type="button" class="sbh" data-subtg="${esc(x.id)}" aria-expanded="${op}"><div class="sbp" role="progressbar" aria-label="${tx}" aria-valuemin="0" aria-valuemax="${x.total}" aria-valuenow="${left}"><span>${tx}</span>${pc>0?`<div class="sbf" style="width:${pc}%"><span style="width:${10000/pc}%">${tx}</span></div>`:''}</div></button><div class="sbb"><div><div class="sbd"><div class="r"><span>${dshort(x.date)} · ${x.total} × ${rub(x.unit||(x.price/x.total))}</span><span>${rub(x.price)}</span></div>${x.disc>0?`<div style="margin:-4px 0 6px"><small style="color:#2fb344">Скидка ${rub(x.disc)} · ${Math.round(x.disc/(x.base*x.total)*100)}%</small></div>`:''}</div></div></div></div>`}).join('')||'<div class="r"><span>Пока нет</span></div>'}
 function stuHtml(){if(SOUND)return stuHtmlS();histOpen=false;const dsk=matchMedia('(min-width:900px)').matches,AB='<button class="btn" data-addsub style="margin:10px 0 0">Добавить абонемент</button>',k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1],o=stat(k),kp=(t,v)=>`<div class="card" style="margin:0"><small style="color:var(--tx2)">${t}</small><div class="big">${v}</div></div>`;
   return XB+`<h3>${esc(nm)}</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">${kp('Занятий',o.n)}${kp('Часов',+o.h.toFixed(1))}${kp('Оплачено',rub(o.paid))}${kp('В абонементе',o.total?o.left+' из '+o.total:'—')}</div><div class="card"><b>Статус</b><div class="seg sx" id="stSeg" data-i="${Object.keys(ST).indexOf(stOf(k))}" style="margin-top:10px;background:var(--bg)">${Object.keys(ST).map(x=>`<button data-ss="${x}" style="--c:${ST[x].c}" class="${stOf(k)===x?'on':''}">${ST[x].n}</button>`).join('')}</div></div>
   <div id="ordHist">${vocHistH(o)}</div>
