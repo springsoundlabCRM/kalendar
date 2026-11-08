@@ -990,7 +990,7 @@ document.addEventListener('touchend',e=>{if(pinch){if(!pinch.s){pinch.s=1;S.zoom
   if(edge&&dx>0){if($('#drawer').classList.contains('on'))return;return openDrawer()}
   if(inDrawer&&dx<0)return closeDrawer();
   if(dx>0&&$('#sheet').classList.contains('on'))return;
-  if(page==='cal'&&e.target.closest('#main,#strip')&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')){cur=addD(cur,(dx<0?1:-1)*(view==='week'?nd:1));render()}
+  if(page==='cal'&&e.target.closest('#main,#strip')&&!$('#drawer').classList.contains('on')&&!$('#sheet').classList.contains('on')){const sg=dx<0?1:-1;cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()+sg,1):addD(cur,sg*(view==='week'?nd:1));render()}
 },{passive:true});
 /* Плавное закрытие нижних окон жестом вниз (как в Авито): окно тянется за пальцем, только когда внутри нечего листать */
 function sheetDrag(el,onClose){
