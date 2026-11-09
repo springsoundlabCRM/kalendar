@@ -323,6 +323,7 @@ body{padding-left:min(82vw,280px)}
 @media (min-width:900px){.sheet.full:has(.setbar) .xbtn,.sheet.full:has(.setbar) .hbtn{top:28px}}
 .gbtn{display:none}.sheet.tall .gbtn{display:grid;place-items:center;position:absolute;top:16px;right:60px;width:36px;height:36px;border-radius:50%;background:var(--bg2);z-index:2}@media (min-width:900px){.sheet.tall .gbtn{top:24px;right:68px}}.gbtn svg{display:block}.svr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0}.svr:not(:last-child){border-bottom:1px solid var(--ln)}.svr .sx2{display:flex;align-items:center;gap:10px;white-space:nowrap;font-weight:600}.svr .sdel{width:32px;height:32px;border-radius:50%;background:var(--bg);display:grid;place-items:center;color:var(--tx2);flex:none}
 #svcPage{position:fixed;top:0;right:0;bottom:0;left:0;background:var(--bg);z-index:30;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 18px) 18px calc(env(safe-area-inset-bottom,0px) + 20px);box-shadow:var(--sh)}#svcPage.on{transform:none}@media (min-width:900px){#svcPage{left:auto;width:460px;border-radius:24px 0 0 24px;padding:28px}}.svh{margin-bottom:10px}.svb{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px 0 10px;border-radius:20px;background:var(--bg2);font-weight:600;font-size:14px}
+#fOrdSug div,#ordSug div{text-align:center}.svh{display:flex;justify-content:flex-end}
 </style>
 </head>
 <body>
@@ -804,10 +805,15 @@ function svcShow(){let p=$('#svcPage');if(!p){p=document.createElement('div');p.
   p.scrollTop=0;void p.offsetWidth;p.classList.add('on')}
 function svcHide(){const p=$('#svcPage');if(p)p.classList.remove('on')}
 /* Выпадающий список сохранённых услуг в карточке клиента (поле «Услуга» заказа) */
-function svcDrop(inp,sg){const q=key(inp.value),m=(S.svc||[]).filter(x=>!q||key(x.name).includes(q)).filter(x=>key(x.name)!==q);sg.innerHTML=m.map(x=>`<div data-sv="${esc(x.id)}">${esc(x.name)} <span style="color:var(--tx2)">· ${rub(x.price)}</span></div>`).join('');sg.classList.toggle('on',m.length>0)}
+function svcDrop(inp,sg){const q=key(inp.value),m=(S.svc||[]).filter(x=>!q||key(x.name).includes(q)).filter(x=>key(x.name)!==q);sg.innerHTML=m.map(x=>`<div data-sv="${esc(x.id)}">${esc(x.name)}</div>`).join('');sg.classList.toggle('on',m.length>0)}
 document.addEventListener('focusin',e=>{if(e.target.id==='ordS'){const g=$('#ordSug');if(g)svcDrop(e.target,g)}});
 document.addEventListener('input',e=>{if(e.target.id==='ordS'){const g=$('#ordSug');if(g)svcDrop(e.target,g)}});
-document.addEventListener('focusout',e=>{if(e.target.id==='ordS')setTimeout(()=>{const g=$('#ordSug');if(g)g.classList.remove('on')},200)});
+let svcHold=false;
+const svcClose=()=>{$$('#fOrdSug,#ordSug').forEach(g=>g.classList.remove('on'))};
+document.addEventListener('focusout',e=>{if(e.target.id==='ordS'&&!svcHold)svcClose()});
+document.addEventListener('pointerdown',e=>{if(e.target.closest('.sg')){svcHold=true;return}if(!e.target.closest('#fOrdS,#ordS')&&$$('#fOrdSug.on,#ordSug.on').length){svcClose();const ae=document.activeElement;if(ae&&(ae.id==='fOrdS'||ae.id==='ordS'))ae.blur()}});
+const svcRel=()=>setTimeout(()=>{svcHold=false;const ae=document.activeElement;if(!ae||(ae.id!=='fOrdS'&&ae.id!=='ordS'))svcClose()},300);
+document.addEventListener('pointerup',svcRel);document.addEventListener('pointercancel',svcRel);
 document.addEventListener('mousedown',e=>{if(e.target.closest('#ordSug'))e.preventDefault()});
 document.addEventListener('click',e=>{const d=e.target.closest('#ordSug [data-sv]');if(!d)return;const x=(S.svc||[]).find(v=>v.id===d.dataset.sv),si=$('#ordS'),pi=$('#ordP');if(!x||!si||!pi)return;si.value=x.name;pi.value=x.price;si.dispatchEvent(new Event('input',{bubbles:true}));pi.dispatchEvent(new Event('input',{bubbles:true}));$('#ordSug').classList.remove('on')});
 function extraSettings(){
@@ -910,8 +916,8 @@ function form(id,pre){
   if(!id&&SOUND){const stUi=()=>{$$('#fSt button').forEach(b=>b.classList.toggle('on',b.dataset.fs===fst));$('#fSt').dataset.i=Object.keys(ST).indexOf(fst);if(SOUND){const on=fst==='part';$('#fOrdPart').hidden=!on;if(on)$('#fOrdDebt').textContent=rub(Math.max(0,(+$('#fOrdP').value||0)-(+$('#fOrdPd').value||0)))}};$('#fSt').onclick=ev=>{const b=ev.target.closest('[data-fs]');if(!b)return;fst=b.dataset.fs;fstT=true;stUi()};$('#fOrdP').oninput=$('#fOrdPd').oninput=stUi;stUi()}
   if(SOUND&&!id){const si=$('#fOrdS'),pi=$('#fOrdP'),sg2=$('#fOrdSug');
     if(pre&&pre.os!=null){si.value=pre.os;pi.value=pre.op||''}
-    const showS=()=>{const q=key(si.value),m=(S.svc||[]).filter(x=>!q||key(x.name).includes(q)).filter(x=>key(x.name)!==q);sg2.innerHTML=m.map(x=>`<div data-sv="${esc(x.id)}">${esc(x.name)} <span style="color:var(--tx2)">· ${rub(x.price)}</span></div>`).join('');sg2.classList.toggle('on',m.length>0)};
-    si.onfocus=si.oninput=showS;si.onblur=()=>setTimeout(()=>sg2.classList.remove('on'),200);
+    const showS=()=>{const q=key(si.value),m=(S.svc||[]).filter(x=>!q||key(x.name).includes(q)).filter(x=>key(x.name)!==q);sg2.innerHTML=m.map(x=>`<div data-sv="${esc(x.id)}">${esc(x.name)}</div>`).join('');sg2.classList.toggle('on',m.length>0)};
+    si.onfocus=si.oninput=showS;si.onblur=()=>{if(!svcHold)sg2.classList.remove('on')};
     sg2.onmousedown=ev=>ev.preventDefault();
     sg2.onclick=ev=>{const d=ev.target.closest('[data-sv]');if(!d)return;const x=(S.svc||[]).find(v=>v.id===d.dataset.sv);if(!x)return;si.value=x.name;pi.value=x.price;pi.dispatchEvent(new Event('input',{bubbles:true}));sg2.classList.remove('on')};
     $('#fSvc').onclick=()=>{svcShow()}}
