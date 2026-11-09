@@ -350,6 +350,16 @@ body.xmas .logo i::before{content:"";position:absolute;left:-7px;top:-21px;width
 #xmT i.kn{position:absolute;right:-5px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;border:2px solid #9a9aa2;background:#141416}
 #xmS{position:fixed;left:0;top:0;width:84px;height:112px;z-index:40;pointer-events:none;will-change:transform}#xmS .fl{width:84px;height:112px}
 #xmR{position:fixed;left:0;top:0;width:100%;height:100%;z-index:39;pointer-events:none;overflow:visible}#xmR .rb{fill:none;stroke:rgb(122,80,44);stroke-width:3.2;stroke-linecap:round}#xmR .rh{fill:none;stroke:rgba(255,226,170,.55);stroke-width:1.3;stroke-dasharray:2 3.5;stroke-linecap:round}
+/* Крестик очистки в полях ввода; у числовых полей убраны стрелки вверх-вниз */
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0}
+input.xi,textarea.xi{padding-right:44px!important}
+.xclr{position:absolute;left:0;top:0;z-index:3;width:34px;height:34px;padding:0;margin:0;border:0;background:transparent;display:none;place-items:center;color:var(--tx2);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.xclr.on{display:grid}
+.xclr i{width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--tx2) 26%,transparent);display:grid;place-items:center}
+.xclr:active i{background:color-mix(in srgb,var(--tx2) 45%,transparent)}
+/* «Услуга» и «Стоимость» в блоке «Заказ» — одинаковой ширины */
+.row:has(#ordS)>.pw,.row:has(#ordS)>input,.row:has(#fOrdS)>.pw,.row:has(#fOrdS)>input{flex:1 1 calc(50% - 5px)!important;min-width:0!important}
 </style>
 </head>
 <body>
@@ -515,9 +525,9 @@ function ordSave(){const sv=$('#ordS').value.trim(),pv=$('#ordP').value.trim(),p
   else if(x){x.service=sv;x.price=pr;x.st=sst;if(pd!=null)x.paid=pd;else delete x.paid}
   else{x={id:String(Date.now()),k:stuK,service:sv,price:pr,date:iso(new Date()),st:sst};if(pd!=null)x.paid=pd;S.ord.push(x);ordId=x.id}
   save();const o=stat(stuK);$('#ordKp').innerHTML=ordKpH(o);$('#ordHist').innerHTML=ordHistH(o);const l=$('#stuList');if(l)l.innerHTML=stuRows();ordPartUi();refreshDebt()}
-const oNew=()=>({sch:false,d:iso(new Date()),dm:new Date(),s:600,e:660,act:null,bk:null});let oS={sch:false,d:'',dm:null,s:600,e:660,act:null,bk:null};
+const oNew=()=>({sch:false,d:iso(new Date()),dm:new Date(),s:600,e:660,hs:false,he:false,act:null,bk:null});let oS={sch:false,d:'',dm:null,s:600,e:660,act:null,bk:null};
 const oDesk=()=>matchMedia('(min-width:900px)').matches;
-function oShow(){const a=$('#oDateBtn');if(!a)return;const c=oS.sch;a.querySelector('span').textContent=c?pd(oS.d).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'}):'—';$('#oTs span').textContent=c?hm(oS.s):'—';$('#oTe span').textContent=c?hm(oS.e):'—'}
+function oShow(){const a=$('#oDateBtn');if(!a)return;const c=oS.sch;a.querySelector('span').textContent=c?pd(oS.d).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'}):'—';$('#oTs span').textContent=c&&oS.hs?hm(oS.s):'—';$('#oTe span').textContent=c&&oS.he?hm(oS.e):'—'}
 function oReset(){oS=oNew();oShow();const p=$('#odpin'),t=$('#otpin');if(p)p.classList.remove('open');if(t)t.classList.remove('open')}
 function oDraw(){const D=oS.dm,y=D.getFullYear(),m=D.getMonth(),off=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=iso(new Date());let h=`<div class="dph"><button type="button" data-dm="-1">‹</button><b>${MN[m]} ${y}</b><button type="button" data-dm="1">›</button></div><div class="dpg">`+DN.map(d=>`<small>${d}</small>`).join('');for(let i=0;i<off;i++)h+='<span></span>';for(let d=1;d<=n;d++){const k=y+'-'+pad(m+1)+'-'+pad(d);h+=`<button type="button" class="${oS.sch&&k===oS.d?'sel':''} ${k===td?'tdy':''}" data-dd="${k}">${d}</button>`}(oDesk()?$('#odpin'):$('#dp')).innerHTML=h+'</div>'}
 function oDpClick(ev){const b=ev.target.closest('button');if(!b)return;if(b.dataset.dm){oS.dm=new Date(oS.dm.getFullYear(),oS.dm.getMonth()+(+b.dataset.dm),1);oDraw()}else if(b.dataset.dd){oS.d=b.dataset.dd;oS.sch=true;oShow();$('#dpop').classList.remove('on');$('#odpin').classList.remove('open')}}
@@ -533,14 +543,14 @@ function oBuild(el){const v=oS.act==='s'?oS.s:oS.e,hi=Math.floor(v/60),mi=v%60;
   const [ch,cm]=el.querySelectorAll('.wcol');let lock=true;
   ch.scrollTop=(72+hi)*44;cm.scrollTop=(180+mi)*44;oMark(ch);oMark(cm);setTimeout(()=>lock=false,300);
   [ch,cm].forEach(c=>c.addEventListener('wheel',ev=>{ev.preventDefault();c._a=(c._a||0)+ev.deltaY*(ev.deltaMode===1?33:1);if(Math.abs(c._a)<30)return;const st=Math.sign(c._a);c._a=0;const n=c.children.length-1,base=Date.now()-(c._wt||0)<400?c._i:Math.round(c.scrollTop/44);c._i=Math.max(0,Math.min(n,base+st));c._wt=Date.now();c.scrollTo({top:c._i*44,behavior:'smooth'})},{passive:false}));
-  [ch,cm].forEach(c=>c.onscroll=()=>{const L=c===c.parentNode.children[0]?24:60;if(c.scrollTop<L*22||c.scrollTop>L*44*6.5)oWrap(c,L);oMark(c);hap(c,L,lock);if(lock)return;clearTimeout(c._t);c._t=setTimeout(()=>{oWrap(ch,24);oWrap(cm,60);const nv=(Math.round(ch.scrollTop/44)%24)*60+Math.round(cm.scrollTop/44)%60;if(oS.act==='s'){const d=oS.e-oS.s;oS.s=nv;oS.e=Math.min(oS.s+d,1439)}else oS.e=nv;oS.sch=true;oShow()},100)})}
-function oTclick(ev){const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tcancel]')){if(oS.bk){oS.s=oS.bk[0];oS.e=oS.bk[1];oS.sch=oS.bk[2];oShow()}return oCloseT()}if(ev.target.closest('[data-tdone]')){oS.sch=true;oShow();oCloseT()}}
+  [ch,cm].forEach(c=>c.onscroll=()=>{const L=c===c.parentNode.children[0]?24:60;if(c.scrollTop<L*22||c.scrollTop>L*44*6.5)oWrap(c,L);oMark(c);hap(c,L,lock);if(lock)return;clearTimeout(c._t);c._t=setTimeout(()=>{oWrap(ch,24);oWrap(cm,60);const nv=(Math.round(ch.scrollTop/44)%24)*60+Math.round(cm.scrollTop/44)%60;if(oS.act==='s'){const d=oS.e-oS.s;oS.s=nv;oS.e=Math.min(oS.s+d,1439);oS.hs=true}else{oS.e=nv;oS.he=true}oS.sch=true;oShow()},100)})}
+function oTclick(ev){const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tcancel]')){if(oS.bk){oS.s=oS.bk[0];oS.e=oS.bk[1];oS.sch=oS.bk[2];oS.hs=oS.bk[3];oS.he=oS.bk[4];oShow()}return oCloseT()}if(ev.target.closest('[data-tdone]')){oS.sch=true;if(oS.act==='s')oS.hs=true;else if(oS.act)oS.he=true;oShow();oCloseT()}}
 function oCenter(p){const sh=$('#sheet'),bar=sh.querySelector('.sbk'),cs=getComputedStyle(p),pv=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom),r=p.getBoundingClientRect(),s=sh.getBoundingClientRect(),vb=s.bottom-(bar?bar.offsetHeight:0),top=r.top+8-parseFloat(cs.marginTop),h=Math.min(380,p.scrollHeight-pv+22),st=sh.scrollTop,tg=st+(top+h/2)-(s.top+vb)/2,t0=performance.now();if(Math.abs(tg-st)<2)return;(function f(n){if(!p.classList.contains('open'))return;const k=Math.min(1,(n-t0)/450),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;sh.scrollTop=st+(tg-st)*e;if(k<1)requestAnimationFrame(f)})(t0)}
 function oOpenD(){oCloseT();$('#dp').onclick=$('#odpin').onclick=oDpClick;oS.dm=pd(oS.d);if(oDesk()){const p=$('#odpin');if(p.classList.contains('open'))return p.classList.remove('open');oDraw();p.classList.add('open');return oCenter(p)}oDraw();$('#dpop').classList.add('on')}
-function oOpenT(k){$('#tpop').onclick=ev=>{if(ev.target.id==='tpop')oCloseT()};$('#otpin').onclick=$('#tpw').onclick=oTclick;if(oS.act===null)oS.bk=[oS.s,oS.e,oS.sch];if(oDesk()){$('#odpin').classList.remove('open');const p=$('#otpin');if(p.classList.contains('open')&&oS.act===k)return oCloseT();oS.act=k;oBuild(p);p.classList.add('open');oCenter(p)}else{oS.act=k;oBuild($('#tpw'));$('#tpop').classList.add('on')}}
+function oOpenT(k){$('#tpop').onclick=ev=>{if(ev.target.id==='tpop')oCloseT()};$('#otpin').onclick=$('#tpw').onclick=oTclick;if(oS.act===null)oS.bk=[oS.s,oS.e,oS.sch,oS.hs,oS.he];if(oDesk()){$('#odpin').classList.remove('open');const p=$('#otpin');if(p.classList.contains('open')&&oS.act===k)return oCloseT();oS.act=k;oBuild(p);p.classList.add('open');oCenter(p)}else{oS.act=k;oBuild($('#tpw'));$('#tpop').classList.add('on')}}
 document.addEventListener('click',e=>{const t=e.target;if(t.closest('#oDateBtn'))oOpenD();else if(t.closest('#oTs'))oOpenT('s');else if(t.closest('#oTe'))oOpenT('e')});
 /* Назначение даты и времени из карточки клиента: создаёт запись в календаре и привязывает к ней заказ */
-function ordSchedule(){if(!oS.sch)return true;const k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1];
+function ordSchedule(){if(!oS.sch)return true;const k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1];if(!oS.hs||!oS.he){const x0=ordId&&S.ord.find(v=>v.id===ordId);if(x0)x0.date=oS.d;save();render();const o0=stat(k);$('#ordKp').innerHTML=ordKpH(o0);$('#ordHist').innerHTML=ordHistH(o0);const l0=$('#stuList');if(l0)l0.innerHTML=stuRows();oReset();return true}
   if(oS.e<=oS.s){toast('Конец должен быть позже начала');return false}
   const c=calAll().find(x=>x.date===oS.d&&x.start<oS.e&&oS.s<x.end);if(c){toast('Студия занята: '+c.person+', '+hm(c.start)+'–'+hm(c.end));return false}
   const ev={id:String(Date.now()),type:'rec',person:nm,date:oS.d,start:oS.s,end:oS.e,note:''};S.ev.push(ev);
@@ -550,7 +560,7 @@ function ordSchedule(){if(!oS.sch)return true;const k=stuK,nm=(allStu().find(a=>
 const vCK='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>',vDONE='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/><path class="gp" stroke="#2fb344" d="M5 12.5l4.5 4.5L19 7"/></svg>';
 function vFix(a){const pi=$('#vP'),ok=$('#vPriceOk');if(!pi||!ok)return;const v=pi.value.trim(),dirty=v===''?S.price!=null:(S.price==null||+v!==+S.price),idle=v===''&&S.price==null;ok.classList.toggle('go',dirty);ok.classList.toggle('done',!dirty&&!idle);ok.innerHTML=(dirty||idle)?vCK:vDONE;ok.disabled=!dirty;if(a===true&&!dirty){const r=ok.querySelector('.gp');if(r)r.classList.add('draw')}}
 function vPlus(){const w=$('#ordWrap');if(!w)return;const open=w.hidden;oReset();$('#vP').value=S.price??'';vFix();if(open){w.hidden=false;w.classList.remove('owin');void w.offsetWidth;w.classList.add('owin');const ok=$('[data-ordok]');ok.disabled=false;ok.hidden=false;$('.sbr').hidden=true;barSync()}w.scrollIntoView({block:'nearest',behavior:'smooth'})}
-function vOk(){if(!oS.sch){toast('Укажите дату и время');return}if(oS.e<=oS.s){toast('Конец должен быть позже начала');return}const k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1];const c=calAll().find(x=>x.date===oS.d&&x.start<oS.e&&oS.s<x.end);if(c){toast('Студия занята: '+c.person+', '+hm(c.start)+'–'+hm(c.end));return}const pv=$('#vP').value.trim();S.ev.push({id:String(Date.now()),type:'lesson',person:nm,date:oS.d,start:oS.s,end:oS.e,note:'',pay:'cash',price:pv===''?undefined:Math.max(0,+pv||0)});save();$('#sheetBody').innerHTML=stuHtml();render();const l=$('#stuList');if(l)l.innerHTML=stuRows();toast('Запись добавлена в календарь')}
+function vOk(){if(!oS.sch||!oS.hs||!oS.he){toast('Укажите дату и время');return}if(oS.e<=oS.s){toast('Конец должен быть позже начала');return}const k=stuK,nm=(allStu().find(a=>a[0]===k)||[k,k])[1];const c=calAll().find(x=>x.date===oS.d&&x.start<oS.e&&oS.s<x.end);if(c){toast('Студия занята: '+c.person+', '+hm(c.start)+'–'+hm(c.end));return}const pv=$('#vP').value.trim();S.ev.push({id:String(Date.now()),type:'lesson',person:nm,date:oS.d,start:oS.s,end:oS.e,note:'',pay:'cash',price:pv===''?undefined:Math.max(0,+pv||0)});save();$('#sheetBody').innerHTML=stuHtml();render();const l=$('#stuList');if(l)l.innerHTML=stuRows();toast('Запись добавлена в календарь')}
 document.addEventListener('input',e=>{if(e.target.id==='vP')vFix()});
 document.addEventListener('click',e=>{if(e.target.closest('#vPriceOk')){const pi=$('#vP'),ok=$('#vPriceOk');if(!pi||ok.disabled)return;const v=pi.value.trim();if(v==='')delete S.price;else S.price=Math.max(0,+v||0);save();vFix(true);toast('Изменения сохранены')}});
 function ordCheck(){const sv=$('#ordS').value.trim(),pv=$('#ordP').value.trim(),pdv=$('#ordPd').value.trim();if(!sv&&!pv&&!pdv)return'';const pr=+pv||0;if(!sv)return'Укажите услугу';if(!(pr>0))return'Укажите стоимость';if(stOf(stuK)==='part'){const d=+pdv||0;if(!(d>0))return'Укажите, сколько внесено';if(d>=pr)return'Внесено должно быть меньше стоимости'}return''}
@@ -934,7 +944,7 @@ function detail(id){
 }
 function form(id,pre){
   const e=S.ev.find(x=>x.id===id)||Object.assign({type:ME.role==='sound'?'rec':'lesson',person:'',date:iso(cur),start:10*60,end:11*60,note:''},pre||{});
-  let type=ME.role==='sound'?'rec':'lesson',dval=e.date,dm=pd(e.date);const desk=matchMedia('(min-width:900px)').matches;let ts=e.start,te=e.end,tact=null,bk=null;
+  let type=ME.role==='sound'?'rec':'lesson',dval=e.date,dm=pd(e.date);const desk=matchMedia('(min-width:900px)').matches;let ts=e.start,te=e.end,tact=null,bk=null;let hs=!!(id&&S.ev.find(x=>x.id===id))||!!(pre&&pre.start!=null),he=hs;
   tallNext=true;
   sheet(`${SOUND&&!id?'<button type="button" class="gbtn" id="fSvc" aria-label="Услуги" title="Услуги"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>':''}<h3>${id?'Изменить':'Новая запись'}</h3>
   <div class="seg" id="fType" style="display:none"><button data-v="lesson">Урок вокала</button><button data-v="rec">Запись песни</button></div>
@@ -968,7 +978,7 @@ function form(id,pre){
   $('#dp').onclick=$('#dpin').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;
     if(b.dataset.dm){dm=new Date(dm.getFullYear(),dm.getMonth()+(+b.dataset.dm),1);drawDp()}
     else if(b.dataset.dd){dval=b.dataset.dd;showD();$('#dpop').classList.remove('on');$('#dpin').classList.remove('open')}};
-  const showT=()=>{$('#fS span').textContent=hm(ts);$('#fE span').textContent=hm(te)};showT();
+  const showT=()=>{$('#fS span').textContent=hs?hm(ts):'—';$('#fE span').textContent=he?hm(te):'—'};showT();
   const mark=c=>{const i=Math.round(c.scrollTop/44);[...c.children].forEach((x,j)=>x.classList.toggle('on',j===i))};
   const closeT=()=>{$('#tpop').classList.remove('on');$('#tpin').classList.remove('open');tact=null};
   const wrap=(c,len)=>{const i=Math.round(c.scrollTop/44);if(i>=len*2&&i<len*5)return;const ni=len*3+(i%len);c.style.scrollSnapType='none';c.scrollTop=ni*44;c._i=ni;requestAnimationFrame(()=>{c.style.scrollSnapType=''})};
@@ -982,14 +992,14 @@ function form(id,pre){
     [ch,cm].forEach(c=>c.onscroll=()=>{const L=c===c.parentNode.children[0]?24:60;if(c.scrollTop<L*22||c.scrollTop>L*44*6.5)wrap(c,L);mark(c);hap(c,L,lock);if(lock)return;clearTimeout(c._t);c._t=setTimeout(()=>{
       wrap(ch,24);wrap(cm,60);
       const nv=(Math.round(ch.scrollTop/44)%24)*60+Math.round(cm.scrollTop/44)%60;
-      if(tact==='s'){const d=te-ts;ts=nv;te=Math.min(ts+d,1439)}else te=nv;showT()},100)});
+      if(tact==='s'){const d=te-ts;ts=nv;te=Math.min(ts+d,1439);hs=true}else{te=nv;he=true}showT()},100)});
   };
   const openT=k=>{
-    if(tact===null)bk=[ts,te];
+    if(tact===null)bk=[ts,te,hs,he];
     if(desk){$('#dpin').classList.remove('open');const p=$('#tpin');if(p.classList.contains('open')&&tact===k)return closeT();tact=k;buildW(p);p.classList.add('open')}
     else{tact=k;buildW($('#tpw'));$('#tpop').classList.add('on')}
   };
-  const tclick=ev=>{const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tcancel]')){if(bk){ts=bk[0];te=bk[1];showT()}return closeT()}if(ev.target.closest('[data-tdone]'))closeT()};
+  const tclick=ev=>{const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tcancel]')){if(bk){ts=bk[0];te=bk[1];hs=bk[2];he=bk[3];showT()}return closeT()}if(ev.target.closest('[data-tdone]')){if(tact==='s')hs=true;else if(tact)he=true;showT();closeT()}};
   $('#tpin').onclick=$('#tpw').onclick=tclick;
   $('#tpop').onclick=ev=>{if(ev.target.id==='tpop')closeT()};
   $('#fS').onclick=()=>openT('s');$('#fE').onclick=()=>openT('e');
@@ -1005,7 +1015,7 @@ function form(id,pre){
   $('#fSave').onclick=()=>{
     const n={id:id||String(Date.now()),type,person:$('#fPerson').value.trim(),date:dval,start:ts,end:te,note:$('#fNote').value.trim(),pay:SOUND?undefined:pay,price:pIn.value.trim()===''?undefined:Math.max(0,+pIn.value||0)};
     const er=t=>$('#fErr').textContent=t;
-    if(!n.person)return er('Укажите имя');if(!n.date)return er('Укажите дату');if(n.end<=n.start)return er('Конец должен быть позже начала');
+    if(!n.person)return er('Укажите имя');if(!n.date)return er('Укажите дату');if(!hs||!he)return er('Укажите время');if(n.end<=n.start)return er('Конец должен быть позже начала');
     const c=calAll().find(x=>x.id!==n.id&&x.date===n.date&&x.start<n.end&&n.start<x.end);
     if(c)return er(`Студия занята: ${c.person}, ${hm(c.start)}–${hm(c.end)}`);
     if(pay==='sub'&&stat(key(n.person),n.id).left<=0)return er('В абонементе не осталось занятий');
@@ -1178,6 +1188,39 @@ const accUpd=()=>{$('#accLbl').innerHTML=esc(S.name||ME.name)+'<br><small style=
 document.addEventListener('input',e=>{if(e.target.id==='accCus'){S.accent=e.target.value;save();applyAccent()}});
 accUpd();applyTheme();fxApply();fxCordUi();addEventListener('resize',fxCordLayout);setTimeout(fxCordLayout,300);if(SOUND){const n=$('.nav[data-page="people"]');if(n&&n.lastChild)n.lastChild.textContent=' Клиенты студии'}try{const sp=localStorage.getItem('crm_pg');if(matchMedia('(min-width:900px)').matches&&['cal','people','rep'].includes(sp)){page=sp;if(sp==='rep'){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()}}}}catch(e){}render();
 setInterval(()=>{if(page==='cal'&&!$('#sheet').classList.contains('on'))render()},60000);
+</script>
+<script>
+/* Крестик очистки справа во всех полях ввода (текст и цифры) */
+(()=>{
+const OK=/^(text|number|email|search|tel|url)$/;
+const elig=el=>((el.tagName==='INPUT'&&OK.test(el.type||'text'))||el.tagName==='TEXTAREA')&&!el.closest('#cpOv');
+let raf=0;
+const sched=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;sync()})};
+const ICON='<i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></i>';
+function mk(el){const b=document.createElement('button');b.type='button';b.className='xclr';b.tabIndex=-1;b.setAttribute('aria-label','Очистить');b.innerHTML=ICON;b._i=el;el._xb=b;if(!el.classList.contains('xi'))el.classList.add('xi');el.after(b)}
+function sync(){
+  document.querySelectorAll('input,textarea').forEach(el=>{if(!el._xb&&elig(el))mk(el)});
+  document.querySelectorAll('.xclr').forEach(b=>{
+    const el=b._i;
+    if(!el||!el.isConnected||el.parentNode!==b.parentNode){b.remove();if(el)el._xb=null;return}
+    const r=el.getBoundingClientRect(),show=el.value!==''&&!el.disabled&&!el.readOnly&&r.width>0&&r.height>0;
+    if(!show){if(b.classList.contains('on'))b.classList.remove('on');return}
+    if(!b.classList.contains('on'))b.classList.add('on');
+    const br=b.getBoundingClientRect(),tl=r.right-br.width-3,tt=el.tagName==='TEXTAREA'?r.top+3:r.top+(r.height-br.height)/2,dx=tl-br.left,dy=tt-br.top;
+    if(Math.abs(dx)>.3||Math.abs(dy)>.3){b.style.left=((parseFloat(b.style.left)||0)+dx)+'px';b.style.top=((parseFloat(b.style.top)||0)+dy)+'px'}
+  });
+}
+const hit=e=>e.target&&e.target.closest?e.target.closest('.xclr'):null;
+document.addEventListener('pointerdown',e=>{if(hit(e))e.stopPropagation()},true);
+document.addEventListener('mousedown',e=>{if(hit(e)){e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('click',e=>{const b=hit(e);if(!b)return;e.stopPropagation();e.preventDefault();const el=b._i;if(!el)return;el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));try{el.focus({preventScroll:true})}catch(_){el.focus()}sched()},true);
+['input','focusin','focusout','transitionend','animationend'].forEach(n=>document.addEventListener(n,sched,true));
+addEventListener('scroll',sched,true);addEventListener('resize',sched);addEventListener('load',sched);
+[HTMLInputElement,HTMLTextAreaElement].forEach(C=>{const d=Object.getOwnPropertyDescriptor(C.prototype,'value');if(d&&d.set&&d.get)Object.defineProperty(C.prototype,'value',{configurable:true,enumerable:d.enumerable,get:d.get,set:function(v){d.set.call(this,v);sched()}})});
+new MutationObserver(ms=>{for(const m of ms){const tg=m.target;if(tg.nodeType===1&&(tg.classList.contains('xclr')||tg.closest('.xclr')))continue;if(m.type==='childList'&&[...m.addedNodes,...m.removedNodes].every(n=>n.nodeType===1&&n.classList.contains('xclr')))continue;sched();break}}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','class','style']});
+setInterval(()=>{if(!document.hidden)sync()},400);
+sync();
+})();
 </script>
 <script type="text/plain" id="xm3src">/**
  * @license
