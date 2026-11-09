@@ -358,6 +358,9 @@ input.xi,textarea.xi{padding-right:44px!important}
 .xclr.on{display:grid}
 .xclr i{width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--tx2) 26%,transparent);display:grid;place-items:center}
 .xclr:active i{background:color-mix(in srgb,var(--tx2) 45%,transparent)}
+/* Мобильный Safari: иконки в круглых кнопках — строго по центру кружка */
+.sheet.tall .gbtn,.svr .sdel{-webkit-appearance:none;appearance:none;padding:0;margin-top:0;margin-bottom:0;display:flex;align-items:center;justify-content:center;line-height:0;text-align:center}
+.sheet.tall .gbtn svg,.svr .sdel svg{display:block;margin:0;flex:none}
 /* «Услуга» и «Стоимость» в блоке «Заказ» — одинаковой ширины */
 .row:has(#ordS)>.pw,.row:has(#ordS)>input,.row:has(#fOrdS)>.pw,.row:has(#fOrdS)>input{flex:1 1 calc(50% - 5px)!important;min-width:0!important}
 </style>
