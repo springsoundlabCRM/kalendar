@@ -1191,14 +1191,15 @@ setInterval(()=>{if(page==='cal'&&!$('#sheet').classList.contains('on'))render()
 </script>
 <script>
 /* Крестик очистки справа во всех полях ввода (текст и цифры) */
-(()=>{
+try{(()=>{
 const OK=/^(text|number|email|search|tel|url)$/;
 const elig=el=>((el.tagName==='INPUT'&&OK.test(el.type||'text'))||el.tagName==='TEXTAREA')&&!el.closest('#cpOv');
 let raf=0;
 const sched=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;sync()})};
 const ICON='<i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></i>';
 function mk(el){const b=document.createElement('button');b.type='button';b.className='xclr';b.tabIndex=-1;b.setAttribute('aria-label','Очистить');b.innerHTML=ICON;b._i=el;el._xb=b;if(!el.classList.contains('xi'))el.classList.add('xi');el.after(b)}
-function sync(){
+function sync(){try{sync0()}catch(_){}}
+function sync0(){
   document.querySelectorAll('input,textarea').forEach(el=>{if(!el._xb&&elig(el))mk(el)});
   document.querySelectorAll('.xclr').forEach(b=>{
     const el=b._i;
@@ -1217,10 +1218,10 @@ document.addEventListener('click',e=>{const b=hit(e);if(!b)return;e.stopPropagat
 ['input','focusin','focusout','transitionend','animationend'].forEach(n=>document.addEventListener(n,sched,true));
 addEventListener('scroll',sched,true);addEventListener('resize',sched);addEventListener('load',sched);
 [HTMLInputElement,HTMLTextAreaElement].forEach(C=>{const d=Object.getOwnPropertyDescriptor(C.prototype,'value');if(d&&d.set&&d.get)Object.defineProperty(C.prototype,'value',{configurable:true,enumerable:d.enumerable,get:d.get,set:function(v){d.set.call(this,v);sched()}})});
-new MutationObserver(ms=>{for(const m of ms){const tg=m.target;if(tg.nodeType===1&&(tg.classList.contains('xclr')||tg.closest('.xclr')))continue;if(m.type==='childList'&&[...m.addedNodes,...m.removedNodes].every(n=>n.nodeType===1&&n.classList.contains('xclr')))continue;sched();break}}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','class','style']});
-setInterval(()=>{if(!document.hidden)sync()},400);
+new MutationObserver(ms=>{for(const m of ms){const tg=m.target;if(tg.nodeType===1&&(tg.classList.contains('xclr')||tg.closest('.xclr')))continue;if(m.type==='childList'&&[...m.addedNodes,...m.removedNodes].every(n=>n.nodeType===1&&n.classList.contains('xclr')))continue;sched();break}}).observe(document.body,{childList:true,subtree:true});
+setInterval(()=>{if(!document.hidden)try{sync()}catch(_){}},400);
 sync();
-})();
+})()}catch(_){}
 </script>
 <script type="text/plain" id="xm3src">/**
  * @license
