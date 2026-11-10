@@ -164,7 +164,7 @@ body{padding-left:min(82vw,280px)}
 @media (min-width:900px){.srow .sdel{margin-right:20px}.srow.h .hdel{justify-self:end;margin-right:37px;transform:translateX(50%);white-space:nowrap}}
 .pw{position:relative;z-index:5}.sgo .pw~*{filter:blur(3px);opacity:.55;pointer-events:none;transition:filter .15s,opacity .15s}
 .sg{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--bg2);border:1px solid var(--ln);border-radius:12px;box-shadow:var(--sh);z-index:50;max-height:210px;overflow-y:auto;display:none}.sg.on{display:block}.sg div{padding:12px 14px;cursor:pointer}.sg div:not(:last-child){border-bottom:1px solid var(--ln)}.sg div:hover{background:color-mix(in srgb,var(--tx) 8%,var(--bg2))}
-.vw{position:relative;flex:none}#vw{margin-right:16px}#fxCord.on #fxCordB{fill:var(--tx)}
+.vw{position:relative;flex:none}#vw{margin-right:16px}#fxCord.on #fxCordB{fill:var(--tx)}body:has(#sheet.full.on) #fxCord{display:none!important}
 .vmenu{position:absolute;right:0;top:46px;min-width:160px;background:var(--bg);border:1px solid var(--ln);border-radius:14px;box-shadow:var(--sh);padding:6px;z-index:20;display:none}
 .vmenu.on{display:block}
 .vmenu button{display:flex;justify-content:space-between;align-items:center;width:100%;padding:11px 12px;border-radius:10px;font-weight:600;text-align:left}
@@ -322,7 +322,7 @@ body{padding-left:min(82vw,280px)}
 @media (max-width:899px){.sheet.full .hbtn{width:40px;padding:0;gap:0;justify-content:center;border-radius:50%}.sheet.full .hbtn span{display:none}.hx .hl{display:none}.hx .hs{display:inline}}
 @media (min-width:900px){.sheet.full:has(.setbar) .xbtn,.sheet.full:has(.setbar) .hbtn{top:28px}}
 .gbtn{display:none}.sheet.tall .gbtn{display:grid;place-items:center;position:absolute;top:16px;right:60px;width:36px;height:36px;border-radius:50%;background:var(--bg2);z-index:2}@media (min-width:900px){.sheet.tall .gbtn{top:24px;right:68px}}.gbtn svg{display:block}.svr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0}.svr:not(:last-child){border-bottom:1px solid var(--ln)}.svr .sx2{display:flex;align-items:center;gap:10px;white-space:nowrap;font-weight:600}.svr .sdel{width:32px;height:32px;border-radius:50%;background:var(--bg);display:grid;place-items:center;color:var(--tx2);flex:none}
-#svcPage{position:fixed;top:0;right:0;bottom:0;left:0;background:var(--bg);z-index:30;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 18px) 18px calc(env(safe-area-inset-bottom,0px) + 20px);box-shadow:var(--sh)}#svcPage.on{transform:none}@media (min-width:900px){#svcPage{left:auto;width:460px;border-radius:24px 0 0 24px;padding:28px}}.svh{margin-bottom:10px}.svb{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px 0 10px;border-radius:20px;background:var(--bg2);font-weight:600;font-size:14px}
+#svcPage{position:fixed;top:0;right:0;bottom:0;left:0;background:var(--bg);z-index:30;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top,0px) + 18px) 18px calc(env(safe-area-inset-bottom,0px) + 20px);box-shadow:var(--sh)}#svcPage.on{transform:none}@media (min-width:900px){#svcPage{left:auto;width:460px;border-radius:24px 0 0 24px;padding:28px}}.svh{margin-bottom:10px}#svcPage{display:flex;flex-direction:column}#svcPage>*{flex:none}.svs{position:sticky;bottom:calc(-20px - env(safe-area-inset-bottom,0px));margin-top:auto;padding:14px 0 calc(env(safe-area-inset-bottom,0px) + 20px);background:var(--bg)}@media (min-width:900px){.svs{bottom:-28px;padding-bottom:28px}}.svb{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px 0 10px;border-radius:20px;background:var(--bg2);font-weight:600;font-size:14px}
 #fOrdSug div,#ordSug div{text-align:center}.svh{display:flex;justify-content:flex-end}
 #fxCv{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9;display:none}#fxGar{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:34px;pointer-events:none;z-index:9;display:none;overflow:hidden}#fxGar svg{display:block}.fxb{animation:fxTw 1.6s ease-in-out infinite}@keyframes fxTw{0%,100%{opacity:1}50%{opacity:.35}}
 .seg.sx.four::before{width:calc((100% - 15px)/4)}.seg.sx[data-i="3"]::before{transform:translateX(calc(300% + 9px))}.seg.sx.none::before{opacity:0}
@@ -360,7 +360,7 @@ input.xi,textarea.xi{padding-right:44px!important}
 .xclr:active i{background:color-mix(in srgb,var(--tx2) 45%,transparent)}
 /* Мобильный Safari: иконки в круглых кнопках — строго по центру кружка */
 .sheet.tall .gbtn,.svr .sdel{-webkit-appearance:none;appearance:none;padding:0;margin-top:0;margin-bottom:0;display:flex;align-items:center;justify-content:center;line-height:0;text-align:center}
-.sheet.tall .gbtn svg,.svr .sdel svg{display:block;margin:0;flex:none}
+.sheet.tall .gbtn svg,.svr .sdel svg{display:block;margin:0;flex:none}.svr [data-svedit]{margin-right:-6px}
 /* Цифры в кружках календаря — строго по центру (в т.ч. в Safari на iPhone) */
 .wh i,.mc i,.dpg button{-webkit-appearance:none;appearance:none;padding:0;margin-left:0;margin-right:0;display:flex;align-items:center;justify-content:center;line-height:1;text-align:center;font-variant-numeric:tabular-nums}
 .mc i{margin-bottom:2px}
@@ -384,6 +384,7 @@ input.xi,textarea.xi{padding-right:44px!important}
     <div class="vmenu" id="vmenu"><button data-vm="1">1 день</button><button data-vm="3">3 дня</button><button data-vm="5">5 дней</button><button data-vm="7">7 дней</button><button data-vm="m">Месяц</button></div>
   </div>
   <button class="ib" id="pgClose" style="display:none" aria-label="Закрыть"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <div id="fxAnc" style="position:relative;flex:none;width:0;height:0;margin-right:16px;display:none"></div>
 </header>
 <div class="strip" id="strip"></div>
 <main id="main"></main>
@@ -656,7 +657,7 @@ const evOn=d=>calAll().filter(e=>e.date===iso(d)&&(filt==='all'||e.type===filt))
 
 function render(){_ca=null;
   const cal=page==='cal';document.body.dataset.pg=page;try{localStorage.setItem('crm_pg',page)}catch(e){}
-  $('#nv').style.display=$('#todayBtn').style.display=$('#vw').style.display=cal?'':'none';$('#zm').style.display=cal&&view!=='month'?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';$('#pgClose').style.display=cal?'none':'';
+  $('#nv').style.display=$('#todayBtn').style.display=$('#vw').style.display=cal?'':'none';$('#zm').style.display=cal&&view!=='month'?'':'none';$('#strip').style.display=cal&&view==='day'?'':'none';$('#pgClose').style.display=cal?'none':'';fxCordUi();
   $$('.nav[data-page]').forEach(n=>n.classList.toggle('on',n.dataset.page===page));
   if(!cal){const t={people:W.pl,rep:'Аналитика',set:'Настройки'}[page];$('#title').textContent=t;$('#sub').textContent='';pages();return}
   $('#title').textContent=MN[cur.getMonth()];
@@ -843,12 +844,13 @@ function people(){
   el.style.transition='none';el.scrollTop=0;void el.offsetWidth;el.style.transition='';void el.offsetWidth;
   el.classList.add('on');$('#scrim').classList.add('on');
 }
-let svcDraft=null;
-const svcRows=()=>{const l=S.svc||[];return l.length?l.map(x=>`<div class="svr"><span>${esc(x.name)}</span><span class="sx2">${rub(x.price)}<button type="button" class="sdel" data-svdel="${esc(x.id)}" aria-label="Удалить"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></span></div>`).join(''):'<p style="color:var(--tx2);font-size:14px;margin:8px 0 0">Пока нет сохранённых услуг</p>'};
-function svcShow(){let p=$('#svcPage');if(!p){p=document.createElement('div');p.id='svcPage';document.body.appendChild(p)}
+let svcDraft=null,svcEd=null;
+const svcEdEnd=()=>{svcEd=null;const t=$('#svcFormT'),a=$('#svcAdd'),n=$('#svcName'),p=$('#svcPrice');if(t)t.textContent='Новая услуга';if(a)a.textContent='Сохранить';if(n)n.value='';if(p)p.value=''};
+const svcRows=()=>{const l=S.svc||[];return l.length?l.map(x=>`<div class="svr"><span>${esc(x.name)}</span><span class="sx2">${rub(x.price)}<button type="button" class="sdel" data-svedit="${esc(x.id)}" aria-label="Редактировать"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button><button type="button" class="sdel" data-svdel="${esc(x.id)}" aria-label="Удалить"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></span></div>`).join(''):'<p style="color:var(--tx2);font-size:14px;margin:8px 0 0">Пока нет сохранённых услуг</p>'};
+function svcShow(){svcEd=null;let p=$('#svcPage');if(!p){p=document.createElement('div');p.id='svcPage';document.body.appendChild(p)}
   p.innerHTML=`<div class="svh"><button type="button" class="svb" id="svcBack" aria-label="Назад"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>Назад</span></button></div><h3>Мои услуги</h3>
   <div class="card"><label style="margin-top:0">Сохранённые услуги и пакеты</label><div id="svcList" style="margin-top:4px">${svcRows()}</div></div>
-  <div class="card"><label style="margin-top:0">Новая услуга</label><input id="svcName" placeholder="Название (например, Песня в подарок)" maxlength="80" autocomplete="off"><input id="svcPrice" type="number" inputmode="numeric" min="0" placeholder="Стоимость, ₽" style="margin-top:10px"><button class="btn" id="svcAdd" style="margin:12px 0 0">Сохранить</button></div>`;
+  <div class="card"><label id="svcFormT" style="margin-top:0">Новая услуга</label><input id="svcName" placeholder="Название (например, Песня в подарок)" maxlength="80" autocomplete="off"><input id="svcPrice" type="number" inputmode="numeric" min="0" placeholder="Стоимость, ₽" style="margin-top:10px"></div><div class="svs"><button class="btn" id="svcAdd" style="margin:0">Сохранить</button></div>`;
   p.scrollTop=0;void p.offsetWidth;p.classList.add('on')}
 function svcHide(){const p=$('#svcPage');if(p)p.classList.remove('on')}
 /* Выпадающий список сохранённых услуг в карточке клиента (поле «Услуга» заказа) */
@@ -909,7 +911,7 @@ function fxSeUi(){const sg=$('#fxPrev');if(!sg)return;const v=S.fxS||'';$$('#fxP
 function fxPOn(){return S.fxP!==false&&!S.fxO}
 function fxCordUi(){const c=$('#fxCord');if(!c)return;const v=!!S.fx&&S.fxP!==false;c.style.display=v?'':'none';c.classList.toggle('on',v&&!S.fxO);if(v)fxCordLayout()}
 let fxIns=null;
-function fxCordLayout(){const c=$('#fxCord'),vw=$('#vw');if(!c||!vw)return;if(fxIns===null){const t=document.createElement('div');t.style.cssText='position:fixed;top:0;left:0;height:0;padding-top:env(safe-area-inset-top,0px);visibility:hidden';document.body.appendChild(t);fxIns=t.getBoundingClientRect().height||t.offsetHeight||0;t.remove()}const r=vw.getBoundingClientRect();if(!r.height)return;const up=Math.max(0,r.top-fxIns),rest=up+30,H=rest+40;c.style.top=(-up)+'px';c.style.height=H+'px';const s=$('#fxCordS');s.setAttribute('height',H);s.setAttribute('viewBox','0 0 22 '+H);FX.cy=rest;fxCordDraw(0)}
+function fxCordLayout(){const c=$('#fxCord');if(!c)return;const an=$('#fxAnc'),vw=page==='cal'?$('#vw'):an;if(!vw)return;if(an)an.style.display=page==='cal'?'none':'';if(c.parentElement!==vw){if(page==='cal')vw.insertBefore(c,$('#vmenu'));else vw.appendChild(c)}if(fxIns===null){const t=document.createElement('div');t.style.cssText='position:fixed;top:0;left:0;height:0;padding-top:env(safe-area-inset-top,0px);visibility:hidden';document.body.appendChild(t);fxIns=t.getBoundingClientRect().height||t.offsetHeight||0;t.remove()}const r=vw.getBoundingClientRect();if(!r.height&&vw!==an)return;const up=Math.max(0,r.top-fxIns),rest=34,H=rest+40;c.style.top=(-up)+'px';c.style.height=H+'px';const s=$('#fxCordS');s.setAttribute('height',H);s.setAttribute('viewBox','0 0 22 '+H);FX.cy=rest;fxCordDraw(0)}
 function fxCordDraw(d){const y=(FX.cy||40)+d,l=$('#fxCordL'),b=$('#fxCordB');if(!l||!b)return;l.setAttribute('y2',y);b.setAttribute('cy',y+5)}
 function fxCordAnim(){if(FX.ca)cancelAnimationFrame(FX.ca);const t0=performance.now();const f=now=>{const t=now-t0;let d;if(t<130)d=18*(1-Math.pow(1-t/130,2));else{const u=(t-130)/1000;d=18*Math.exp(-5*u)*Math.cos(14*u)}fxCordDraw(d);if(t<1000)FX.ca=requestAnimationFrame(f);else{FX.ca=0;fxCordDraw(0)}};FX.ca=requestAnimationFrame(f)}
 function fxPartSet(){if(!S.fx||!FX.cv){FX.soft=true;fxApply();return}clearTimeout(FX.ft);if(!fxPOn()){FX.emit=false;FX.cv.style.transition='opacity 1.4s ease-out';FX.cv.style.opacity='0';FX.ft=setTimeout(()=>{if(FX.emit===false)FX.ps=[]},1450)}else{if(FX.emit===false)FX.ps=[];FX.emit=true;FX.acc=0;FX.ps=[];FX.cv.style.transition='none';FX.cv.style.opacity='0';FX.cv.style.display='block';fxSize(false);void FX.cv.offsetWidth;FX.cv.style.transition='opacity .7s ease-in';FX.cv.style.opacity='1';if(!FX.raf)FX.raf=requestAnimationFrame(fxLoop)}}
@@ -1101,8 +1103,9 @@ document.addEventListener('click',e=>{
   if(b=q('.col')){const r=b.getBoundingClientRect(),m=Math.floor((e.clientY-r.top)/H)*60+S0*60;return form(null,{date:b.dataset.date,start:m,end:m+60})}
   if(q('#saveSet')){S.rate={rec:+$('#r1').value||0,lesson:+$('#r2').value||0};save();return alert('Сохранено')}
   if(q('#svcBack')){svcHide();return}
-  if(b=q('[data-svdel]')){S.svc=(S.svc||[]).filter(x=>x.id!==b.dataset.svdel);save();$('#svcList').innerHTML=svcRows();return}
-  if(q('#svcAdd')){const nm=$('#svcName').value.trim(),pv=$('#svcPrice').value.trim(),pr=Math.max(0,+pv||0);if(!nm){toast('Укажите название услуги');return}if(!(pr>0)){toast('Укажите стоимость');return}S.svc=S.svc||[];const ex=S.svc.find(x=>key(x.name)===key(nm));if(ex){ex.name=nm;ex.price=pr}else S.svc.push({id:String(Date.now()),name:nm,price:pr});save();$('#svcList').innerHTML=svcRows();$('#svcName').value='';$('#svcPrice').value='';toast('Услуга сохранена');return}
+  if(b=q('[data-svedit]')){const x=(S.svc||[]).find(v=>v.id===b.dataset.svedit);if(!x)return;svcEd=x.id;$('#svcName').value=x.name;$('#svcPrice').value=x.price;$('#svcFormT').textContent='Редактирование услуги';$('#svcAdd').textContent='Сохранить изменения';$('#svcName').focus();return}
+  if(b=q('[data-svdel]')){if(svcEd===b.dataset.svdel)svcEdEnd();S.svc=(S.svc||[]).filter(x=>x.id!==b.dataset.svdel);save();$('#svcList').innerHTML=svcRows();return}
+  if(q('#svcAdd')){const nm=$('#svcName').value.trim(),pv=$('#svcPrice').value.trim(),pr=Math.max(0,+pv||0);if(!nm){toast('Укажите название услуги');return}if(!(pr>0)){toast('Укажите стоимость');return}S.svc=S.svc||[];if(svcEd){const cur=S.svc.find(x=>x.id===svcEd),dup=S.svc.find(x=>x.id!==svcEd&&key(x.name)===key(nm));if(dup){toast('Услуга с таким названием уже есть');return}if(cur){cur.name=nm;cur.price=pr}svcEdEnd();save();$('#svcList').innerHTML=svcRows();toast('Изменения сохранены');return}const ex=S.svc.find(x=>key(x.name)===key(nm));if(ex){ex.name=nm;ex.price=pr}else S.svc.push({id:String(Date.now()),name:nm,price:pr});save();$('#svcList').innerHTML=svcRows();$('#svcName').value='';$('#svcPrice').value='';toast('Услуга сохранена');return}
   if(q('#goExtra')){const i=$('#setName');if(i)sdn=i.value;return extraSettings()}
   if(q('#goMain')){return settings()}
   if(q('#setSave')){const i=$('#setName');S.name=(i?i.value:(sdn!=null?sdn:S.name)).trim();sd=null;sdn=null;save();accUpd();closeAll();render();return toast('Сохранено')}
