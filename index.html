@@ -477,7 +477,7 @@ function stat(k,ex){if(SOUND){const hr=e=>(e.end-e.start)/60,ev=S.ev.filter(e=>k
   return{ev,su,total,left:total-used,n:ev.length,h:ev.reduce((a,e)=>a+hr(e),0),paid:su.reduce((a,x)=>a+x.price,0)+ev.filter(e=>e.pay!=='sub').reduce((a,e)=>a+(e.price!=null&&e.price!==''?+e.price||0:hr(e)*(+S.rate[e.type]||0)),0),last:ev.reduce((a,e)=>e.date>a?e.date:a,'')}}
 const subCell=o=>SOUND?`<small>${o.lastSvc?esc(o.lastSvc):'Нет заказов'}</small>`:o.total?(o.left>0?`<small>Осталось ${o.left} из ${o.total}</small>`:'<small>Абонемент закончился</small>'):'<small>Нет абонемента</small>';
 const dshort=d=>pd(d).toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
-function stuCap(){const l=$('#stuList');if(!l)return;l.style.maxHeight='';l.style.overflowY='';l.style.overscrollBehavior='';if(!SOUND||!(matchMedia('(max-width:899px)').matches||matchMedia('(pointer:coarse)').matches))return;const r=l.querySelector('.srow'),lb=l.getBoundingClientRect();if(!r||lb.height<=0)return;const rh=r.getBoundingClientRect().height,av=Math.max(window.innerHeight-lb.top-20,rh*3);l.style.maxHeight='calc('+av+'px - env(safe-area-inset-bottom,0px))';l.style.overflowY='auto';l.style.overscrollBehavior='contain'}
+function stuCap(){const l=$('#stuList');if(!l)return;l.style.maxHeight='';l.style.overflowY='';l.style.overscrollBehavior='';const pg=l.closest('.pg');if(pg)pg.style.paddingBottom='';if(!SOUND)return;const r=l.querySelector('.srow'),lb=l.getBoundingClientRect();if(!r||lb.height<=0)return;const rh=r.getBoundingClientRect().height,mn=pg?$('#main'):null,bt=mn?mn.getBoundingClientRect().bottom:window.innerHeight,gap=pg?16:20,av=Math.max(bt-lb.top-gap,rh*3);if(pg)pg.style.paddingBottom=gap+'px';l.style.maxHeight='calc('+av+'px - env(safe-area-inset-bottom,0px))';l.style.overflowY='auto';l.style.overscrollBehavior='contain'}
 window.addEventListener('resize',stuCap);window.addEventListener('orientationchange',()=>setTimeout(stuCap,300));
 function stuRows(){if(fixAll())save();sfSync();setTimeout(stuCap,0);setTimeout(stuCap,450);const q=key(stuQv),R=allStu().filter(([k])=>k.includes(q)&&(stuF==='all'||(stOf(k)===stuF&&!stEmpty(k)))&&bookOk(k)).map(([k,nm])=>({k,nm,...stat(k)})).sort((a,b)=>(b.last>a.last)-(b.last<a.last)||a.nm.localeCompare(b.nm));
   return R.length?R.map(o=>`<div class="srow${SOUND?' sd':''}" data-stu="${esc(o.k)}"><div class="sn"><i class="sa">${esc(o.nm[0].toUpperCase())}</i><b>${esc(o.nm)}</b><i class="sdot" style="background:${stEmpty(o.k)?'transparent':ST[stOf(o.k)].c}"></i></div><span>${stEmpty(o.k)?'—':o.n}</span><div>${stEmpty(o.k)?'<small>—</small>':subCell(o)}</div><span>${stEmpty(o.k)?'—':rub(o.paid)}</span><span>${o.last?dshort(o.last):'—'}</span>${stEmpty(o.k)?'<span>—</span>':`<span class="stbd" style="color:${ST[stOf(o.k)].c};background:color-mix(in srgb,${ST[stOf(o.k)].c} 16%,transparent)">${ST[stOf(o.k)].n}</span>`}${SOUND?(o.debt>0?`<span class="sdebt" style="color:#f04438;font-weight:600">${rub(o.debt)}</span>`:'<span class="sdebt">—</span>'):''}<button class="sdel" data-delstu="${esc(o.k)}" aria-label="Удалить"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3"/></svg></button></div>`).join(''):'<div class="empty" style="padding:24px">'+W.none+'</div>'}
@@ -699,7 +699,7 @@ function pages(){if(page==='rep'){$('#main').innerHTML='<div class="pg">'+anHtml
 }
 
 /* sheet / drawer */
-let an={per:'m',y:0,m:0};
+let an={per:'y',y:0,m:0};
 /* Аналитика для звукорежиссёра: доход считается по заказам (услуга + стоимость) из карточек клиентов */
 function anHtmlS(desk){
   const hr=e=>(e.end-e.start)/60,pr=x=>+x.price||0,svc=x=>(x.service||'').trim()||'Без названия',nmOf=k=>(allStu().find(a=>a[0]===k)||[k,k])[1];
@@ -828,7 +828,7 @@ function anHtml(desk){
   <div class="card" style="margin:0 0 10px"><div class="r"><b>За всё время</b><span>${rub(aInc)}</span></div><div class="r"><span>${all.length} занятий</span><span>${H(aH)}</span></div></div>
   <p style="color:var(--tx2);font-size:13px;margin:0">Доход считается по ставкам: урок ${rub(+(S.rate&&S.rate.lesson)||0)}/ч, запись ${rub(+(S.rate&&S.rate.rec)||0)}/ч.</p>`;
 }
-function analytics(){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()};fullNext=true;sheet(anHtml());$('#sheet').classList.add('an')}
+function analytics(){const d=new Date();an={per:'y',y:d.getFullYear(),m:d.getMonth()};fullNext=true;sheet(anHtml());$('#sheet').classList.add('an')}
 const anUp=()=>page==='rep'?pages():($('#sheetBody').innerHTML=anHtml());
 /* Ученики на мобильных: та же панель сбоку, что у «Аналитики» и «Настроек» */
 function people(){
@@ -1092,7 +1092,7 @@ document.addEventListener('click',e=>{
   if(b=q('[data-d]')){cur=pd(b.dataset.d);return render()}
   if(b=q('[data-nav]')){cur=addD(cur,+b.dataset.nav);return render()}
   if(b=q('[data-f]')){filt=b.dataset.f;return render()}
-  if(b=q('[data-page]')){{const pp=$('#pplSheet');if(pp&&b.dataset.page!=='people')pp.classList.remove('on')}if(b.dataset.page==='set'){closeAll();return settings()}if(b.dataset.page==='rep'&&!matchMedia('(min-width:900px)').matches){closeAll();return analytics()}if(b.dataset.page==='rep'){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()}}if(b.dataset.page==='people'&&matchMedia('(max-width:899px)').matches){closeAll();return people()}page=b.dataset.page;closeAll();return render()}
+  if(b=q('[data-page]')){{const pp=$('#pplSheet');if(pp&&b.dataset.page!=='people')pp.classList.remove('on')}if(b.dataset.page==='set'){closeAll();return settings()}if(b.dataset.page==='rep'&&!matchMedia('(min-width:900px)').matches){closeAll();return analytics()}if(b.dataset.page==='rep'){const d=new Date();an={per:'y',y:d.getFullYear(),m:d.getMonth()}}if(b.dataset.page==='people'&&matchMedia('(max-width:899px)').matches){closeAll();return people()}page=b.dataset.page;closeAll();return render()}
   if(b=q('#accMode [data-am]')){accMode=b.dataset.am;return applyAccent()}
   if(b=q('#accCalSw [data-cc]')){const c=b.dataset.cc,tk=takenCal();if(tk[c]&&c!==myCal())return toast('Цвет занят: '+tk[c]);S.calColor=c;_ca=null;applyAccent();render();return}
   if(b=q('#accCus')){return openPicker()}
@@ -1203,7 +1203,7 @@ if($('#instBtn'))$('#instBtn').onclick=async()=>{
 
 const accUpd=()=>{$('#accLbl').innerHTML=esc(S.name||ME.name)+'<br><small style="color:var(--tx2);font-weight:400">'+ROLE[ME.role]+'</small>'};
 document.addEventListener('input',e=>{if(e.target.id==='accCus'){S.accent=e.target.value;save();applyAccent()}});
-accUpd();applyTheme();fxApply();fxCordUi();addEventListener('resize',fxCordLayout);setTimeout(fxCordLayout,300);if(SOUND){const n=$('.nav[data-page="people"]');if(n&&n.lastChild)n.lastChild.textContent=' Клиенты студии'}try{const sp=localStorage.getItem('crm_pg');if(matchMedia('(min-width:900px)').matches&&['cal','people','rep'].includes(sp)){page=sp;if(sp==='rep'){const d=new Date();an={per:'m',y:d.getFullYear(),m:d.getMonth()}}}}catch(e){}render();
+accUpd();applyTheme();fxApply();fxCordUi();addEventListener('resize',fxCordLayout);setTimeout(fxCordLayout,300);if(SOUND){const n=$('.nav[data-page="people"]');if(n&&n.lastChild)n.lastChild.textContent=' Клиенты студии'}try{const sp=localStorage.getItem('crm_pg');if(matchMedia('(min-width:900px)').matches&&['cal','people','rep'].includes(sp)){page=sp;if(sp==='rep'){const d=new Date();an={per:'y',y:d.getFullYear(),m:d.getMonth()}}}}catch(e){}render();
 setInterval(()=>{if(page==='cal'&&!$('#sheet').classList.contains('on'))render()},60000);
 </script>
 <script>
