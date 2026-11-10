@@ -470,7 +470,7 @@ document.addEventListener('click',e=>{const t=e.target;let b;
   $$('.stm.on').forEach(x=>x.classList.remove('on'))});
 const allStu=()=>{const m=new Map();S.stu.forEach(s=>m.set(key(s.name),s.name));S.ev.forEach(e=>{const k=key(e.person);if(k&&!m.has(k))m.set(k,e.person.trim())});return[...m]};
 function subUnit(k,ex){const su=S.subs.filter(x=>x.k===k).sort((a,b)=>(a.date+a.id).localeCompare(b.date+b.id));let used=S.ev.filter(e=>key(e.person)===k&&e.pay==='sub'&&e.id!==ex).length;for(const x of su){if(used<x.total)return x.unit||(x.price/x.total)||0;used-=x.total}return null}
-function stat(k,ex){if(SOUND){const hr=e=>(e.end-e.start)/60,ev=S.ev.filter(e=>key(e.person)===k),od=S.ord.filter(x=>x.k===k).sort((a,b)=>(a.date+a.id).localeCompare(b.date+b.id));return{ev,su:[],ord:od,total:0,left:0,n:ev.length,h:ev.reduce((a,e)=>a+hr(e),0),paid:od.reduce((a,x)=>a+(+x.price||0),0),debt:od.reduce((a,x)=>a+(x.paid!=null?Math.max(0,(+x.price||0)-(+x.paid||0)):0),0),last:[...ev.map(e=>e.date),...od.map(x=>x.date)].reduce((a,d)=>d&&d>a?d:a,''),lastSvc:od.length?od[od.length-1].service:''}}const hr=e=>(e.end-e.start)/60,ev=S.ev.filter(e=>key(e.person)===k),su=S.subs.filter(x=>x.k===k),total=su.reduce((a,x)=>a+x.total,0),used=ev.filter(e=>e.pay==='sub'&&e.id!==ex).length;
+function stat(k,ex){if(SOUND){const hr=e=>(e.end-e.start)/60,ev=S.ev.filter(e=>key(e.person)===k),od=S.ord.filter(x=>x.k===k).sort((a,b)=>(a.date+a.id).localeCompare(b.date+b.id));return{ev,su:[],ord:od,total:0,left:0,n:ev.length,h:ev.reduce((a,e)=>a+hr(e),0),paid:od.reduce((a,x)=>a+(+x.price||0),0),debt:od.reduce((a,x)=>a+(x.paid!=null?Math.max(0,(+x.price||0)-(+x.paid||0)):(ordSt(x)==='unpaid'?Math.max(0,+x.price||0):0)),0),pd:od.reduce((a,x)=>a+(x.paid!=null?Math.max(0,(+x.price||0)-(+x.paid||0)):0),0),last:[...ev.map(e=>e.date),...od.map(x=>x.date)].reduce((a,d)=>d&&d>a?d:a,''),lastSvc:od.length?od[od.length-1].service:''}}const hr=e=>(e.end-e.start)/60,ev=S.ev.filter(e=>key(e.person)===k),su=S.subs.filter(x=>x.k===k),total=su.reduce((a,x)=>a+x.total,0),used=ev.filter(e=>e.pay==='sub'&&e.id!==ex).length;
   return{ev,su,total,left:total-used,n:ev.length,h:ev.reduce((a,e)=>a+hr(e),0),paid:su.reduce((a,x)=>a+x.price,0)+ev.filter(e=>e.pay!=='sub').reduce((a,e)=>a+(e.price!=null&&e.price!==''?+e.price||0:hr(e)*(+S.rate[e.type]||0)),0),last:ev.reduce((a,e)=>e.date>a?e.date:a,'')}}
 const subCell=o=>SOUND?`<small>${o.lastSvc?esc(o.lastSvc):'Нет заказов'}</small>`:o.total?(o.left>0?`<small>Осталось ${o.left} из ${o.total}</small>`:'<small>Абонемент закончился</small>'):'<small>Нет абонемента</small>';
 const dshort=d=>pd(d).toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
@@ -493,7 +493,7 @@ function stuHtml(){if(SOUND)return stuHtmlS();histOpen=false;oS=oNew();const dsk
 let ordId=null,delK=null,debtOpen=false,stBefore='';
 /* Статус всегда согласован с долгом: есть долг -> «Частично»; «Не оплачен» только при долге или неоплаченном заказе, иначе «Оплачен»; «Частично» без долга -> «Оплачен» (если были частичные заказы) или прежний статус */
 const stEmpty=k=>SOUND&&!S.ev.some(e=>key(e.person)===k)&&!S.ord.some(x=>x.k===k);
-function fixSt(k){if(!SOUND)return null;const o=stat(k),s=S.st[k]||'unpaid';let n=s;if(o.debt>0)n='part';else if(s==='part')n=o.ord.some(x=>x.paid!=null)?'paid':(k===stuK&&stBefore&&stBefore!=='part'?stBefore:'unpaid');else if(s==='unpaid'&&!o.ord.some(x=>x.paid==null&&x.st==='unpaid'))n='paid';if(n===s)return null;S.st[k]=n;return n}
+function fixSt(k){if(!SOUND)return null;const o=stat(k),s=S.st[k]||'unpaid';let n=s;if(o.pd>0)n='part';else if(s==='part')n=o.ord.some(x=>x.paid!=null)?'paid':(k===stuK&&stBefore&&stBefore!=='part'?stBefore:'unpaid');else if(s==='unpaid'&&!o.ord.some(x=>x.paid==null&&x.st==='unpaid'))n='paid';if(n==='paid'&&o.ord.some(x=>x.paid==null&&x.st==='unpaid'))n='unpaid';if(n===s)return null;S.st[k]=n;return n}
 const stEditing=k=>k===stuK&&$('#sheet').classList.contains('on')&&$('#ordWrap')&&!$('#ordWrap').hidden;
 function fixAll(){if(!SOUND)return false;let ch=false;allStu().forEach(([k])=>{if(!stEditing(k)&&fixSt(k))ch=true});return ch}
 function stSync(){const sg=$('#stSeg');if(!sg)return;$$('#stSeg button').forEach(b=>b.classList.toggle('on',b.dataset.ss===stOf(stuK)));sg.dataset.i=Object.keys(ST).indexOf(stOf(stuK))}
@@ -579,10 +579,10 @@ function dCenter(c){const sh=$('#sheet'),bar=sh.querySelector('.sbk'),vv=window.
 function refreshDebt(){const w=$('#ordDebtWrap');if(!w)return;const o=stat(stuK),c=w.querySelector('.debtc');if(c&&o.debt>0){const t=c.querySelector('.dbs b');if(t)t.textContent=rub(o.debt);debtCalc()}else w.innerHTML=ordDebtH(o);barSync()}
 function debtCalc(){const i=$('#debtIn');if(!i)return;const a=Math.max(0,+i.value||0);$('#debtLeft').textContent=rub(Math.max(0,stat(stuK).debt-a));$('[data-debtpay]').disabled=!(a>0)}
 function debtPay(){const i=$('#debtIn');if(!i)return;let left=Math.max(0,+i.value||0);if(!left)return;
-  const os=S.ord.filter(x=>x.k===stuK&&x.paid!=null&&(+x.price||0)>(+x.paid||0)).sort((a,b)=>(a.date+a.id).localeCompare(b.date+b.id));
-  for(const x of os){if(left<=0)break;const t=Math.min((+x.price||0)-(+x.paid||0),left);x.paid=(+x.paid||0)+t;left-=t}
+  const os=S.ord.filter(x=>x.k===stuK&&(+x.price||0)>0&&(x.paid!=null?(+x.price||0)>(+x.paid||0):ordSt(x)==='unpaid')).sort((a,b)=>(a.date+a.id).localeCompare(b.date+b.id));
+  for(const x of os){if(left<=0)break;const t=Math.min((+x.price||0)-(+x.paid||0),left);x.paid=(+x.paid||0)+t;x.st=x.paid>=(+x.price||0)?'paid':'part';left-=t}
   const o=stat(stuK),done=o.debt<=0;
-  if(done){fixSt(stuK);stSync()}
+  fixSt(stuK);stSync();
   const cur=ordId&&S.ord.find(v=>v.id===ordId);if(cur&&cur.paid!=null&&$('#ordPd'))$('#ordPd').value=cur.paid;
   save();$('#ordKp').innerHTML=ordKpH(o);$('#ordHist').innerHTML=ordHistH(o);if(done)debtOpen=false;{const di=$('#debtIn');if(di)di.value=''}refreshDebt();ordPartUi();const l=$('#stuList');if(l)l.innerHTML=stuRows();toast(done?'Задолженность погашена':'Платёж внесён')}
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='debtIn'){e.preventDefault();debtPay()}});
