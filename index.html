@@ -1150,7 +1150,7 @@ function sheetDrag(el,onClose){
   let y0=0,x0=0,ly=0,lt=0,v=0,d=0,on=false,ok=false,can=false,inn=null;
   const sci=n=>{while(n&&n!==el&&n.nodeType===1){if(n.scrollHeight>n.clientHeight+1&&/(auto|scroll)/.test(getComputedStyle(n).overflowY))return n;n=n.parentElement}return null};   /* вложенный список со своей прокруткой */
   el.addEventListener('touchstart',e=>{
-    ok=e.touches.length===1&&mob()&&el.classList.contains('on')&&!document.body.classList.contains('dtop')&&!e.target.closest('.wcol,.sg,textarea');on=false;v=0;d=0;inn=sci(e.target);can=el.scrollTop<1&&!(inn&&inn.scrollTop>=1);   /* закрытие только жестом, начатым уже у самого верха */
+    ok=e.touches.length===1&&mob()&&el.classList.contains('on')&&!document.body.classList.contains('dtop')&&!e.target.closest('.wcol,.sg,textarea')&&!(e.target.closest('#stuList')&&$('#stuList').style.maxHeight);on=false;v=0;d=0;inn=sci(e.target);can=el.scrollTop<1&&!(inn&&inn.scrollTop>=1);   /* закрытие только жестом, начатым уже у самого верха */
     if(!ok)return;const t=e.touches[0];y0=ly=t.clientY;x0=t.clientX;lt=e.timeStamp},{passive:true});
   el.addEventListener('touchmove',e=>{
     if(!ok)return;
