@@ -361,6 +361,10 @@ input.xi,textarea.xi{padding-right:44px!important}
 /* Мобильный Safari: иконки в круглых кнопках — строго по центру кружка */
 .sheet.tall .gbtn,.svr .sdel{-webkit-appearance:none;appearance:none;padding:0;margin-top:0;margin-bottom:0;display:flex;align-items:center;justify-content:center;line-height:0;text-align:center}
 .sheet.tall .gbtn svg,.svr .sdel svg{display:block;margin:0;flex:none}
+/* Цифры в кружках календаря — строго по центру (в т.ч. в Safari на iPhone) */
+.wh i,.mc i,.dpg button{-webkit-appearance:none;appearance:none;padding:0;margin-left:0;margin-right:0;display:flex;align-items:center;justify-content:center;line-height:1;text-align:center;font-variant-numeric:tabular-nums}
+.mc i{margin-bottom:2px}
+@supports (text-box:trim-both cap alphabetic){.wh i,.mc i,.dpg button{text-box:trim-both cap alphabetic}}
 /* «Услуга» и «Стоимость» в блоке «Заказ» — одинаковой ширины */
 .row:has(#ordS)>.pw,.row:has(#ordS)>input,.row:has(#fOrdS)>.pw,.row:has(#fOrdS)>input{flex:1 1 calc(50% - 5px)!important;min-width:0!important}
 </style>
