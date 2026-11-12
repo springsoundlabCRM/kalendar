@@ -367,6 +367,7 @@ input.xi,textarea.xi{padding-right:44px!important}
 @supports (text-box:trim-both cap alphabetic){.wh i,.mc i,.dpg button{text-box:trim-both cap alphabetic}}
 /* Клиенты студии (звукорежиссёр, компьютер): колонки равной ширины, содержимое по центру — одинаковые промежутки */
 @media (min-width:900px){.srow.sd{grid-template-columns:minmax(0,1.4fr) repeat(6,minmax(0,1fr)) 34px}.srow.sd>:nth-child(n+2):nth-child(-n+7){text-align:center;justify-self:center;max-width:100%;min-width:0}}
+@media (min-width:900px){.srow:not(.sd){grid-template-columns:minmax(0,1.4fr) repeat(5,minmax(0,1fr)) 34px}.srow:not(.sd)>:nth-child(n+2):nth-child(-n+6){text-align:center;justify-self:center;max-width:100%;min-width:0}}
 /* «Услуга» и «Стоимость» в блоке «Заказ» — одинаковой ширины */
 .row:has(#ordS)>.pw,.row:has(#ordS)>input,.row:has(#fOrdS)>.pw,.row:has(#fOrdS)>input{flex:1 1 calc(50% - 5px)!important;min-width:0!important}
 </style>
