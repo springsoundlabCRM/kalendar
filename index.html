@@ -1445,6 +1445,24 @@ function stage(){
  requestAnimationFrame(loop);
  return{st,L0,W,end(){st.on=0;if(m3)m3.dispose();S.remove();R.remove()}};
 }
+const DEER=`<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120" viewBox="0 0 160 120" style="display:block;overflow:visible"><ellipse cx="72" cy="117" rx="52" ry="4" fill="rgba(0,0,0,.2)"/><g class="dg"><g class="dl2"><rect x="52" y="68" width="9" height="42" rx="4" fill="#8f5a2e" stroke="#111" stroke-width="2.4"/><path d="M51 108h11v8h-11z" fill="#2a1c12" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/></g><g class="dl3"><rect x="88" y="68" width="9" height="42" rx="4" fill="#8f5a2e" stroke="#111" stroke-width="2.4"/><path d="M87 108h11v8h-11z" fill="#2a1c12" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/></g><ellipse cx="29" cy="54" rx="6" ry="5" fill="#fff" stroke="#111" stroke-width="2.4"/><ellipse cx="70" cy="62" rx="41" ry="21" fill="#b9783f" stroke="#111" stroke-width="2.6"/><ellipse cx="72" cy="72" rx="28" ry="9" fill="#d9a56e"/><g class="dl1"><rect x="38" y="68" width="9" height="42" rx="4" fill="#b9783f" stroke="#111" stroke-width="2.4"/><path d="M37 108h11v8h-11z" fill="#2a1c12" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/></g><g class="dl4"><rect x="101" y="68" width="9" height="42" rx="4" fill="#b9783f" stroke="#111" stroke-width="2.4"/><path d="M100 108h11v8h-11z" fill="#2a1c12" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/></g><path d="M94 54L106 28L122 36L110 66Z" fill="#b9783f" stroke="#111" stroke-width="2.6" stroke-linejoin="round"/><g class="dh"><path d="M114 30C110 16 114 8 108 -2M112 20C120 16 124 12 128 5M111 12C106 11 103 7 101 1" fill="none" stroke="#111" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M114 30C110 16 114 8 108 -2M112 20C120 16 124 12 128 5M111 12C106 11 103 7 101 1" fill="none" stroke="#ead7ae" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="112" cy="29" rx="3.4" ry="7.5" transform="rotate(-28 112 29)" fill="#a56a38" stroke="#111" stroke-width="2.2"/><ellipse cx="122" cy="38" rx="15" ry="10.5" fill="#b9783f" stroke="#111" stroke-width="2.6"/><ellipse cx="134" cy="41" rx="7" ry="5.4" fill="#d9a56e" stroke="#111" stroke-width="2.4"/><circle cx="139.5" cy="40" r="4.4" fill="#e8212e" stroke="#111" stroke-width="2"/><circle cx="125" cy="34" r="2.3" fill="#111"/><circle cx="125.8" cy="33.2" r=".8" fill="#fff"/></g></g></svg>`;
+function mkDeer(st,L0,gY){
+ const el=document.createElement('div');el.id='xmD';el.style.cssText='position:fixed;left:0;top:'+(gY-120)+'px;width:160px;height:120px;z-index:38;pointer-events:none;will-change:transform';
+ el.innerHTML=DEER;document.body.appendChild(el);
+ const q=c=>el.querySelector('.'+c),bd=q('dg'),dh=q('dh'),lg=[q('dl1'),q('dl2'),q('dl3'),q('dl4')],px=[50,56,92,104];
+ const d={en:0,low:0,on:1,kill(){d.on=0;el.remove()}};let phi=0,lx=null;
+ const loop=now=>{if(!d.on)return;
+  const off=(1-d.en)*(Math.max(0,L0+st.tx)+240),x=L0+st.tx-2-146-off;
+  if(lx!==null)phi+=Math.abs(x-lx)/14;lx=x;
+  const low=d.low,jit=Math.sin(now/45)*1.6*low;
+  el.style.transform='translate3d('+(x+jit)+'px,0,0)';
+  lg.forEach((l,i)=>{const a=Math.sin(phi+(i%2)*Math.PI)*20+low*Math.sin(now/55+i*1.7)*9;l.setAttribute('transform','rotate('+a+' '+px[i]+' 70)')});
+  dh.setAttribute('transform','rotate('+(8*(1-low)+38*low+Math.sin(now/70)*2.5*low)+' 110 40)');
+  bd.setAttribute('transform','rotate('+(5*low)+' 70 116)');
+  requestAnimationFrame(loop)};
+ requestAnimationFrame(loop);
+ return d;
+}
 async function add(){
  T.style.display='block';T.style.transform='none';tick();
  const{st,L0,W,end}=stage();
@@ -1478,7 +1496,19 @@ async function remove(){
  await tween(300,t=>{st.flip=Math.cos(t*Math.PI)});
  await Promise.all([tween(800,t=>{st.x=xO+(xP-xO)*E.sm(t)}),tween(800,t=>{st.push=E.sm(t);st.grab=E.sm(t)})]);
  const dx=-(xP+SW+16);
- await tween(3800,t=>{const e=E.sm(t);st.x=xP+dx*e;st.tx=dx*e});
+ const setTx=v=>{st.tx=v;st.x=xP+v};
+ const gY=T.getBoundingClientRect().bottom+6;
+ const D=mkDeer(st,L0,gY);
+ await Promise.all([tween(900,t=>setTx(-55*E.sm(t))),tween(900,t=>{D.en=E.out(t)})]);
+ await tween(250,t=>{D.low=E.sm(t)});
+ let cur=-55;
+ for(const[to,ms]of[[55,750],[-125,800],[30,650],[-85,700]]){
+  const a=cur;await tween(ms,t=>{setTx(a+(to-a)*E.sm(t));st.jolt=.55*Math.abs(Math.sin(t*Math.PI*3))});cur=to;
+ }
+ st.jolt=0;
+ const c0=cur;
+ await Promise.all([tween(3800,t=>{const e=E.sm(t);setTx(c0+(dx-c0)*e)}),tween(1300,t=>{D.en=1-E.sm(t);D.low=Math.max(0,1-t*2.5)})]);
+ D.kill();
  end();clearInterval(tmr);T.style.display='none';T.style.transform='';shown=false;
 }
 g.addEventListener('click',()=>{if(busy)return;busy=true;load3().then(()=>shown?remove():add()).catch(e=>{console.error(e)}).then(()=>{busy=false})});
