@@ -1009,10 +1009,10 @@ function form(id,pre){
     for(let d=1;d<=n;d++){const k=y+'-'+pad(m+1)+'-'+pad(d);h+=`<button type="button" class="${k===dval?'sel':''} ${k===td?'tdy':''}" data-dd="${k}">${d}</button>`}
     (desk?$('#dpin'):$('#dp')).innerHTML=h+'</div>'};
   showD();
-  const fFit=()=>{const sh=$('#sheet'),b=$('#fSave');if(!sh||!b)return;const t0=performance.now(),step=()=>{const r=b.getBoundingClientRect(),vb=Math.min(sh.getBoundingClientRect().bottom,window.innerHeight)-12,n=r.bottom-vb;if(n>0)sh.scrollTop+=n;if(performance.now()-t0<520)requestAnimationFrame(step)};requestAnimationFrame(step)};
-  $('#fDateBtn').onclick=()=>{closeT();if(desk){const p=$('#dpin');if(p.classList.contains('open'))return p.classList.remove('open');dm=pd(dval);drawDp();p.classList.add('open');if(!SOUND)fFit();return}dm=pd(dval);drawDp();$('#dpop').classList.add('on')};
+  const fFit=p=>{const sh=$('#sheet'),b=$('#fSave');if(!sh||!b||!p)return;const cs=getComputedStyle(p),sc=p.scrollHeight,fin=Math.min(380,sc+20)+8,cur=p.offsetHeight+(parseFloat(cs.marginTop)||0);let shr=0;[$('#dpin'),$('#tpin')].forEach(x=>{if(x&&x!==p&&!x.classList.contains('open')&&x.offsetHeight>0)shr+=x.offsetHeight+(parseFloat(getComputedStyle(x).marginTop)||0)});const vb=Math.min(sh.getBoundingClientRect().bottom,window.innerHeight)-12,need=b.getBoundingClientRect().bottom+(fin-cur-shr)-vb;if(need<=1)return;const bez=(x1,y1,x2,y2)=>t=>{let a=t;for(let i=0;i<8;i++){const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,x=((ax*a+bx)*a+cx)*a-t,d=(3*ax*a+2*bx)*a+cx;if(Math.abs(x)<1e-5||!d)break;a-=x/d}const cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;return((ay*a+by)*a+cy)*a},ease=bez(.4,0,.2,1),st=sh.scrollTop;let t0=0;sh.style.overflowAnchor='none';const step=n=>{if(!t0)t0=n;const k=Math.min(1,(n-t0)/450);sh.scrollTop=st+need*ease(k);if(k<1)requestAnimationFrame(step);else sh.style.overflowAnchor=''};requestAnimationFrame(step)};
+  $('#fDateBtn').onclick=()=>{closeT();if(desk){const p=$('#dpin');if(p.classList.contains('open'))return p.classList.remove('open');dm=pd(dval);drawDp();p.classList.add('open');if(!SOUND)fFit(p);return}dm=pd(dval);drawDp();$('#dpop').classList.add('on')};
   $('#dp').onclick=$('#dpin').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;
-    if(b.dataset.dm){dm=new Date(dm.getFullYear(),dm.getMonth()+(+b.dataset.dm),1);drawDp();if(!SOUND&&desk)fFit()}
+    if(b.dataset.dm){dm=new Date(dm.getFullYear(),dm.getMonth()+(+b.dataset.dm),1);drawDp()}
     else if(b.dataset.dd){dval=b.dataset.dd;showD();$('#dpop').classList.remove('on');$('#dpin').classList.remove('open')}};
   const showT=()=>{$('#fS span').textContent=hs?hm(ts):'—';$('#fE span').textContent=he?hm(te):'—'};showT();
   const mark=c=>{const i=Math.round(c.scrollTop/44);[...c.children].forEach((x,j)=>x.classList.toggle('on',j===i))};
@@ -1032,7 +1032,7 @@ function form(id,pre){
   };
   const openT=k=>{
     if(tact===null)bk=[ts,te,hs,he];
-    if(desk){$('#dpin').classList.remove('open');const p=$('#tpin');if(p.classList.contains('open')&&tact===k)return closeT();tact=k;buildW(p);p.classList.add('open');if(!SOUND)fFit()}
+    if(desk){$('#dpin').classList.remove('open');const p=$('#tpin');if(p.classList.contains('open')&&tact===k)return closeT();tact=k;buildW(p);p.classList.add('open');if(!SOUND)fFit(p)}
     else{tact=k;buildW($('#tpw'));$('#tpop').classList.add('on')}
   };
   const tclick=ev=>{const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tcancel]')){if(bk){ts=bk[0];te=bk[1];hs=bk[2];he=bk[3];showT()}return closeT()}if(ev.target.closest('[data-tdone]')){if(tact==='s')hs=true;else if(tact)he=true;showT();closeT()}};
