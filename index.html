@@ -994,7 +994,7 @@ function form(id,pre){
   let pay=e.pay||'cash',manual=!!e.pay;
   let autoP=false,manP=false,priceHook=null,svcP=null,hRecalc=null;const upPay=()=>{if(SOUND)return;const k=key($('#fPerson').value),st=stat(k,id);if(!manual&&!id)pay=st.left>0?'sub':'cash';$$('#fPay button').forEach(b=>b.classList.toggle('on',b.dataset.p===pay));$('#fPay').dataset.i=pay==='sub'?1:0;const u=pay==='sub'?subUnit(k,id):null;$('#fPayH').textContent=st.total?`Осталось ${subN(st.left)} из ${st.total}`+(u!=null?` · ${rub(u)} за занятие`:''):'';const pi=$('#fPrice'),keep=id&&e.pay==='sub'&&e.price!=null&&pay==='sub';if(pay==='sub'&&u!=null&&!manP&&!keep){pi.value=u;autoP=true}else if(pay!=='sub'&&autoP){pi.value=id?(e.price??''):(svcP??'');autoP=false}if(priceHook)priceHook()};
   if(!SOUND)$('#fPay').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;pay=b.dataset.p;manual=true;upPay()};const sg=$('#fSug'),setSg=o=>{sg.classList.toggle('on',o);$('#sheetBody').classList.toggle('sgo',o)},hideSg=()=>setSg(false);
-  $('#fPerson').oninput=()=>{upPay();const v=key($('#fPerson').value),m=v?allStu().filter(a=>a[0].includes(v)&&a[0]!==v).slice(0,6):[];sg.innerHTML=m.map(a=>`<div data-sg="${esc(a[1])}">${esc(a[1])}</div>`).join('');setSg(m.length>0)};
+  $('#fPerson').oninput=()=>{upPay();const v=key($('#fPerson').value),m=v?allStu().filter(a=>a[0].startsWith(v)&&a[0]!==v).slice(0,6):[];sg.innerHTML=m.map(a=>`<div data-sg="${esc(a[1])}">${esc(a[1])}</div>`).join('');setSg(m.length>0)};
   $('#fPerson').onblur=()=>setTimeout(hideSg,200);
   sg.onclick=ev=>{const d=ev.target.closest('[data-sg]');if(!d)return;$('#fPerson').value=d.dataset.sg;hideSg();upPay()};upPay();
   const pIn=SOUND?document.createElement('input'):$('#fPrice'),pOk=document.createElement('button');
