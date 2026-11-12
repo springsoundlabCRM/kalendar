@@ -1002,6 +1002,7 @@ function form(id,pre){
   priceHook=pFix;pIn.oninput=()=>{manP=true;autoP=false;pFix()};
   pOk.onclick=()=>{const v=pIn.value.trim();if(v==='')delete S.price;else S.price=Math.max(0,+v||0);save();pFix(true);toast('Изменения сохранены')};
   $('#fType').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;type=b.dataset.v;sync()};
+  const fClose=p=>{if(!p||!p.classList.contains('open'))return;if(SOUND){p.classList.remove('open');return}const h=p.offsetHeight;p.style.transition='none';p.style.maxHeight=h+'px';void p.offsetWidth;p.style.transition='';p.classList.remove('open');p.style.maxHeight='0px';clearTimeout(p._ct);p._ct=setTimeout(()=>{if(!p.classList.contains('open'))p.style.maxHeight=''},520)};
   const showD=()=>{$('#fDateBtn span').textContent=pd(dval).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'})};
   const drawDp=()=>{const y=dm.getFullYear(),m=dm.getMonth(),off=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=iso(new Date());
     let h=`<div class="dph"><button type="button" data-dm="-1">‹</button><b>${MN[m]} ${y}</b><button type="button" data-dm="1">›</button></div><div class="dpg">`+DN.map(d=>`<small>${d}</small>`).join('');
@@ -1009,13 +1010,13 @@ function form(id,pre){
     for(let d=1;d<=n;d++){const k=y+'-'+pad(m+1)+'-'+pad(d);h+=`<button type="button" class="${k===dval?'sel':''} ${k===td?'tdy':''}" data-dd="${k}">${d}</button>`}
     (desk?$('#dpin'):$('#dp')).innerHTML=h+'</div>'};
   showD();
-  $('#fDateBtn').onclick=()=>{closeT();if(desk){const p=$('#dpin');if(p.classList.contains('open'))return p.classList.remove('open');dm=pd(dval);drawDp();p.classList.add('open');if(!SOUND)scFollow(()=>1e6,()=>p.classList.contains('open'),1500);return}dm=pd(dval);drawDp();$('#dpop').classList.add('on')};
+  $('#fDateBtn').onclick=()=>{closeT();if(desk){const p=$('#dpin');if(p.classList.contains('open'))return fClose(p);dm=pd(dval);drawDp();p.style.maxHeight='';p.classList.add('open');if(!SOUND)scFollow(()=>1e6,()=>p.classList.contains('open'),1500);return}dm=pd(dval);drawDp();$('#dpop').classList.add('on')};
   $('#dp').onclick=$('#dpin').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;
     if(b.dataset.dm){dm=new Date(dm.getFullYear(),dm.getMonth()+(+b.dataset.dm),1);drawDp()}
-    else if(b.dataset.dd){dval=b.dataset.dd;showD();$('#dpop').classList.remove('on');$('#dpin').classList.remove('open')}};
+    else if(b.dataset.dd){dval=b.dataset.dd;showD();$('#dpop').classList.remove('on');fClose($('#dpin'))}};
   const showT=()=>{$('#fS span').textContent=hs?hm(ts):'—';$('#fE span').textContent=he?hm(te):'—'};showT();
   const mark=c=>{const i=Math.round(c.scrollTop/44);[...c.children].forEach((x,j)=>x.classList.toggle('on',j===i))};
-  const closeT=()=>{$('#tpop').classList.remove('on');$('#tpin').classList.remove('open');tact=null};
+  const closeT=()=>{$('#tpop').classList.remove('on');fClose($('#tpin'));tact=null};
   const wrap=(c,len)=>{const i=Math.round(c.scrollTop/44);if(i>=len*2&&i<len*5)return;const ni=len*3+(i%len);c.style.scrollSnapType='none';c.scrollTop=ni*44;c._i=ni;requestAnimationFrame(()=>{c.style.scrollSnapType=''})};
   const buildW=el=>{
     const v=tact==='s'?ts:te,hi=Math.floor(v/60),mi=v%60;
@@ -1031,7 +1032,7 @@ function form(id,pre){
   };
   const openT=k=>{
     if(tact===null)bk=[ts,te,hs,he];
-    if(desk){$('#dpin').classList.remove('open');const p=$('#tpin');if(p.classList.contains('open')&&tact===k)return closeT();tact=k;buildW(p);p.classList.add('open');if(!SOUND)scFollow(()=>1e6,()=>p.classList.contains('open'),1500)}
+    if(desk){fClose($('#dpin'));const p=$('#tpin');if(p.classList.contains('open')&&tact===k)return closeT();tact=k;buildW(p);p.style.maxHeight='';p.classList.add('open');if(!SOUND)scFollow(()=>1e6,()=>p.classList.contains('open'),1500)}
     else{tact=k;buildW($('#tpw'));$('#tpop').classList.add('on')}
   };
   const tclick=ev=>{const w=ev.target.closest('.wv');if(w){const c=w.parentNode;c.scrollTo({top:[...c.children].indexOf(w)*44,behavior:'smooth'});return}if(ev.target.closest('[data-tcancel]')){if(bk){ts=bk[0];te=bk[1];hs=bk[2];he=bk[3];showT()}return closeT()}if(ev.target.closest('[data-tdone]')){if(tact==='s')hs=true;else if(tact)he=true;showT();closeT()}};
