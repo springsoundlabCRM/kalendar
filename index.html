@@ -502,7 +502,7 @@ function stuHtml(){if(SOUND)return stuHtmlS();histOpen=false;oS=oNew();const dsk
   <div id="ordWrap" hidden><div class="card"><b>Занятие</b><label style="margin-top:10px">Дата</label><button type="button" class="dbtn" id="oDateBtn" style="background:var(--bg)"><span>—</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button><div class="dpin" id="odpin"></div><div class="row"><div><label>Начало</label><button type="button" class="dbtn" id="oTs" style="background:var(--bg)"><span>—</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></button></div><div><label>Конец</label><button type="button" class="dbtn" id="oTe" style="background:var(--bg)"><span>—</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></button></div></div><div class="dpin" id="otpin"></div><div class="row" style="margin-top:10px"><div class="pw" style="flex:1 1 0;min-width:0"><input id="fOrdS" placeholder="Услуга" maxlength="80" autocomplete="off" style="margin:0"><div class="sg" id="fOrdSug"></div></div><input id="vP" type="number" inputmode="numeric" min="0" placeholder="Стоимость, ₽" style="margin:0;flex:1 1 0;min-width:0;width:auto"></div></div></div>
   <div id="ordHist">${vocHistH(o)}</div>
   <div class="card${subOpen?' open':''}" id="subCard"><div class="hhd${subOpen?' open':''}" style="margin:0" data-subtg><b>Абонементы</b><button class="hopen" data-subtg aria-label="Развернуть абонементы" aria-expanded="${subOpen}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button></div>${subBars(o)}<div class="sbb"><div><div class="sbd">${subChain(o)?'':'<div class="r"><span>Пока нет абонемента</span></div>'}${subRows(o)}${S.price!=null?`<small style="color:var(--tx2);display:block;margin-top:8px">Обычная цена занятия: ${rub(S.price)}</small>`:''}<div class="row" style="margin-top:10px"><input id="subN" type="number" min="1" placeholder="Занятий" style="margin:0"><input id="subP" type="number" min="0" placeholder="Цена за занятие, ₽" style="margin:0"></div><div id="subD"></div><div class="r" style="margin-top:10px"><span>Итого</span><b id="subT">0 ₽</b></div>${o.su.length?AB:''}</div></div></div></div><div class="stk sbk"><div class="sbr"${o.su.length?'':' style="gap:10px;align-items:center"'}>${o.su.length?'':AB.replace('margin:10px 0 0','margin:0;flex:1'+(subOpen?'':';display:none'))}<button class="ordplus" data-book="${esc(nm)}" aria-label="Поставить на урок"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" aria-hidden="true"><path d="M12 4.5v15M4.5 12h15"/></svg></button></div><button class="btn" data-ordok disabled hidden>Подтвердить</button></div>`}
-let ordId=null,delK=null,debtOpen=false,stBefore='';
+let ordId=null,delK=null,debtOpen=false,stBefore='',cfmCb=null;const cfmAsk=(t,m,f)=>{cfmCb=f;$('#cfmT').textContent=t;$('#cfmM').textContent=m;$('#cfm').classList.add('on')};
 /* Статус всегда согласован с долгом: есть долг -> «Частично»; «Не оплачен» только при долге или неоплаченном заказе, иначе «Оплачен»; «Частично» без долга -> «Оплачен» (если были частичные заказы) или прежний статус */
 const vNs=k=>!SOUND&&S.ev.some(e=>key(e.person)===k)&&S.ev.every(e=>key(e.person)!==k||e.mark==='none')&&!S.subs.some(x=>x.k===k);
 const stEmpty=k=>SOUND?(!S.ev.some(e=>key(e.person)===k)&&!S.ord.some(x=>x.k===k)):vNs(k);
@@ -1124,7 +1124,8 @@ document.addEventListener('click',e=>{
   if(q('[data-histopen]')){histSet(!histOpen);return}
   if(q('.xbtn')){closeAll();return}
   if(b=q('[data-delstu]')){delK=b.dataset.delstu;const nm=(allStu().find(a=>a[0]===delK)||[delK,delK])[1];$('#cfmT').textContent=SOUND?'Удалить клиента?':'Удалить ученика?';$('#cfmM').textContent='«'+nm+'» будет удалён'+(SOUND?' вместе с записями в календаре и заказами.':' вместе с занятиями в календаре и абонементами.')+' Это действие нельзя отменить.';$('#cfm').classList.add('on');return}
-  if(q('[data-cfmno]')||t.id==='cfm'){$('#cfm').classList.remove('on');return}
+  if(q('[data-cfmno]')||t.id==='cfm'){cfmCb=null;$('#cfm').classList.remove('on');return}
+  if(q('[data-cfmyes]')&&cfmCb){const f=cfmCb;cfmCb=null;$('#cfm').classList.remove('on');f();return}
   if(q('[data-cfmyes]')){const k=delK;delK=null;$('#cfm').classList.remove('on');if(k){S.stu=S.stu.filter(x=>key(x.name)!==k);S.ev=S.ev.filter(e=>key(e.person)!==k);S.subs=S.subs.filter(x=>x.k!==k);S.ord=S.ord.filter(x=>x.k!==k);delete S.st[k];delete S.det[k];save();const l=$('#stuList');if(l)l.innerHTML=stuRows();render();toast(SOUND?'Клиент удалён':'Ученик удалён')}return}
   if(b=q('[data-stu]')){stuK=b.dataset.stu;subOpen=false;if(matchMedia('(min-width:900px)').matches)stuNext=true;else fullNext=true;return sheet(stuHtml())}
   if(q('[data-addstu]')){tallNext=true;return sheet('<h3>'+W.newT+'</h3><label>Имя</label><input id="newStu" placeholder="'+W.newP+'"><button class="btn" id="saveStu">Добавить</button>')}
@@ -1149,7 +1150,7 @@ document.addEventListener('click',e=>{
   if(b=q('.mc')){cur=pd(b.dataset.date);view='day';nd=1;first=true;return render()}
   if(b=q('[data-pay]')){const x=S.ev.find(v=>v.id===b.dataset.pay);x.paid=!x.paid;save();closeAll();render();return}
   if(b=q('[data-edit]'))return form(b.dataset.edit);
-  if(b=q('[data-del]')){if(confirm('Удалить запись?')){S.ev=S.ev.filter(v=>v.id!==b.dataset.del);save();closeAll();render()}return}
+  if(b=q('[data-del]')){const di=b.dataset.del;cfmAsk('Удалить запись?','Запись будет удалена из календаря. Это действие нельзя отменить.',()=>{S.ev=S.ev.filter(v=>v.id!==di);save();closeAll();render()});return}
   if(b=q('[data-d]')){cur=pd(b.dataset.d);return render()}
   if(b=q('[data-nav]')){cur=addD(cur,+b.dataset.nav);return render()}
   if(b=q('[data-f]')){filt=b.dataset.f;return render()}
@@ -1165,7 +1166,7 @@ document.addEventListener('click',e=>{
   if(b=q('#fxSeg button')){S.fx=b.dataset.fx==='1';fxUi();fxApply();return}
   if(b=q('#themeSeg button')){S.theme=b.dataset.t;return applyTheme()}
   if(b=q('.col')){const r=b.getBoundingClientRect(),m=Math.floor((e.clientY-r.top)/H)*60+S0*60;return form(null,{date:b.dataset.date,start:m,end:m+60})}
-  if(q('#saveSet')){S.rate={rec:+$('#r1').value||0,lesson:+$('#r2').value||0};save();return alert('Сохранено')}
+  if(q('#saveSet')){S.rate={rec:+$('#r1').value||0,lesson:+$('#r2').value||0};save();return toast('Сохранено')}
   if(q('#svcBack')){svcHide();return}
   if(q('[data-det]')){detShow();return}
   if(q('#detBack')){detHide();return}
@@ -1185,7 +1186,7 @@ document.addEventListener('click',e=>{
   if(q('#setSave')){const i=$('#setName');S.name=(i?i.value:(sdn!=null?sdn:S.name)).trim();sd=null;sdn=null;save();accUpd();closeAll();render();return toast('Сохранено')}
   if(q('#setCancel')){closeAll();return}
   if(q('#exp')){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='studio-backup.json';a.click();return}
-  if(q('#clr')){if(confirm('Удалить все записи?')){sd=null;S.ev=[];save();closeAll();render()}return}
+  if(q('#clr')){cfmAsk('Удалить все записи?','Все записи в календаре будут удалены. Это действие нельзя отменить.',()=>{sd=null;S.ev=[];save();closeAll();render()});return}
 });
 $('#menuBtn').onclick=openDrawer;$('#scrim').onclick=()=>closeDrawer();document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#sheet').classList.contains('stu')&&$('#sheet').classList.contains('on'))closeAll()});$('#dpop').onclick=e=>{if(e.target.id==='dpop')$('#dpop').classList.remove('on')};
 
