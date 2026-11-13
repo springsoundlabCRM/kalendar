@@ -271,6 +271,7 @@ body{padding-left:min(82vw,280px)}
 .sbk .btn{margin:0}.sbk .btn:disabled{opacity:.45;pointer-events:none}
 /* «Подтвердить» прячется, пока открыта задолженность (все устройства); карточка задолженности встаёт низом на место кнопки */
 .sbk [data-ordok]{max-height:90px;overflow:hidden;transition:max-height .32s cubic-bezier(.4,0,.2,1),padding .32s cubic-bezier(.4,0,.2,1),opacity .2s ease}.sbk [data-ordok].gone{max-height:0;padding-top:0;padding-bottom:0;opacity:0;pointer-events:none}.sbk.dbo{margin-top:0}#ordDebtWrap:has(+ .sbk.dbo) .debtc{margin-bottom:0}
+@media (min-width:900px){.sbr.dim{max-height:64px;overflow:visible;opacity:1;pointer-events:auto;transition:none}.stk.sbk.dbo{padding-top:14px;margin-top:auto}#ordDebtWrap:has(+ .stk.sbk.dbo) .debtc{margin-bottom:10px}}
 @media (max-width:899px){.sheet.full:has(.sbk) #sheetBody>.sbk.dbo{margin-top:0}.sheet.full:has(.sbk.dbo){padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}.sheet.full:has(.sbk){transition:transform .3s cubic-bezier(.2,.8,.2,1),padding-bottom .32s cubic-bezier(.4,0,.2,1)}}
 /* Задолженность в карточке клиента */
 .debtc{padding:0;overflow:hidden}
