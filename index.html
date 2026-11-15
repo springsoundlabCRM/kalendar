@@ -388,10 +388,10 @@ input.xi,textarea.xi{padding-right:44px!important}
 #auth.ld .ldw{width:min(44vw,190px);aspect-ratio:1;flex:none}
 #auth.ld svg{display:block;width:100%;height:100%;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
 #auth.ld .ldt{margin-top:44px;display:flex;justify-content:center;font-weight:700;font-size:clamp(15px,4.4vw,20px);letter-spacing:.34em;padding-left:.34em;color:#fff;line-height:1}
-#auth.ld .ldt i{font-style:normal;display:inline-block;opacity:0;transform:translateY(8px);filter:blur(5px);animation:ldL .6s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(1.05s + var(--k)*.075s)}
+#auth.ld .ldt i{font-style:normal;display:inline-block;opacity:0;transform:none;filter:none;animation:ldL .6s ease-out forwards;animation-delay:calc(1.05s + var(--k)*.075s)}
 #auth.ld.q .ldt i{animation-delay:calc(.5s + var(--k)*.04s)}
 #auth.ld .ldt i.sp{width:.8em}
-@keyframes ldL{to{opacity:1;transform:none;filter:none}}
+@keyframes ldL{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){#auth.ld .ldt i{animation:none;opacity:1;transform:none;filter:none}}
 </style>
 </head>
@@ -401,7 +401,7 @@ input.xi,textarea.xi{padding-right:44px!important}
 /* ===== Заставка: белый контур на чёрном, предметы студии перетекают друг в друга ===== */
 (function(){
 const NS='http://www.w3.org/2000/svg',M=11,P=72,TXT='YOUR WORKPLACE';
-const MIN=3.4,T0=1.5,HOLD=.25,MORPH=.65,CYC=HOLD+MORPH; /* секунды: MIN — сколько минимум идёт заставка */
+const MIN=3.4,T0=1.5,HOLD=.16,MORPH=.58,CYC=HOLD+MORPH; /* секунды: MIN — сколько минимум идёт заставка */
 const ICONS=[
  ["M46 32a14 14 0 0 1 28 0v22a14 14 0 0 1-28 0z","M46 40h28","M46 48h28","M34 52v2a26 26 0 0 0 52 0v-2","M60 80v20","M42 104h36"],
  ["M14 32h92a6 6 0 0 1 6 6v52a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6V38a6 6 0 0 1 6-6z","M28 46v36","M44 46v36","M60 46v36","M76 46v36","M92 46v36","M22 56h12","M38 70h12","M54 52h12","M70 74h12","M86 62h12"],
@@ -432,9 +432,12 @@ function build(){
     polys.sort((a,b)=>cen(a)[1]-cen(b)[1]||cen(a)[0]-cen(b)[0]);return polys});
   sv.remove();
   TO=POLY.map((A,i)=>{const B=POLY[(i+1)%POLY.length],used=new Set(),res=new Array(M),ca=A.map(cen),cb=B.map(cen);
-    [...A.keys()].sort((x,y)=>len(A[y])-len(A[x])).forEach(x=>{let bj=-1,bd=1e9;for(let j=0;j<M;j++)if(!used.has(j)){const d=Math.hypot(ca[x][0]-cb[j][0],ca[x][1]-cb[j][1]);if(d<bd){bd=d;bj=j}}used.add(bj);res[x]=align(A[x],B[bj])});return res});
+    const D=(x,j)=>{const d=Math.hypot(ca[x][0]-cb[j][0],ca[x][1]-cb[j][1]);return d*d+Math.abs(len(A[x])-len(B[j]))*2},as=new Array(M);
+    [...A.keys()].sort((x,y)=>len(A[y])-len(A[x])).forEach(x=>{let bj=-1,bd=1e9;for(let j=0;j<M;j++)if(!used.has(j)){const d=D(x,j);if(d<bd){bd=d;bj=j}}used.add(bj);as[x]=bj});
+    for(let it=0,ch=true;ch&&it<20;it++){ch=false;for(let x=0;x<M;x++)for(let y=x+1;y<M;y++)if(D(x,as[y])+D(y,as[x])<D(x,as[x])+D(y,as[y])-1e-6){const t=as[x];as[x]=as[y];as[y]=t;ch=true}}
+    A.forEach((_,x)=>{res[x]=align(A[x],B[as[x]])});return res});
 }
-const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,soft=t=>-(Math.cos(Math.PI*t)-1)/2;
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const dOf=pts=>'M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L');
 const mix=(a,b,t)=>a.map((p,i)=>[p[0]+(b[i][0]-p[0])*t,p[1]+(b[i][1]-p[1])*t]);
@@ -463,9 +466,9 @@ const SPLASH=window.SPLASH={
           if(s.inited==true){s.paths.forEach(p=>{p.style.strokeDasharray='none';p.style.strokeDashoffset='0';p.style.opacity='1'});s.inited=2}
           const kk=Math.floor((t-T0)/CYC),u=(t-T0)-kk*CYC,i=kk%POLY.length;
           if(u<HOLD)s.paths.forEach((p,j)=>p.setAttribute('d',dOf(POLY[i][j])));
-          else{const s0=(u-HOLD)/MORPH;s.paths.forEach((p,j)=>{const sj=.35*j/(M-1),e=ease(clamp((s0-sj)/.65,0,1));p.setAttribute('d',dOf(mix(POLY[i][j],TO[i][j],e)))})}
+          else{const e=soft(clamp((u-HOLD)/MORPH,0,1));s.paths.forEach((p,j)=>p.setAttribute('d',dOf(mix(POLY[i][j],TO[i][j],e))))}
         }
-        if(t>=s.endT){s.frozen=true;const i=(Math.round((s.endT-T0-.12)/CYC))%POLY.length;s.paths.forEach((p,j)=>{p.setAttribute('d',dOf(POLY[i][j]));p.style.strokeDasharray='none';p.style.opacity='1'});s.res()}
+        if(t>=s.endT&&!s.rs){s.rs=1;s.res()}
       }
       if(!s.frozen||!s.done){s.done=s.frozen;s.raf=requestAnimationFrame(frame)}
     };
