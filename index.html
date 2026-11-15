@@ -376,17 +376,102 @@ input.xi,textarea.xi{padding-right:44px!important}
 @media (min-width:900px){.srow:not(.sd){grid-template-columns:minmax(0,1.4fr) repeat(5,minmax(0,1fr)) 34px}.srow:not(.sd)>:nth-child(n+2):nth-child(-n+6){text-align:center;justify-self:center;max-width:100%;min-width:0}}
 /* «Услуга» и «Стоимость» в блоке «Заказ» — одинаковой ширины */
 .row:has(#ordS)>.pw,.row:has(#ordS)>input,.row:has(#fOrdS)>.pw,.row:has(#fOrdS)>input{flex:1 1 calc(50% - 5px)!important;min-width:0!important}
-#auth.ld{background:var(--ac,#fc0);padding:0;overflow:hidden}
-#auth.ld .ldw{position:relative;width:min(48vw,210px);aspect-ratio:1;margin:auto}
-#auth.ld .ic{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#17171a;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
-#auth.ld .ic path{stroke-dasharray:1;stroke-dashoffset:.98;opacity:0;animation:ldDraw 12s cubic-bezier(.45,0,.25,1) infinite backwards;animation-delay:calc(var(--i)*2.4s + var(--p,0s))}
-#auth.ld .ic path:nth-child(2){--p:.08s}#auth.ld .ic path:nth-child(3){--p:.16s}#auth.ld .ic path:nth-child(4){--p:.24s}#auth.ld .ic path:nth-child(5){--p:.32s}#auth.ld .ic path:nth-child(6){--p:.4s}#auth.ld .ic path:nth-child(n+7){--p:.48s}
-@keyframes ldDraw{0%{stroke-dashoffset:.98;opacity:0}.01%{stroke-dashoffset:.98;opacity:1}10%{stroke-dashoffset:0}18%{stroke-dashoffset:0}27.9%{stroke-dashoffset:-.98;opacity:1}28%,100%{stroke-dashoffset:.98;opacity:0}}
-@media (prefers-reduced-motion:reduce){#auth.ld .ic path{animation:none;stroke-dashoffset:0}#auth.ld .ic:not(:first-child){display:none}}
+#auth.ld{background:#000;padding:0;overflow:hidden;flex-direction:column;color:#fff}
+#auth.ld.out{opacity:0;transition:opacity .9s ease;pointer-events:none}
+#auth.ld .ldw{width:min(44vw,190px);aspect-ratio:1;flex:none}
+#auth.ld svg{display:block;width:100%;height:100%;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+#auth.ld .ldt{margin-top:44px;display:flex;justify-content:center;font-weight:700;font-size:clamp(15px,4.4vw,20px);letter-spacing:.34em;padding-left:.34em;color:#fff;line-height:1}
+#auth.ld .ldt i{font-style:normal;display:inline-block;opacity:0;transform:translateY(8px);filter:blur(5px);animation:ldL .6s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(1.05s + var(--k)*.075s)}
+#auth.ld.q .ldt i{animation-delay:calc(.5s + var(--k)*.04s)}
+#auth.ld .ldt i.sp{width:.8em}
+@keyframes ldL{to{opacity:1;transform:none;filter:none}}
+@media (prefers-reduced-motion:reduce){#auth.ld .ldt i{animation:none;opacity:1;transform:none;filter:none}}
 </style>
 </head>
 <body>
-<div id="auth" class="ld"><div class="ldw" role="status" aria-label="Загрузка"><svg class="ic" viewBox="0 0 120 120" style="--i:0" aria-hidden="true"><path pathLength="1" d="M46 32a14 14 0 0 1 28 0v22a14 14 0 0 1-28 0z"/><path pathLength="1" d="M46 40h28"/><path pathLength="1" d="M46 48h28"/><path pathLength="1" d="M34 52v2a26 26 0 0 0 52 0v-2"/><path pathLength="1" d="M60 80v20"/><path pathLength="1" d="M42 104h36"/></svg><svg class="ic" viewBox="0 0 120 120" style="--i:1" aria-hidden="true"><path pathLength="1" d="M14 32h92a6 6 0 0 1 6 6v52a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6V38a6 6 0 0 1 6-6z"/><path pathLength="1" d="M28 46v36"/><path pathLength="1" d="M44 46v36"/><path pathLength="1" d="M60 46v36"/><path pathLength="1" d="M76 46v36"/><path pathLength="1" d="M92 46v36"/><path pathLength="1" d="M22 56h12"/><path pathLength="1" d="M38 70h12"/><path pathLength="1" d="M54 52h12"/><path pathLength="1" d="M70 74h12"/><path pathLength="1" d="M86 62h12"/></svg><svg class="ic" viewBox="0 0 120 120" style="--i:2" aria-hidden="true"><path pathLength="1" d="M36 10h48a6 6 0 0 1 6 6v88a6 6 0 0 1-6 6H36a6 6 0 0 1-6-6V16a6 6 0 0 1 6-6z"/><path pathLength="1" d="M53 32a7 7 0 1 0 14 0a7 7 0 1 0-14 0"/><path pathLength="1" d="M40 74a20 20 0 1 0 40 0a20 20 0 1 0-40 0"/><path pathLength="1" d="M54 74a6 6 0 1 0 12 0a6 6 0 1 0-12 0"/><path pathLength="1" d="M52 100h16"/></svg><svg class="ic" viewBox="0 0 120 120" style="--i:3" aria-hidden="true"><path pathLength="1" d="M24 62a36 36 0 0 1 72 0"/><path pathLength="1" d="M32 62H22a6 6 0 0 0-6 6v26a6 6 0 0 0 6 6h10z"/><path pathLength="1" d="M88 62h10a6 6 0 0 1 6 6v26a6 6 0 0 1-6 6H88z"/><path pathLength="1" d="M24 74h-4"/><path pathLength="1" d="M96 74h4"/></svg><svg class="ic" viewBox="0 0 120 120" style="--i:4" aria-hidden="true"><path pathLength="1" d="M12 40h96a6 6 0 0 1 6 6v36a6 6 0 0 1-6 6H12a6 6 0 0 1-6-6V46a6 6 0 0 1 6-6z"/><path pathLength="1" d="M23 64a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path pathLength="1" d="M32 64v-6"/><path pathLength="1" d="M51 64a9 9 0 1 0 18 0a9 9 0 1 0-18 0"/><path pathLength="1" d="M60 64l4-4"/><path pathLength="1" d="M82 64a10 10 0 1 0 20 0a10 10 0 1 0-20 0"/><path pathLength="1" d="M88 64a4 4 0 1 0 8 0a4 4 0 1 0-8 0"/></svg></div></div>
+<div id="auth" class="ld"></div>
+<script>
+/* ===== Заставка: белый контур на чёрном, предметы студии перетекают друг в друга ===== */
+(function(){
+const NS='http://www.w3.org/2000/svg',M=11,P=72,TXT='YOUR WORKPLACE';
+const MIN=3.4,T0=1.5,HOLD=.25,MORPH=.65,CYC=HOLD+MORPH; /* секунды: MIN — сколько минимум идёт заставка */
+const ICONS=[
+ ["M46 32a14 14 0 0 1 28 0v22a14 14 0 0 1-28 0z","M46 40h28","M46 48h28","M34 52v2a26 26 0 0 0 52 0v-2","M60 80v20","M42 104h36"],
+ ["M14 32h92a6 6 0 0 1 6 6v52a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6V38a6 6 0 0 1 6-6z","M28 46v36","M44 46v36","M60 46v36","M76 46v36","M92 46v36","M22 56h12","M38 70h12","M54 52h12","M70 74h12","M86 62h12"],
+ ["M36 10h48a6 6 0 0 1 6 6v88a6 6 0 0 1-6 6H36a6 6 0 0 1-6-6V16a6 6 0 0 1 6-6z","M53 32a7 7 0 1 0 14 0a7 7 0 1 0-14 0","M40 74a20 20 0 1 0 40 0a20 20 0 1 0-40 0","M54 74a6 6 0 1 0 12 0a6 6 0 1 0-12 0","M52 100h16"],
+ ["M24 62a36 36 0 0 1 72 0","M32 62H22a6 6 0 0 0-6 6v26a6 6 0 0 0 6 6h10z","M88 62h10a6 6 0 0 1 6 6v26a6 6 0 0 1-6 6H88z","M24 74h-4","M96 74h4"],
+ ["M12 40h96a6 6 0 0 1 6 6v36a6 6 0 0 1-6 6H12a6 6 0 0 1-6-6V46a6 6 0 0 1 6-6z","M23 64a9 9 0 1 0 18 0a9 9 0 1 0-18 0","M32 64v-6","M51 64a9 9 0 1 0 18 0a9 9 0 1 0-18 0","M60 64l4-4","M82 64a10 10 0 1 0 20 0a10 10 0 1 0-20 0","M88 64a4 4 0 1 0 8 0a4 4 0 1 0-8 0"]
+];
+const ov=document.getElementById('auth');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const len=p=>{let s=0;for(let i=1;i<p.length;i++)s+=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);return s};
+const cen=p=>{let x=0,y=0;for(const q of p){x+=q[0];y+=q[1]}return[x/p.length,y/p.length]};
+const resample=(pts,n)=>{const c=[0];for(let i=1;i<pts.length;i++)c.push(c[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+  const L=c[c.length-1]||1,out=[];let j=1;
+  for(let i=0;i<=n;i++){const t=L*i/n;while(j<c.length-1&&c[j]<t)j++;const a=pts[j-1],b=pts[j],s=(c[j]-c[j-1])||1,u=(t-c[j-1])/s;out.push([a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u])}
+  return out};
+const closed=p=>Math.hypot(p[0][0]-p[P][0],p[0][1]-p[P][1])<.8;
+const cost=(a,b)=>{let s=0;for(let i=0;i<=P;i+=6){const dx=a[i][0]-b[i][0],dy=a[i][1]-b[i][1];s+=dx*dx+dy*dy}return s};
+function align(a,b){let best=b,bc=cost(a,b);const c=[b.slice().reverse()];
+  if(closed(a)&&closed(b)){const base=b.slice(0,P);for(let sh=4;sh<P;sh+=4){const s=base.slice(sh).concat(base.slice(0,sh));s.push(s[0]);c.push(s,s.slice().reverse())}}
+  for(const x of c){const k=cost(a,x);if(k<bc){bc=k;best=x}}return best}
+let POLY=null,TO=null;
+function build(){
+  if(POLY)return;
+  const sv=document.createElementNS(NS,'svg');sv.setAttribute('style','position:absolute;width:0;height:0;visibility:hidden');document.body.appendChild(sv);
+  POLY=ICONS.map(ds=>{
+    let polys=ds.map(d=>{const el=document.createElementNS(NS,'path');el.setAttribute('d',d);sv.appendChild(el);const L=el.getTotalLength(),pts=[];for(let i=0;i<=P;i++){const q=el.getPointAtLength(L*i/P);pts.push([q.x,q.y])}return pts});
+    while(polys.length<M){let bi=0,bl=-1;polys.forEach((p,i)=>{const l=len(p);if(l>bl){bl=l;bi=i}});const p=polys.splice(bi,1)[0],h=P/2;polys.push(resample(p.slice(0,h+1),P),resample(p.slice(h),P))}
+    polys.sort((a,b)=>cen(a)[1]-cen(b)[1]||cen(a)[0]-cen(b)[0]);return polys});
+  sv.remove();
+  TO=POLY.map((A,i)=>{const B=POLY[(i+1)%POLY.length],used=new Set(),res=new Array(M),ca=A.map(cen),cb=B.map(cen);
+    [...A.keys()].sort((x,y)=>len(A[y])-len(A[x])).forEach(x=>{let bj=-1,bd=1e9;for(let j=0;j<M;j++)if(!used.has(j)){const d=Math.hypot(ca[x][0]-cb[j][0],ca[x][1]-cb[j][1]);if(d<bd){bd=d;bj=j}}used.add(bj);res[x]=align(A[x],B[bj])});return res});
+}
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const dOf=pts=>'M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L');
+const mix=(a,b,t)=>a.map((p,i)=>[p[0]+(b[i][0]-p[0])*t,p[1]+(b[i][1]-p[1])*t]);
+let st=null,meta=null,metaOld=null;
+function html(){let k=0;return '<div class="ldw" role="status" aria-label="Загрузка"><svg viewBox="0 0 120 120" aria-hidden="true">'+Array.from({length:M},()=>'<path pathLength="1" d="M0 0"/>').join('')+'</svg></div><div class="ldt" aria-label="Your workplace">'+[...TXT].map(ch=>ch===' '?'<i class="sp"></i>':'<i style="--k:'+(k++)+'">'+ch+'</i>').join('')+'</div>'}
+const SPLASH=window.SPLASH={
+  start(quick){
+    this.stop();
+    const F=quick?.5:1;
+    ov.style.opacity='';ov.style.transition='';ov.className='ld'+(quick?' q':'');ov.innerHTML=html();
+    meta=document.querySelector('meta[name="theme-color"]');if(meta){metaOld=metaOld||meta.content;meta.content='#000000'}
+    let res;const minP=new Promise(r=>res=r);
+    const k=Math.ceil((MIN-T0-.12)/CYC),endT=T0+k*CYC+.12;
+    st={F,endT,res,minP,frozen:false,done:false,t0:performance.now(),paths:[...ov.querySelectorAll('svg path')],inited:false};
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches){build();st.paths.forEach((p,j)=>p.setAttribute('d',dOf(POLY[0][j])));st.frozen=true;setTimeout(res,1200);return}
+    const s=st;
+    const frame=now=>{
+      if(st!==s||!ov.isConnected)return;
+      try{build()}catch(e){console.warn(e);s.res();return}
+      const t=(now-s.t0)/1000/F;
+      if(!s.frozen){
+        if(t<T0){
+          s.paths.forEach((p,j)=>{if(!s.inited)p.setAttribute('d',dOf(POLY[0][j]));const q=clamp((t-j*.055)/.62,0,1);p.style.strokeDasharray='1';p.style.strokeDashoffset=String(1-ease(q));p.style.opacity=q>0?'1':'0'});
+          s.inited=true;
+        }else{
+          if(s.inited==true){s.paths.forEach(p=>{p.style.strokeDasharray='none';p.style.strokeDashoffset='0';p.style.opacity='1'});s.inited=2}
+          const kk=Math.floor((t-T0)/CYC),u=(t-T0)-kk*CYC,i=kk%POLY.length;
+          if(u<HOLD)s.paths.forEach((p,j)=>p.setAttribute('d',dOf(POLY[i][j])));
+          else{const s0=(u-HOLD)/MORPH;s.paths.forEach((p,j)=>{const sj=.35*j/(M-1),e=ease(clamp((s0-sj)/.65,0,1));p.setAttribute('d',dOf(mix(POLY[i][j],TO[i][j],e)))})}
+        }
+        if(t>=s.endT){s.frozen=true;const i=(Math.round((s.endT-T0-.12)/CYC))%POLY.length;s.paths.forEach((p,j)=>{p.setAttribute('d',dOf(POLY[i][j]));p.style.strokeDasharray='none';p.style.opacity='1'});s.res()}
+      }
+      if(!s.frozen||!s.done){s.done=s.frozen;s.raf=requestAnimationFrame(frame)}
+    };
+    s.raf=requestAnimationFrame(frame);
+  },
+  minWait(){return st?st.minP:Promise.resolve()},
+  stop(){if(st&&st.raf)cancelAnimationFrame(st.raf);if(st)st.res();st=null},
+  async out(){ov.classList.add('out');await sleep(900);this.stop();ov.remove();if(meta&&metaOld)meta.content=metaOld},
+  async to(fn){await this.minWait();ov.style.transition='opacity .35s ease';ov.style.opacity='0';await sleep(370);this.stop();fn();if(meta&&metaOld)meta.content=metaOld;void ov.offsetWidth;ov.style.opacity='1';await sleep(380);ov.style.transition=''}
+};
+SPLASH.start(false);
+})();
+</script>
 <header class="top">
   <button class="ib" id="menuBtn" aria-label="Меню"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   <div class="ttl"><b id="title"></b><small id="sub"></small></div>
@@ -440,10 +525,10 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const ERR={'auth/invalid-credential':'Неверная почта или пароль','auth/wrong-password':'Неверная почта или пароль','auth/user-not-found':'Неверная почта или пароль','auth/invalid-email':'Введите корректную почту','auth/email-already-in-use':'Эта почта уже зарегистрирована — войдите','auth/weak-password':'Пароль — минимум 6 символов','auth/network-request-failed':'Нет соединения с интернетом','auth/too-many-requests':'Слишком много попыток — попробуйте позже','auth/operation-not-allowed':'В Firebase не включён вход по почте и паролю','auth/user-disabled':'Аккаунт отключён','permission-denied':'Нет доступа: проверьте правила Firestore'};
 const emsg=e=>ERR[e&&e.code]||ERR[String(e&&e.code).replace('firestore/','')]||('Ошибка: '+((e&&e.message)||e));
-const ov=document.getElementById('auth')||(()=>{const d=document.createElement('div');d.id='auth';document.body.appendChild(d);return d})();const SPL=ov.innerHTML;
+const ov=document.getElementById('auth')||(()=>{const d=document.createElement('div');d.id='auth';document.body.appendChild(d);return d})();
 const logo='<div class="alg"><i>♪</i>Студия</div>';
-const wait=t=>{if(ov.className==='ld')return;ov.className='ld';ov.innerHTML=SPL};
-const fail=(t,retry)=>{ov.className='';ov.innerHTML=`<div class="aw">${logo}<h1>Не удалось загрузить</h1><p class="as">${esc(t)}</p><button class="btn" id="aRetry">Повторить</button></div>`;ov.querySelector('#aRetry').onclick=retry};
+const wait=t=>{if(!ov.classList.contains('ld'))SPLASH.start(true)};
+const fail=(t,retry)=>{SPLASH.stop();ov.className='';ov.style.opacity='';ov.innerHTML=`<div class="aw">${logo}<h1>Не удалось загрузить</h1><p class="as">${esc(t)}</p><button class="btn" id="aRetry">Повторить</button></div>`;ov.querySelector('#aRetry').onclick=retry};
 
 const CL=window.CLOUD={me:null,others:{},_prof:{},_evAll:null,_pub:new Map(),_js:null,_pr:'',_n:0,_S:null,_t:0};
 const fb={};
@@ -467,7 +552,8 @@ async function init(){
 }
 
 /* ---------- экран входа / регистрации ---------- */
-function showAuth(){
+function showAuth(){SPLASH.to(showAuth0)}
+function showAuth0(){
   ov.className='';
   const {F,AU,db,auth}=fb;
   let mode='in',role='vocal';
@@ -553,9 +639,9 @@ async function boot(user){
   document.addEventListener('click',e=>{if(e.target.closest('#logout'))logout()});
   addEventListener('pagehide',()=>{if(CL._t)flush()});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&CL._t)flush()});
-  ov.remove();
   document.querySelectorAll('script.boot').forEach(s=>{const x=document.createElement('script');x.textContent=s.textContent;document.body.appendChild(x)});
   if(migrated)CL.save(S0,true);
+  await SPLASH.minWait();await SPLASH.out();
 }
 
 /* ---------- сохранение ---------- */
