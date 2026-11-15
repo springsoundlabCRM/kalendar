@@ -466,7 +466,7 @@ const SPLASH=window.SPLASH={
   },
   minWait(){return st?st.minP:Promise.resolve()},
   stop(){if(st&&st.raf)cancelAnimationFrame(st.raf);if(st)st.res();st=null},
-  async out(){ov.classList.add('out');await sleep(900);this.stop();ov.remove();if(meta&&metaOld)meta.content=metaOld},
+  async out(){ov.classList.add('out');await sleep(900);this.stop();ov.remove()},
   async to(fn){await this.minWait();ov.style.transition='opacity .35s ease';ov.style.opacity='0';await sleep(370);this.stop();fn();if(meta&&metaOld)meta.content=metaOld;void ov.offsetWidth;ov.style.opacity='1';await sleep(380);ov.style.transition=''}
 };
 SPLASH.start(false);
