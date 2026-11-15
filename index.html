@@ -450,7 +450,7 @@ const SPLASH=window.SPLASH={
     ov.style.opacity='';ov.style.transition='';ov.className='ld'+(quick?' q':'');ov.innerHTML=html();
     meta=document.querySelector('meta[name="theme-color"]');if(meta){metaOld=metaOld||meta.content;meta.content='#000000'}
     let res;const minP=new Promise(r=>res=r);
-    const k=Math.ceil((MIN-T0-.12)/CYC),endT=T0+k*CYC+.12;
+    let k=4;try{build();k=POLY.length-1}catch(e){}const endT=T0+k*CYC+.12;
     st={F,endT,res,minP,frozen:false,done:false,t0:performance.now(),paths:[...ov.querySelectorAll('svg path')],inited:false};
     if(matchMedia('(prefers-reduced-motion:reduce)').matches){build();st.paths.forEach((p,j)=>p.setAttribute('d',dOf(POLY[0][j])));st.frozen=true;setTimeout(res,1200);return}
     const s=st;
@@ -464,8 +464,8 @@ const SPLASH=window.SPLASH={
           s.inited=true;
         }else{
           if(s.inited==true){s.paths.forEach(p=>{p.style.strokeDasharray='none';p.style.strokeDashoffset='0';p.style.opacity='1'});s.inited=2}
-          const kk=Math.floor((t-T0)/CYC),u=(t-T0)-kk*CYC,i=kk%POLY.length;
-          if(u<HOLD)s.paths.forEach((p,j)=>p.setAttribute('d',dOf(POLY[i][j])));
+          const kk=Math.floor((t-T0)/CYC),u=(t-T0)-kk*CYC,i=Math.min(kk,POLY.length-1);
+          if(kk>=POLY.length-1||u<HOLD)s.paths.forEach((p,j)=>p.setAttribute('d',dOf(POLY[i][j])));
           else{const e=soft(clamp((u-HOLD)/MORPH,0,1));s.paths.forEach((p,j)=>p.setAttribute('d',dOf(mix(POLY[i][j],TO[i][j],e))))}
         }
         if(t>=s.endT&&!s.rs){s.rs=1;s.res()}
