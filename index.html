@@ -393,6 +393,8 @@ input.xi,textarea.xi{padding-right:44px!important}
 #auth.ld .ldt i.sp{width:.8em}
 @keyframes ldL{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){#auth.ld .ldt i{animation:none;opacity:1;transform:none;filter:none}}
+/* Крестики мгновенно скрываются, пока открыт любой календарь/таймер/окно */
+body:has(.dpop.on) .xclr,body:has(.dpin.open) .xclr,body:has(.dpop.on) #fOrdL .sdel,body:has(.dpin.open) #fOrdL .sdel,body:has(.dpop.on) #fXcL .sdel,body:has(.dpin.open) #fXcL .sdel,body:has(.dpop.on) #cXcL .sdel,body:has(.dpin.open) #cXcL .sdel,body:has(.dpop.on) #ordWrap .sdel,body:has(.dpin.open) #ordWrap .sdel{visibility:hidden!important;opacity:0!important;pointer-events:none!important;transition:none!important}
 </style>
 </head>
 <body>
@@ -1697,6 +1699,7 @@ document.addEventListener('click',e=>{const b=hit(e);if(!b)return;e.stopPropagat
 addEventListener('scroll',sched,true);addEventListener('resize',sched);addEventListener('load',sched);
 [HTMLInputElement,HTMLTextAreaElement].forEach(C=>{const d=Object.getOwnPropertyDescriptor(C.prototype,'value');if(d&&d.set&&d.get)Object.defineProperty(C.prototype,'value',{configurable:true,enumerable:d.enumerable,get:d.get,set:function(v){d.set.call(this,v);sched()}})});
 new MutationObserver(ms=>{for(const m of ms){const tg=m.target;if(tg.nodeType===1&&(tg.classList.contains('xclr')||tg.closest('.xclr')))continue;if(m.type==='childList'&&[...m.addedNodes,...m.removedNodes].every(n=>n.nodeType===1&&n.classList.contains('xclr')))continue;sched();break}}).observe(document.body,{childList:true,subtree:true});
+new MutationObserver(ms=>{for(const m of ms){const t=m.target;if(t.nodeType===1&&t.classList&&(t.classList.contains('dpop')||t.classList.contains('dpin'))){sync();break}}}).observe(document.body,{attributes:true,attributeFilter:['class'],subtree:true});
 setInterval(()=>{if(!document.hidden)try{sync()}catch(_){}},400);
 sync();
 })()}catch(_){}
