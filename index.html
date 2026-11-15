@@ -393,8 +393,6 @@ input.xi,textarea.xi{padding-right:44px!important}
 #auth.ld .ldt i.sp{width:.8em}
 @keyframes ldL{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){#auth.ld .ldt i{animation:none;opacity:1;transform:none;filter:none}}
-/* Крестики мгновенно скрываются, пока открыт любой календарь/таймер/окно */
-body:has(.dpop.on) .xclr,body:has(.dpin.open) .xclr,body:has(.dpop.on) #fOrdL .sdel,body:has(.dpin.open) #fOrdL .sdel,body:has(.dpop.on) #fXcL .sdel,body:has(.dpin.open) #fXcL .sdel,body:has(.dpop.on) #cXcL .sdel,body:has(.dpin.open) #cXcL .sdel,body:has(.dpop.on) #ordWrap .sdel,body:has(.dpin.open) #ordWrap .sdel{visibility:hidden!important;opacity:0!important;pointer-events:none!important;transition:none!important}
 </style>
 </head>
 <body>
@@ -1681,15 +1679,24 @@ function mk(el){const b=document.createElement('button');b.type='button';b.class
 function sync(){try{sync0()}catch(_){}}
 function sync0(){
   document.querySelectorAll('input,textarea').forEach(el=>{if(!el._xb&&elig(el))mk(el)});
+  const L=[];
   document.querySelectorAll('.xclr').forEach(b=>{
     const el=b._i;
     if(!el||!el.isConnected||el.parentNode!==b.parentNode){b.remove();if(el)el._xb=null;return}
-    const r=el.getBoundingClientRect(),show=el.value!==''&&!el.disabled&&!el.readOnly&&r.width>0&&r.height>0;
-    if(!show){if(b.classList.contains('on'))b.classList.remove('on');return}
-    if(!b.classList.contains('on'))b.classList.add('on');
-    const br=b.getBoundingClientRect(),tl=r.right-br.width-3,tt=el.tagName==='TEXTAREA'?r.top+3:r.top+(r.height-br.height)/2,dx=tl-br.left,dy=tt-br.top;
-    if(Math.abs(dx)>.3||Math.abs(dy)>.3){b.style.left=((parseFloat(b.style.left)||0)+dx)+'px';b.style.top=((parseFloat(b.style.top)||0)+dy)+'px'}
+    const r=el.getBoundingClientRect();
+    if(!(r.width>0&&r.height>0))return;
+    const show=el.value!==''&&!el.disabled&&!el.readOnly;
+    L.push([b,el,r,show]);
   });
+  const W=[];
+  L.forEach(([b,el,r,show])=>{
+    if(!show){W.push([b,false]);return}
+    if(!b.classList.contains('on')){W.push([b,true]);return}
+    const br=b.getBoundingClientRect(),tl=r.right-br.width-3,tt=el.tagName==='TEXTAREA'?r.top+3:r.top+(r.height-br.height)/2,dx=tl-br.left,dy=tt-br.top;
+    if(Math.abs(dx)>.3||Math.abs(dy)>.3)W.push([b,true,(parseFloat(b.style.left)||0)+dx,(parseFloat(b.style.top)||0)+dy]);
+  });
+  W.forEach(([b,on,l,t])=>{if(!on){b.classList.remove('on');return}b.classList.add('on');if(l!==undefined){b.style.left=l+'px';b.style.top=t+'px'}});
+  if(W.some(w=>w[1]&&w[2]===undefined)){L.forEach(([b,el,r,show])=>{if(!show)return;const br=b.getBoundingClientRect(),tl=r.right-br.width-3,tt=el.tagName==='TEXTAREA'?r.top+3:r.top+(r.height-br.height)/2,dx=tl-br.left,dy=tt-br.top;if(Math.abs(dx)>.3||Math.abs(dy)>.3){b.style.left=((parseFloat(b.style.left)||0)+dx)+'px';b.style.top=((parseFloat(b.style.top)||0)+dy)+'px'}})}
 }
 const hit=e=>e.target&&e.target.closest?e.target.closest('.xclr'):null;
 document.addEventListener('pointerdown',e=>{if(hit(e))e.stopPropagation()},true);
@@ -1699,8 +1706,7 @@ document.addEventListener('click',e=>{const b=hit(e);if(!b)return;e.stopPropagat
 addEventListener('scroll',sched,true);addEventListener('resize',sched);addEventListener('load',sched);
 [HTMLInputElement,HTMLTextAreaElement].forEach(C=>{const d=Object.getOwnPropertyDescriptor(C.prototype,'value');if(d&&d.set&&d.get)Object.defineProperty(C.prototype,'value',{configurable:true,enumerable:d.enumerable,get:d.get,set:function(v){d.set.call(this,v);sched()}})});
 new MutationObserver(ms=>{for(const m of ms){const tg=m.target;if(tg.nodeType===1&&(tg.classList.contains('xclr')||tg.closest('.xclr')))continue;if(m.type==='childList'&&[...m.addedNodes,...m.removedNodes].every(n=>n.nodeType===1&&n.classList.contains('xclr')))continue;sched();break}}).observe(document.body,{childList:true,subtree:true});
-new MutationObserver(ms=>{for(const m of ms){const t=m.target;if(t.nodeType===1&&t.classList&&(t.classList.contains('dpop')||t.classList.contains('dpin'))){sync();break}}}).observe(document.body,{attributes:true,attributeFilter:['class'],subtree:true});
-setInterval(()=>{if(!document.hidden)try{sync()}catch(_){}},400);
+(function xl(){if(!document.hidden)try{sync()}catch(_){}requestAnimationFrame(xl)})();
 sync();
 })()}catch(_){}
 </script>
