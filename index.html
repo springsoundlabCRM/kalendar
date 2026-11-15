@@ -165,6 +165,8 @@ body{padding-left:min(82vw,280px)}
 .pw{position:relative;z-index:5}.sgo .pw~*{filter:blur(3px);opacity:.55;pointer-events:none;transition:filter .15s,opacity .15s}
 .sg{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--bg2);border:1px solid var(--ln);border-radius:12px;box-shadow:var(--sh);z-index:50;max-height:210px;overflow-y:auto;display:none}.sg.on{display:block}.sg div{padding:12px 14px;cursor:pointer}.sg div:not(:last-child){border-bottom:1px solid var(--ln)}.sg div:hover{background:color-mix(in srgb,var(--tx) 8%,var(--bg2))}
 .vw{position:relative;flex:none}#vw{margin-right:16px}#fxCord.on #fxCordB{fill:var(--tx)}body:has(#sheet.full.on) #fxCord{display:none!important}
+/* Телефон: шнурок эффектов скрыт (код остаётся), значок вида дня сдвинут вправо, «Сегодня» ближе к нему */
+@media (hover:none) and (pointer:coarse){#fxCord,#fxAnc{display:none!important}#vw{margin-right:0}#todayBtn{margin-right:-6px}}
 .vmenu{position:absolute;right:0;top:46px;min-width:160px;background:var(--bg);border:1px solid var(--ln);border-radius:14px;box-shadow:var(--sh);padding:6px;z-index:20;display:none}
 .vmenu.on{display:block}
 .vmenu button{display:flex;justify-content:space-between;align-items:center;width:100%;padding:11px 12px;border-radius:10px;font-weight:600;text-align:left}
