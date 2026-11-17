@@ -615,7 +615,23 @@ ${up?`<label>Имя</label><input id="aN" placeholder="Как вас зовут"
 }
 
 /* ---------- загрузка данных пользователя ---------- */
+/* сразу после входа/смены пароля токен может «доезжать» до Firestore с задержкой — тихо повторяем */
 async function boot(user){
+  let last;
+  for(let i=0;i<6;i++){
+    try{
+      try{await user.getIdToken(i>0)}catch(e){}
+      return await boot0(user);
+    }catch(e){
+      last=e;
+      const c=String(e&&e.code||'');
+      if(!/permission-denied|unauthenticated|unavailable/.test(c))throw e;
+      await new Promise(r=>setTimeout(r,500+i*400));
+    }
+  }
+  throw last;
+}
+async function boot0(user){
   wait('Загружаем данные…');
   const {F,db}=fb,uid=user.uid,D=(...p)=>F.doc(db,'users',uid,...p);
   let ps=await F.getDoc(F.doc(db,'users',uid)),prof=ps.exists()?ps.data():null;
