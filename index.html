@@ -1362,10 +1362,10 @@ function detShow(){let p=$('#detPage');if(!p){p=document.createElement('div');p.
   <div class="card"><label style="margin-top:0">Цель занятий</label>${detTa('goal','Зачем пришёл учиться: для себя, сцена, поступление, экзамен…')}<label>Текущий репертуар</label>${detTa('rep','Песни и произведения в работе')}</div>
   <div class="card"><label style="margin-top:0">Домашнее задание</label>${detTa('hw','Что задано к следующему занятию')}</div>`}`;  p.scrollTop=0;void p.offsetWidth;p.classList.add('on')}
 /* ручной ввод даты и переименование клиента */
-function dParse(t){t=String(t||'').trim();if(!t)return'';let g=t.split(/\D+/).filter(Boolean);if(g.length===1){const d=g[0];if(d.length===8||d.length===6)g=[d.slice(0,2),d.slice(2,4),d.slice(4)];else return null}if(g.length!==3)return null;let dd=+g[0],mm=+g[1],yy=+g[2];if(g[2].length===2)yy+=yy>new Date().getFullYear()%100?1900:2000;else if(g[2].length!==4)return null;const o=new Date(yy,mm-1,dd);if(yy<1900||o.getFullYear()!==yy||o.getMonth()!==mm-1||o.getDate()!==dd)return null;return yy+'-'+pad(mm)+'-'+pad(dd)}
-function dSave(f,v){if(v&&f==='bd'&&pd(v)>new Date())return false;const d=S.det[stuK]=S.det[stuK]||{};d[f]=v;save();return true}
-document.addEventListener('input',e=>{const t=e.target;if(!t.dataset||t.dataset.bdt===undefined)return;const v=dParse(t.value);if(v&&(/\d{4}\s*$/.test(t.value)||/^\s*\d{8}\s*$/.test(t.value)))dSave(t.dataset.bdf,v)});
-document.addEventListener('focusout',e=>{const t=e.target;if(!t.dataset||t.dataset.bdt===undefined)return;const f=t.dataset.bdf,v=dParse(t.value);if(v===''){dSave(f,'');t.value='';return}if(v&&dSave(f,v)){t.value=bdFmt(v);return}toast('Введите дату, например 15.03.1995');t.value=bdFmt(bdVal(f))});
+function dParse(t,f){t=String(t||'').trim();if(!t)return'';let g=t.split(/\D+/).filter(Boolean);if(f==='bd'){/* год можно не знать: 15.03 или 15.03.ГГГГ */if(g.length===1&&g[0].length===4)g=[g[0].slice(0,2),g[0].slice(2)];if(g.length===2){const dd=+g[0],mm=+g[1],o=new Date(2000,mm-1,dd);if(g[0].length>2||g[1].length>2||o.getMonth()!==mm-1||o.getDate()!==dd)return null;return'--'+pad(mm)+'-'+pad(dd)}}if(g.length===1){const d=g[0];if(d.length===8||d.length===6)g=[d.slice(0,2),d.slice(2,4),d.slice(4)];else return null}if(g.length!==3)return null;let dd=+g[0],mm=+g[1],yy=+g[2];if(g[2].length===2)yy+=yy>new Date().getFullYear()%100?1900:2000;else if(g[2].length!==4)return null;const o=new Date(yy,mm-1,dd);if(yy<1900||o.getFullYear()!==yy||o.getMonth()!==mm-1||o.getDate()!==dd)return null;return yy+'-'+pad(mm)+'-'+pad(dd)}
+function dSave(f,v){if(v&&f==='bd'&&v[0]!=='-'&&pd(v)>new Date())return false;const d=S.det[stuK]=S.det[stuK]||{};d[f]=v;save();return true}
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset||t.dataset.bdt===undefined)return;const v=dParse(t.value,t.dataset.bdf);if(v&&v[0]!=='-'&&(/\d{4}\s*$/.test(t.value)||/^\s*\d{8}\s*$/.test(t.value)))dSave(t.dataset.bdf,v)});
+document.addEventListener('focusout',e=>{const t=e.target;if(!t.dataset||t.dataset.bdt===undefined)return;const f=t.dataset.bdf,v=dParse(t.value,f);if(v===''){dSave(f,'');t.value='';return}if(v&&dSave(f,v)){t.value=bdFmt(v);return}toast(f==='bd'?'Введите число и месяц, например 15.03 (год можно позже)':'Введите дату, например 15.03.1995');t.value=bdFmt(bdVal(f))});
 function stuRename(raw){const nn=String(raw||'').trim().slice(0,40),ok=stuK,nk=key(nn),old=(allStu().find(a=>a[0]===ok)||[ok,ok])[1];
   if(!nn){toast('Введите имя');return old}
   if(nn===old)return old;
@@ -1382,7 +1382,7 @@ document.addEventListener('change',e=>{if(e.target.id==='detName')e.target.value
 document.addEventListener('keydown',e=>{if(e.target.id==='detName'&&e.key==='Enter'){e.preventDefault();e.target.blur()}});
 let bdM=null,bdYr=false,bdF='bd';
 const bdVal=f=>(S.det[stuK]||{})[f||bdF]||'';
-const bdFmt=v=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v||'');return m?m[3]+'.'+m[2]+'.'+m[1]:''};
+const bdFmt=v=>{const m=/^(\d{4}|-)-(\d{2})-(\d{2})$/.exec(v||'');return m?m[3]+'.'+m[2]+'.'+(m[1]==='-'?'ГГГГ':m[1]):''};
 const BDS=[[0,2,2,'дд'],[3,5,2,'мм'],[6,10,4,'гггг']];
 const bdSg=v=>BDS.map(x=>v.slice(x[0],x[1]));
 function bdSel(t,i){t._si=i;t._fresh=true;t.setSelectionRange(BDS[i][0],BDS[i][1])}
@@ -1415,7 +1415,7 @@ function bdClick(ev){const b=ev.target.closest('button,[data-bdy]');if(!b)return
   if(b.dataset.dy){bdM=new Date(+b.dataset.dy,bdM.getMonth(),1);bdYr=false;bdDraw();return}
   if(b.dataset.dm){bdM=new Date(bdM.getFullYear(),bdM.getMonth()+(+b.dataset.dm),1);bdDraw();return}
   if(b.dataset.dd){const d=S.det[stuK]=S.det[stuK]||{};d[bdF]=b.dataset.dd;save();const bi=$('#detPage input[data-bdt][data-bdf="'+bdF+'"]');if(bi)bi.value=bdFmt(b.dataset.dd);$('#dpop').classList.remove('on')}}
-function bdOpen(f){bdF=f||'bd';const v=bdVal();bdM=v?pd(v):bdF==='bd'?new Date(new Date().getFullYear()-20,0,1):new Date();bdM=new Date(bdM.getFullYear(),bdM.getMonth(),1);bdYr=false;$('#dp').onclick=bdClick;bdDraw();$('#dpop').classList.add('on')}
+function bdOpen(f){bdF=f||'bd';const v=bdVal();bdM=v&&v[0]!=='-'?pd(v):bdF==='bd'?new Date(new Date().getFullYear()-20,0,1):new Date();bdM=new Date(bdM.getFullYear(),bdM.getMonth(),1);bdYr=false;$('#dp').onclick=bdClick;bdDraw();$('#dpop').classList.add('on')}
 function detHide(){const p=$('#detPage');if(p)p.classList.remove('on')}
 function svcHide(){const p=$('#svcPage');if(p)p.classList.remove('on')}
 /* Выпадающий список сохранённых услуг в карточке клиента (поле «Услуга» заказа) */
