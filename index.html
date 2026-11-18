@@ -1352,14 +1352,34 @@ function detIn(f,ph){return `<input data-df="${f}" placeholder="${ph}" maxlength
 function detShow(){let p=$('#detPage');if(!p){p=document.createElement('div');p.id='detPage';document.body.appendChild(p);sheetDrag(p,detHide)}
   const nm=(allStu().find(a=>a[0]===stuK)||[stuK,stuK])[1];
   p.innerHTML=`<div class="grab"></div><div class="svh"><h3>Детали</h3><button type="button" class="svb" id="detBack" aria-label="Назад"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span>Назад</span></button></div>
-  <p style="color:var(--tx2);font-size:13px;margin:0 0 12px">${esc(nm)}. Всё сохраняется автоматически.</p>
+  <p id="detSub" style="color:var(--tx2);font-size:13px;margin:0 0 12px">Всё сохраняется автоматически.</p>
+  <div class="card"><label style="margin-top:0">${SOUND?'Имя клиента':'Имя ученика'}</label><input id="detName" maxlength="40" autocomplete="off" value="${esc(nm)}" placeholder="Имя"></div>
+  <div class="card"><label style="margin-top:0">День рождения</label><div style="position:relative"><input type="text" inputmode="decimal" data-bdt data-bdf="bd" autocomplete="off" spellcheck="false" placeholder="ДД.ММ.ГГГГ" value="${esc(bdFmt(bdVal('bd')))}" style="padding-right:48px"><button type="button" id="bdBtn" aria-label="Открыть календарь" style="position:absolute;right:0;top:5px;bottom:0;width:48px;display:grid;place-items:center;color:var(--tx2);line-height:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button></div></div>
   ${SOUND?'':`<div class="card"><label style="margin-top:0">Заметки</label>${detTa('notes','Прогресс, наблюдения, договорённости')}</div>`}
-  <div class="card"><label style="margin-top:0">День рождения</label><div style="position:relative"><input type="text" inputmode="numeric" data-bdi data-bdf="bd" autocomplete="off" spellcheck="false" value="${esc(bdFmt(bdVal('bd'))||'дд.мм.гггг')}" style="padding-right:48px"><button type="button" id="bdBtn" aria-label="Открыть календарь" style="position:absolute;right:0;top:5px;bottom:0;width:48px;display:grid;place-items:center;color:var(--tx2);line-height:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button></div></div>
-  ${SOUND?'':`<div class="card"><label style="margin-top:0">Дата первого занятия</label><div style="position:relative"><input type="text" inputmode="numeric" data-bdi data-bdf="fd" autocomplete="off" spellcheck="false" value="${esc(bdFmt(bdVal('fd'))||'дд.мм.гггг')}" style="padding-right:48px"><button type="button" id="fdBtn" aria-label="Открыть календарь" style="position:absolute;right:0;top:5px;bottom:0;width:48px;display:grid;place-items:center;color:var(--tx2);line-height:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button></div></div>
+  ${SOUND?'':`<div class="card"><label style="margin-top:0">Дата первого занятия</label><div style="position:relative"><input type="text" inputmode="decimal" data-bdt data-bdf="fd" autocomplete="off" spellcheck="false" placeholder="ДД.ММ.ГГГГ" value="${esc(bdFmt(bdVal('fd')))}" style="padding-right:48px"><button type="button" id="fdBtn" aria-label="Открыть календарь" style="position:absolute;right:0;top:5px;bottom:0;width:48px;display:grid;place-items:center;color:var(--tx2);line-height:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button></div></div>
   <div class="card"><label style="margin-top:0">Откуда пришёл</label>${detIn('srcn','Например: порекомендовал знакомый или объявление на Авито')}</div>
   <div class="card"><label style="margin-top:0">Диапазон</label>${detIn('range','Например, A3 – E5')}<label>Уровень</label>${detLvl()}</div>
   <div class="card"><label style="margin-top:0">Цель занятий</label>${detTa('goal','Зачем пришёл учиться: для себя, сцена, поступление, экзамен…')}<label>Текущий репертуар</label>${detTa('rep','Песни и произведения в работе')}</div>
   <div class="card"><label style="margin-top:0">Домашнее задание</label>${detTa('hw','Что задано к следующему занятию')}</div>`}`;  p.scrollTop=0;void p.offsetWidth;p.classList.add('on')}
+/* ручной ввод даты и переименование клиента */
+function dParse(t){t=String(t||'').trim();if(!t)return'';let g=t.split(/\D+/).filter(Boolean);if(g.length===1){const d=g[0];if(d.length===8||d.length===6)g=[d.slice(0,2),d.slice(2,4),d.slice(4)];else return null}if(g.length!==3)return null;let dd=+g[0],mm=+g[1],yy=+g[2];if(g[2].length===2)yy+=yy>new Date().getFullYear()%100?1900:2000;else if(g[2].length!==4)return null;const o=new Date(yy,mm-1,dd);if(yy<1900||o.getFullYear()!==yy||o.getMonth()!==mm-1||o.getDate()!==dd)return null;return yy+'-'+pad(mm)+'-'+pad(dd)}
+function dSave(f,v){if(v&&f==='bd'&&pd(v)>new Date())return false;const d=S.det[stuK]=S.det[stuK]||{};d[f]=v;save();return true}
+document.addEventListener('input',e=>{const t=e.target;if(!t.dataset||t.dataset.bdt===undefined)return;const v=dParse(t.value);if(v&&(/\d{4}\s*$/.test(t.value)||/^\s*\d{8}\s*$/.test(t.value)))dSave(t.dataset.bdf,v)});
+document.addEventListener('focusout',e=>{const t=e.target;if(!t.dataset||t.dataset.bdt===undefined)return;const f=t.dataset.bdf,v=dParse(t.value);if(v===''){dSave(f,'');t.value='';return}if(v&&dSave(f,v)){t.value=bdFmt(v);return}toast('Введите дату, например 15.03.1995');t.value=bdFmt(bdVal(f))});
+function stuRename(raw){const nn=String(raw||'').trim().slice(0,40),ok=stuK,nk=key(nn),old=(allStu().find(a=>a[0]===ok)||[ok,ok])[1];
+  if(!nn){toast('Введите имя');return old}
+  if(nn===old)return old;
+  if(nk!==ok&&allStu().some(a=>a[0]===nk)){toast(SOUND?'Клиент с таким именем уже есть':'Ученик с таким именем уже есть');return old}
+  S.stu.forEach(x=>{if(key(x.name)===ok)x.name=nn});
+  S.ev.forEach(e=>{if(key(e.person)===ok)e.person=nn});
+  S.subs.forEach(x=>{if(x.k===ok)x.k=nk});S.ord.forEach(x=>{if(x.k===ok)x.k=nk});
+  if(nk!==ok){if(S.st[ok]!==undefined){S.st[nk]=S.st[ok];delete S.st[ok]}if(S.det[ok]){S.det[nk]=S.det[ok];delete S.det[ok]}}
+  stuK=nk;save();
+  const h=document.querySelector('#sheet .detbtn + h3');if(h)h.textContent=nn;
+  document.querySelectorAll('#stuList').forEach(l=>l.innerHTML=stuRows());render();
+  return nn}
+document.addEventListener('change',e=>{if(e.target.id==='detName')e.target.value=stuRename(e.target.value)});
+document.addEventListener('keydown',e=>{if(e.target.id==='detName'&&e.key==='Enter'){e.preventDefault();e.target.blur()}});
 let bdM=null,bdYr=false,bdF='bd';
 const bdVal=f=>(S.det[stuK]||{})[f||bdF]||'';
 const bdFmt=v=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v||'');return m?m[3]+'.'+m[2]+'.'+m[1]:''};
@@ -1394,7 +1414,7 @@ function bdClick(ev){const b=ev.target.closest('button,[data-bdy]');if(!b)return
   if(b.dataset.yp){bdM=new Date(bdM.getFullYear()+(+b.dataset.yp),bdM.getMonth(),1);bdDraw();return}
   if(b.dataset.dy){bdM=new Date(+b.dataset.dy,bdM.getMonth(),1);bdYr=false;bdDraw();return}
   if(b.dataset.dm){bdM=new Date(bdM.getFullYear(),bdM.getMonth()+(+b.dataset.dm),1);bdDraw();return}
-  if(b.dataset.dd){const d=S.det[stuK]=S.det[stuK]||{};d[bdF]=b.dataset.dd;save();const bi=$('#detPage input[data-bdi][data-bdf="'+bdF+'"]');if(bi){bi.value=bdFmt(b.dataset.dd);bi._si=0;bi._fresh=true}$('#dpop').classList.remove('on')}}
+  if(b.dataset.dd){const d=S.det[stuK]=S.det[stuK]||{};d[bdF]=b.dataset.dd;save();const bi=$('#detPage input[data-bdt][data-bdf="'+bdF+'"]');if(bi)bi.value=bdFmt(b.dataset.dd);$('#dpop').classList.remove('on')}}
 function bdOpen(f){bdF=f||'bd';const v=bdVal();bdM=v?pd(v):bdF==='bd'?new Date(new Date().getFullYear()-20,0,1):new Date();bdM=new Date(bdM.getFullYear(),bdM.getMonth(),1);bdYr=false;$('#dp').onclick=bdClick;bdDraw();$('#dpop').classList.add('on')}
 function detHide(){const p=$('#detPage');if(p)p.classList.remove('on')}
 function svcHide(){const p=$('#svcPage');if(p)p.classList.remove('on')}
@@ -1842,7 +1862,7 @@ setInterval(()=>{if(page==='cal'&&!$('#sheet').classList.contains('on'))render()
 /* Крестик очистки справа во всех полях ввода (текст и цифры) */
 try{(()=>{
 const OK=/^(text|number|email|search|tel|url)$/;
-const elig=el=>((el.tagName==='INPUT'&&OK.test(el.type||'text'))||el.tagName==='TEXTAREA')&&!el.closest('#cpOv')&&!el.hasAttribute('data-bdi');
+const elig=el=>((el.tagName==='INPUT'&&OK.test(el.type||'text'))||el.tagName==='TEXTAREA')&&!el.closest('#cpOv')&&!el.hasAttribute('data-bdi')&&!el.hasAttribute('data-bdt');
 let raf=0;
 const sched=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;sync()})};
 const ICON='<i><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></i>';
